@@ -63,7 +63,7 @@ class TopMenu extends React.Component {
 let treeData = []
 
 $.ajax({
-  url: "http://127.0.0.1:5000/v1/main/list",
+  url: "http://47.97.152.219:82/v1/main/list",
   method: "GET",
   async: false,
   success: function(res){
@@ -332,7 +332,7 @@ class RightSidermenu extends React.Component {
         show_1.style.display = 'none';
         show_0.style.display = 'block';
         axios({
-          url: 'http://127.0.0.1:5000/v1/feature/MCFF',
+          url: 'http://47.97.152.219:82/v1/feature/MCFF',
           method: 'POST',
           data:{
             filepath: sound_path,
@@ -350,7 +350,7 @@ class RightSidermenu extends React.Component {
         let startTime = document.querySelector('#startTime').value;
         let endTime = document.querySelector('#endTime').value;
         axios({
-          url: 'http://127.0.0.1:5000/v1/feature/Zero_Crossing',
+          url: 'http://47.97.152.219:82/v1/feature/Zero_Crossing',
           method: 'POST',
           data:{
             filepath: sound_path,

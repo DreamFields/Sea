@@ -41,7 +41,7 @@ class PowerApp extends React.Component {
       "filename": localStorage['sound_name']
     };
     $.ajax({
-      url: "http://127.0.0.1:5000/v1/feature/onethree",
+      url: "http://47.97.152.219:82/v1/feature/onethree",
       method: 'post',
       data: JSON.stringify(send_data),
       dataType:'json',
@@ -133,7 +133,7 @@ class PowerApp extends React.Component {
       "filename": localStorage['sound_name']
     };
     $.ajax({
-      url: "http://127.0.0.1:5000/v1/feature/Power",
+      url: "http://47.97.152.219:82/v1/feature/Power",
       method: 'post',
       data: JSON.stringify(send_data),
       dataType:'json',

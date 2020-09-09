@@ -56,7 +56,7 @@ class TopMenu extends React.Component {
 let treeData = []
 
 $.ajax({
-  url: "http://127.0.0.1:5000/v1/main/list",
+  url: "http://47.97.152.219:82/v1/main/list",
   method: "GET",
   async: false,
   success: function(res){

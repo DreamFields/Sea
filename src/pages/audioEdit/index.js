@@ -64,7 +64,7 @@ class TopMenu extends React.Component {
 let treeData = []
 
 $.ajax({
-  url: "http://127.0.0.1:5000/v1/main/list",
+  url: "http://47.97.152.219:82/v1/main/list",
   method: "GET",
   async: false,
   success: function(res){
@@ -275,7 +275,7 @@ class Waveform extends React.Component {
           color: "rgba(112,500,130,0.3)"
       });
       axios({
-        url: 'http://127.0.0.1:5000/v1/pretreatment/getTips/' + sound_id,
+        url: 'http://47.97.152.219:82/v1/pretreatment/getTips/' + sound_id,
         method: 'GET',        
       }).then(res => {
         console.log(res.data.regions);
@@ -308,7 +308,7 @@ class Waveform extends React.Component {
       })          
       // console.log(regions)
       axios({
-        url: 'http://127.0.0.1:5000/v1/pretreatment/saveTips',
+        url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
         method: 'POST',
         data: {"sound_id": sound_id,regions: JSON.stringify(regions)}        
       }).then(res => {
@@ -373,7 +373,7 @@ class Waveform extends React.Component {
     });
     audioDelete.addEventListener('click', function(){
       axios({
-        url: 'http://127.0.0.1:5000/v1/datamanage/sounds/' + sound_id,
+        url: 'http://47.97.152.219:82/v1/datamanage/sounds/' + sound_id,
         method: 'delete'
       }).then(res => {
         alert(res.data.msg);
@@ -411,7 +411,7 @@ class Waveform extends React.Component {
       var start = document.querySelector('#regionStart').value
       var end = document.querySelector('#regionEnd').value
       axios({
-        url: 'http://127.0.0.1:5000/v1/pretreatment/editAudio',
+        url: 'http://47.97.152.219:82/v1/pretreatment/editAudio',
         method: 'POST',
         data: {'operateName': operateName,'start':start, 'end':end,'audio_path': sound_path}        
       }).then(res => {
@@ -424,7 +424,7 @@ class Waveform extends React.Component {
         if(operateName == 'btnpaste'){         
           // console.log(paste_len - origin_len)
           axios({
-            url: 'http://127.0.0.1:5000/v1/pretreatment/getTips/' + sound_id,
+            url: 'http://47.97.152.219:82/v1/pretreatment/getTips/' + sound_id,
             method: 'GET',        
           }).then(res => {
             let pre_regions = JSON.parse(res.data.regions)
@@ -441,7 +441,7 @@ class Waveform extends React.Component {
             
             // console.log(pre_regions);
             axios({
-              url: 'http://127.0.0.1:5000/v1/pretreatment/saveTips',
+              url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
               method: 'POST',
               data: {"sound_id": sound_id,regions: JSON.stringify(pre_regions)}        
             }).then(res => {
@@ -450,7 +450,7 @@ class Waveform extends React.Component {
           });
         }else if(operateName == 'btncut' || operateName == 'btndelete'){
           axios({
-            url: 'http://127.0.0.1:5000/v1/pretreatment/getTips/' + sound_id,
+            url: 'http://47.97.152.219:82/v1/pretreatment/getTips/' + sound_id,
             method: 'GET',        
           }).then(res => {
             let pre_regions = JSON.parse(res.data.regions)
@@ -475,7 +475,7 @@ class Waveform extends React.Component {
             
             // console.log(pre_regions);
             axios({
-              url: 'http://127.0.0.1:5000/v1/pretreatment/saveTips',
+              url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
               method: 'POST',
               data: {"sound_id": sound_id,regions: JSON.stringify(pre_regions)}        
             }).then(res => {

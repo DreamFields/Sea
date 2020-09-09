@@ -68,7 +68,7 @@ const index = ({fleets, dispatch}) => {
     name: 'file',
     accept: '.wav',
     multiple: true,
-    action: 'http://127.0.0.1:5000/upload',
+    action: 'http://47.97.152.219:82/upload',
     data: {'fleet_name': ''},
     showUploadList: false,
     onChange(info) {
@@ -87,7 +87,7 @@ const index = ({fleets, dispatch}) => {
           // console.log("fleet_id: "+fleet_id_now);
           // console.log(sound_infor);
           axios({
-            url: "http://127.0.0.1:5000/v1/datamanage/upload",
+            url: "http://47.97.152.219:82/v1/datamanage/upload",
             method: "POST",
             data: {
               fleet_id: fleet_id_now,
@@ -122,14 +122,14 @@ const index = ({fleets, dispatch}) => {
       // console.log(e);
       // alert(document.querySelector('#fleet_name').value);
       axios({
-        url: 'http://127.0.0.1:5000/create_fleet',
+        url: 'http://47.97.152.219:82/create_fleet',
         method: 'POST',
         data: {'fleet_name': document.querySelector('#fleet_name').value}        
       }).then(res => {
         alert(res.data)
       });
       axios({
-        url: 'http://127.0.0.1:5000/v1/datamanage/fleets',
+        url: 'http://47.97.152.219:82/v1/datamanage/fleets',
         method: 'POST',
         data: {'fleet_name': document.querySelector('#fleet_name').value,
         "fleet_type": this.state.fleetType,
@@ -329,7 +329,7 @@ const index = ({fleets, dispatch}) => {
     const confirmDelete = record => {
       console.log('record', record)
       axios({
-        url: 'http://127.0.0.1:5000/delete_fleet',
+        url: 'http://47.97.152.219:82/delete_fleet',
         method: 'POST',
         data: {'fleet_name': record.fleet_name}        
       }).then(res => {
@@ -406,7 +406,7 @@ const index = ({fleets, dispatch}) => {
     const handleOk = () => {
       if( Record.fleet_name != document.querySelector('#fleet_edit_name').value){
         axios({
-          url: 'http://127.0.0.1:5000/edit_fleet',
+          url: 'http://47.97.152.219:82/edit_fleet',
           method: 'post',
           data: {'fleet_old_name' : Record.fleet_name, 'fleet_new_name': document.querySelector('#fleet_edit_name').value}
         }).then( res => {

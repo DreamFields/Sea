@@ -23,7 +23,7 @@ const errorHandler = function(error) {
 
 
 export const getRemoteList = async (params) => {
-    return extendRequest('http://223.4.179.3:82/v1/datamanage/fleets', {
+    return extendRequest('http://47.97.152.219:82/v1/datamanage/fleets', {
         method: 'get',
       })
         .then(function(response) {
@@ -36,7 +36,7 @@ export const getRemoteList = async (params) => {
 }
 
 export const getMainList = async (params) => {
-  return extendRequest('http://127.0.0.1:5000/v1/main/list', {
+  return extendRequest('http://47.97.152.219:82/v1/main/list', {
       method: 'get',
     })
       .then(function(response) {
