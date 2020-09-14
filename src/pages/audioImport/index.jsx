@@ -1,115 +1,423 @@
-import React,{useState} from 'react';
-import '../main.less';
-import '../audioEdit/edit.less';
-import { Menu } from 'antd';
+import React,{ useState, useEffect } from 'react';
+import { Cascader, Carousel, DatePicker, TimePicker  } from 'antd';
 import {Link, connect} from 'umi';
-import { UserOutlined, TwitterOutlined, HomeOutlined, MenuUnfoldOutlined, ScissorOutlined, SnippetsOutlined, EditOutlined} from '@ant-design/icons';
-import { FileOutlined, HistoryOutlined} from '@ant-design/icons';
-import { Layout,Input,Button,Tree,Popconfirm, Select } from 'antd';
+import moment from 'moment';
+import { Input,Button,Popconfirm, Select } from 'antd';
 import { Upload, message, Modal, Form } from 'antd';
-import { Table, Tag, Space } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
+import { Table, Tag, Space, Radio } from 'antd';
+import { InboxOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import style from "./style.less";
 import axios from 'axios';
-const { Header, Sider, Footer, Content } = Layout;
+import TestList from '../../components/DataTable/index.jsx';
 
-const { Search,TextArea } = Input;
-const { SubMenu } = Menu;
+const { TextArea } = Input;
 const { Dragger } = Upload;
 const { Option } = Select;
 
-let fleet_id_now = 9999;
-
-class Sidermenu extends React.Component {
-  handleClick = e => {
-    console.log('click ', e);
-  };
-
-  render() {
-    return (
-      <Menu
-        onClick={this.handleClick}
-        style={{ width: 80,backgroundColor:'#2D2D2D',borderBottomLeftRadius:5,borderTopLeftRadius:5 }}
-        defaultSelectedKeys={['2']}
-        mode="inline"
-      >
-        <Menu.Item key="1" icon={<HomeOutlined  />}><Link to='/'></Link></Menu.Item>
-        <Menu.Item key="2"><Link to='/audioImport'><MenuUnfoldOutlined /></Link></Menu.Item>
-        <Menu.Item key="3"><Link to='/audioEdit'><ScissorOutlined /></Link></Menu.Item>
-        <Menu.Item key="4"><Link to='/features'><SnippetsOutlined /></Link></Menu.Item>
-        <Menu.Item key="5"><EditOutlined /></Menu.Item>
-      </Menu>
-    );
-  }
-}
-
-class TopMenu extends React.Component {
-  handleClick = e => {
-    console.log('click ', e);
-  };
-
-  render() {
-    return (
-      <Menu onClick={this.handleClick} defaultSelectedKeys={['file']} mode="horizontal" style={{backgroundColor:'black'}}>
-        <Menu.Item key="file" icon={<FileOutlined />}>
-          文件
-        </Menu.Item>
-        <Menu.Item key="history" icon={<HistoryOutlined />}>
-          历史记录
-        </Menu.Item>
-      </Menu>
-    );
-  }
-}
-// console.log(treeData)
-
 
 const index = ({fleets, dispatch}) => {
-  const uploadprops = {
-    name: 'file',
-    accept: '.wav',
-    multiple: true,
-    action: 'http://47.97.152.219:82/upload',
-    data: {'fleet_name': ''},
-    showUploadList: false,
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        // console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        // console.log(info.file.response);
-        if(info.file.response == 'target not exists!'){
-          message.error('目标船舰不存在!');
-        }else if (info.file.response == 'please choose target!') {
-          alert('请选择目标!');
-        }else{
-          let sound_infor = info.file.response;
-          // console.log("fleet_id: "+fleet_id_now);
-          // console.log(sound_infor);
-          axios({
-            url: "http://47.97.152.219:82/v1/datamanage/upload",
-            method: "POST",
-            data: {
-              fleet_id: fleet_id_now,
-              sound_name: sound_infor['name'],
-              sound_path: sound_infor['path'],
-            }
-          }).then(res => {
-            message.success(`${info.file.name} 文件上传成功.`);
-            dispatch({
-              type: 'fleets/getRemote',
-            });
-          })
-        }
-      } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败.`);
-      }
-    },
-  };
+  const AddSound = ()=> {
+    const [card, setCard] = useState(undefined);
 
+    const TypeRadio = ()=>{
+      const [value, setValue] = useState(1);
+  
+      const onChange = e => {
+        console.log('radio checked', e.target);
+        setValue(e.target.value);
+        let radiation = document.getElementById('radiation_target_div');
+        let echo = document.getElementById('echo_target_div');
+        let pulse = document.getElementById('pulse_target_div');
+        let power = document.getElementById('powerplant_div');
+        let propeller = document.getElementById('propeller_div');
+        console.log(echo);
+        if(e.target.value == 1){
+          radiation.style.display = "block";
+          echo.style.display = "none";
+          pulse.style.display = "none";
+
+          power.style.display = "block";
+          propeller.style.display = "block";
+        }else if(e.target.value == 2){
+          radiation.style.display = "none";
+          echo.style.display = "block";
+          pulse.style.display = "none";
+
+          power.style.display = "block";
+          propeller.style.display = "block";
+        }else if(e.target.value == 3){
+          radiation.style.display = "none";
+          echo.style.display = "none";
+          pulse.style.display = "block";
+          power.style.display = "none";
+          propeller.style.display = "none";
+        }
+      };
+  
+      return(
+        <Radio.Group onChange={onChange} value={value}>
+          <Radio value={1} >辐射噪声</Radio>
+          <Radio value={2} >目标回声</Radio>
+          <Radio value={3} >主动脉冲</Radio>
+        </Radio.Group>
+      );
+    }
+
+    const RadiationTarget = ()=>{
+      const [value_1, setValue_1] = useState(1);
+      const [value_2, setValue_2] = useState(1);
+
+      const onChange_1 = e => {
+        console.log('RadiationTarget checked', e.target);
+        setValue_1(e.target.value);
+      };
+      const onChange_2 = e => {
+        console.log('RadiationTarget checked', e.target);
+        setValue_2(e.target.value);
+      };
+
+      return(
+        <Form name="radiation_target" >
+          <Form.Item name='position' label="水面/水下">
+            <Radio.Group onChange={onChange_1} value={value_1}>
+              <Radio value={1} >水面</Radio>
+              <Radio value={2} >水下</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item name='type' label="目标类型">
+            <Radio.Group onChange={onChange_2} value={value_2}>
+              <Radio value={1} >商船</Radio>
+              <Radio value={2} >民船</Radio>
+              <Radio value={3} >军舰-驱逐舰</Radio>
+              <Radio value={4} >军舰-护卫舰</Radio>
+              <Radio value={5} >潜艇-常规</Radio>
+              <Radio value={6} >潜艇-战略核潜艇</Radio>
+              <Radio value={7} >潜艇-攻击核潜艇</Radio>
+              <Radio value={8} >监听船</Radio>
+              <Radio value={9} >海洋科考船</Radio>
+              <Radio value={10} >航空母舰</Radio>
+              <Radio value={11} >未知类别</Radio>
+              <Radio value={12} >添加新类别</Radio>
+            </Radio.Group>
+          </Form.Item>
+        <Form.Item name='country' label="国别">
+          <Select defaultValue="china" style={{ width: 120 }} >
+            <Option value="china">中国</Option>
+            <Option value="UK">英国</Option>
+            <Option value="USA">USA</Option>
+            <Option value="France">法国</Option>
+            <Option value="Russia">俄罗斯</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name='name' label="目标舰号或名称">
+          <Input placeholder="名称"  id='fleet_name' />
+        </Form.Item>
+        </Form> 
+      );
+    };
+
+
+    const EchoTarget = ()=>{
+      const [value, setValue] = useState(1);
+
+      const onChange = e => {
+        console.log('EchoTarget checked', e.target);
+        setValue(e.target.value);
+      };
+
+      return(
+        <Form name="echo_target" >
+          <Form.Item name='type' label="目标类型">
+            <Radio.Group onChange={onChange} value={value}>
+              <Radio value={1} >水面船舰</Radio>
+              <Radio value={2} >潜艇-常规</Radio>
+              <Radio value={3} >潜艇-战略核潜艇</Radio>
+              <Radio value={4} >潜艇-攻击核潜艇</Radio>
+              <Radio value={5} >礁石</Radio>
+              <Radio value={6} >浅滩</Radio>
+              <Radio value={7} >沉船</Radio>
+              <Radio value={8} >混响</Radio>
+              <Radio value={9} >未知类别</Radio>
+              <Radio value={10} >添加新类别</Radio>
+            </Radio.Group>
+          </Form.Item>
+        <Form.Item name='country' label="国别">
+          <Select defaultValue="china" style={{ width: 120 }} >
+            <Option value="china">中国</Option>
+            <Option value="UK">英国</Option>
+            <Option value="USA">USA</Option>
+            <Option value="France">法国</Option>
+            <Option value="Russia">俄罗斯</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name='name' label="目标舰号或名称">
+          <Input placeholder="名称"  id='fleet_name' />
+        </Form.Item>
+        </Form> 
+      );
+    };
+
+
+    const PulseTarget = ()=>{
+      const [value_1, setValue_1] = useState(1);
+      const [value_2, setValue_2] = useState(1);
+
+      const onChange_1 = e => {
+        console.log('PulseTarget checked', e.target);
+        setValue_1(e.target.value);
+      };
+      const onChange_2 = e => {
+        console.log('PulseTarget checked', e.target);
+        setValue_2(e.target.value);
+      };
+
+      return(
+        <Form name="pulse_target" >
+          <Form.Item name='type' label="目标类型">
+            <Radio.Group onChange={onChange_2} value={value_2}>
+              <Radio value={1} >水面船舰</Radio>
+              <Radio value={2} >潜艇-常规</Radio>
+              <Radio value={3} >潜艇-战略核潜艇</Radio>
+              <Radio value={4} >潜艇-攻击核潜艇</Radio>
+              <Radio value={5} >浮标</Radio>
+              <Radio value={6} >潜标</Radio>
+              <Radio value={7} >未知类别</Radio>
+              <Radio value={8} >添加新类别</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item name='sonar_type' label="主动声纳类型">
+            <Radio.Group onChange={onChange_1} value={value_1}>
+              <Radio value={1} >舰壳-xxx</Radio>
+              <Radio value={2} >拖曳-xxx</Radio>
+              <Radio value={3} >未知类别</Radio>
+              <Radio value={4} >添加新类别</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item name='country' label="国别">
+            <Select defaultValue="china" style={{ width: 120 }} >
+              <Option value="china">中国</Option>
+              <Option value="UK">英国</Option>
+              <Option value="USA">USA</Option>
+              <Option value="France">法国</Option>
+              <Option value="Russia">俄罗斯</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name='name' label="目标舰号或名称">
+            <Input placeholder="名称"  id='fleet_name' />
+          </Form.Item>
+        </Form> 
+      );
+    };
+
+
+    const Powerplant = ()=>{
+      const [value, setValue] = useState(1);
+  
+      const onChange = e => {
+        console.log('Powerplant checked', e.target);
+        setValue(e.target.value);
+      };
+  
+      return(
+        <Radio.Group onChange={onChange} value={value}>
+          <Radio value={1} >柴油机</Radio>
+          <Radio value={2} >燃气轮机</Radio>
+          <Radio value={3} >涡轮机</Radio>
+          <Radio value={4} >电机</Radio>
+          <Radio value={5} >柴电-联合动力</Radio>
+          <Radio value={6} >未知类别</Radio>
+          <Radio value={7} >添加新类别</Radio>
+        </Radio.Group>
+      );
+    }
+
+    const Propeller = ()=>{
+      const [value_1, setValue_1] = useState(1);
+      const [value_2, setValue_2] = useState(1);
+  
+      const onChange_1 = e => {
+        console.log('Propeller checked', e.target);
+        setValue_1(e.target.value);
+      };
+      const onChange_2 = e => {
+        console.log('Propeller checked', e.target);
+        setValue_2(e.target.value);
+      };
+  
+      return(
+        <Form name="propeller">
+          <Form.Item name="axis_num" label="轴数">
+            <Radio.Group onChange={onChange_1} value={value_1}>
+              <Radio value={1} >单轴</Radio>
+              <Radio value={2} >双轴</Radio>
+              <Radio value={3} >四轴</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item name="leaf_num" label="叶数">
+            <Radio.Group onChange={onChange_2} value={value_2}>
+              <Radio value={1} >3叶</Radio>
+              <Radio value={2} >4叶</Radio>
+              <Radio value={3} >5叶</Radio>
+              <Radio value={4} >6叶</Radio>
+              <Radio value={5} >7叶</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </Form>
+      );
+    };
+
+    const SignalInfor = ()=>{
+      function dateChange(date, dateString) {
+        console.log(date, dateString);
+      };
+
+      function timeChange(time, timeString) {
+        console.log(time, timeString);
+      }
+
+      return(
+        <Form name="signal_information">
+          <Form.Item name="time" label="采集时间">
+            <DatePicker onChange={dateChange} />
+            <TimePicker onChange={timeChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />
+          </Form.Item>
+          <Form.Item name="platform" label="采集平台">
+            <Input />
+          </Form.Item>
+          <Form.Item name="task_source" label="采集任务源">
+            <Input />
+          </Form.Item>
+          <Form.Item name="position" label="采集海区位置及深度">
+            <Input />
+          </Form.Item>
+          <Form.Item name="new_type" label="添加新类别">
+            <Input />
+          </Form.Item>
+        </Form>
+      )
+    }
+
+    const OtherFiles = ()=>{
+      const props={
+        name: 'file',
+        multiple: true,
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        onChange(info) {
+          const { status } = info.file;
+          if (status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully.`);
+          } else if (status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+          }
+        },
+      };
+
+      return(
+        <Dragger {...props}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">点击或拖动文件以上传</p>
+          <p className="ant-upload-hint">
+            支持单次或者批量上传
+          </p>
+        </Dragger>
+      )
+    }
+  
+    return (
+      <div>
+        <button
+          className={style.leftButton}
+            // style={{ left: 26 }}
+          onClick={() => {
+          // 通过获取走马灯dom，调用Carousel的prev()方法
+            card.prev();
+          }}
+        >
+            {/* <IconFont type="icon-previous" /> */}<LeftOutlined />
+        </button>
+        <button
+          className={style.rightButton}
+          // style={{ right: 26 }}
+          onClick={() => {
+          // 通过获取走马灯dom，调用Carousel的next()方法
+            card.next();
+          }}
+        >
+          {/* <IconFont type="icon-next" /> */}<RightOutlined />
+        </button>
+        <Carousel
+          ref={e => {
+          // 走马灯dom名card
+            setCard(e);
+          }}
+          // autoplay
+        >
+          <div>
+            <div className={style.contentStyle}>
+              <span>1. 选择信号类型</span>
+              <div style={{marginTop: 150}}>
+                <TypeRadio />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.contentStyle}>
+              <span>2. 选择目标船舰类型</span>
+              <div style={{marginTop: 50}} id='radiation_target_div'>
+                <RadiationTarget />
+              </div>
+              <div style={{marginTop: 80,display:"none"}} id="echo_target_div">
+                <EchoTarget />
+              </div>
+              <div style={{marginTop: 50,display:"none"}} id="pulse_target_div">
+                <PulseTarget />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.contentStyle}>
+              <span>3. 录入目标动力装置</span>
+              <div style={{marginTop: 150}} id="powerplant_div">
+                <Powerplant />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.contentStyle}>
+              <span>4. 录入目标螺旋桨情况</span>
+              <div style={{marginTop:120}} id="propeller_div">
+                <Propeller />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.contentStyle}>
+              <span>5. 信号采集信息</span>
+              <div style={{marginTop:40}}>
+                <SignalInfor />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.contentStyle}>
+              <span>6. 其他需要录入信息(图片等)</span>
+              <div style={{marginTop:80}}>
+                <OtherFiles />
+              </div>
+            </div>
+          </div>
+        </Carousel>
+      </div>        
+    );
+  }
 
   //添加弹出框
-  class Add extends React.Component {
+  class AddFleet extends React.Component {
     state = { visible: false, fleetType: '小航空母舰' };
   
     showModal = () => {
@@ -178,136 +486,6 @@ const index = ({fleets, dispatch}) => {
             <TextArea rows={4} placeholder="说明" style={{marginTop: 20}} id='fleet_des' />
           </Modal>
         </>
-      );
-    }
-  }
-
-  let treeData = []
-  if(fleets.treeData != undefined){
-    treeData = fleets.treeData
-  }
-
-  const dataList = [];
-  const generateList = data => {
-    for (let i = 0; i < data.length; i++) {
-      const node = data[i];
-      const { key, title } = node;
-      dataList.push({ key, title: title });
-      if (node.children) {
-        generateList(node.children);
-      }
-    }
-  };
-  generateList(treeData);
-
-  const getParentKey = (key, tree) => {
-    let parentKey;
-    for (let i = 0; i < tree.length; i++) {
-      const node = tree[i];
-      if (node.children) {
-        if (node.children.some(item => item.key === key)) {
-          parentKey = node.key;
-        } else if (getParentKey(key, node.children)) {
-          parentKey = getParentKey(key, node.children);
-        }
-      }
-    }
-    return parentKey;
-  };
-
-
-  class SearchTree extends React.Component {
-    state = {
-      expandedKeys: [ ],
-      searchValue: '',
-      autoExpandParent: true,
-      checkedKeys: [ ]
-    };
-
-    onExpand = expandedKeys => {
-      this.setState({
-        expandedKeys,
-        autoExpandParent: false,
-      });
-    };
-
-    onCheck = checkedKeys => {
-      console.log('onCheck', checkedKeys);
-      this.setState({
-        checkedKeys
-      });
-    };
-
-    onChange = e => {
-      const { value } = e.target;
-      const expandedKeys = dataList
-        .map(item => {
-          if (item.title.indexOf(value) > -1) {
-            return getParentKey(item.key, treeData);
-          }
-          return null;
-        })
-        .filter((item, i, self) => item && self.indexOf(item) === i);
-      this.setState({
-        expandedKeys,
-        searchValue: value,
-        autoExpandParent: true,
-      });
-    };
-
-    render() {
-      const onSelect = (selectedKeys, info) => {
-        console.log('onSelect', info['node']);
-        document.querySelector('#targetName').innerHTML = info['node']['_title'];
-        uploadprops.data.fleet_name = info['node']['_title'];
-        // setSelectedKeys(selectedKeys);
-        fleet_id_now = info['node']['fleet_id'];
-      };
-
-      const { searchValue, expandedKeys, autoExpandParent, checkedKeys } = this.state;
-      const loop = data =>
-        data.map(item => {
-          const index = item.title.indexOf(searchValue);
-          const beforeStr = item.title.substr(0, index);
-          const afterStr = item.title.substr(index + searchValue.length);
-          const title =
-            index > -1 ? (
-              <span>
-                {beforeStr}
-                <span className="site-tree-search-value">{searchValue}</span>
-                {afterStr}
-              </span>
-            ) : (
-              <span>{item.title}</span>
-            );
-          if (item.children) {
-            return { title, key: item.key, children: loop(item.children), _title:item.title, fleet_id:item.fleet_id };
-          }
-
-          return {
-            title,
-            key: item.key,
-            _title: item.title,
-            sound_id: item.sound_id,
-            sound_path: item.sound_path
-          };
-        });
-        // console.log(loop(treeData))
-      return (
-        <div>
-          <Search style={{ marginBottom: 8 }} placeholder="搜索" onChange={this.onChange} />
-          <Tree
-            checkable
-            onExpand={this.onExpand}
-            expandedKeys={expandedKeys}
-            autoExpandParent={autoExpandParent}
-            treeData={loop(treeData)}
-            height={500}
-            onSelect={onSelect}
-            onCheck={this.onCheck}
-            checkedKeys={checkedKeys}
-          />
-        </div>
       );
     }
   }
@@ -395,36 +573,34 @@ const index = ({fleets, dispatch}) => {
       },
     ];
   
-    let data=[]
-    if (fleets.targetData != undefined){
-      // console.log(fleets.targetData);
-      data = fleets.targetData
-    }
+    // let data=[]
+    // if (fleets.targetData != undefined){
+    //   // console.log(fleets.targetData);
+    //   data = fleets.targetData
+    // }
 
-
-
-    const handleOk = () => {
-      if( Record.fleet_name != document.querySelector('#fleet_edit_name').value){
-        axios({
-          url: 'http://47.97.152.219:82/edit_fleet',
-          method: 'post',
-          data: {'fleet_old_name' : Record.fleet_name, 'fleet_new_name': document.querySelector('#fleet_edit_name').value}
-        }).then( res => {
-          console.log('edit_res', res)
-        })
-      }
-      // console.log(FleetType)
-      dispatch({
-        type: 'fleets/edit',
-        payload: {values: { 
-          "fleet_id": Record.id,
-          "fleet_name": document.querySelector('#fleet_edit_name').value,
-          "fleet_type": FleetType,
-          "fleet_description": document.querySelector('#fleet_edit_des').value
-          }}        
-      });
-      setModalVisble(false);
-    }
+    // const handleOk = () => {
+    //   if( Record.fleet_name != document.querySelector('#fleet_edit_name').value){
+    //     axios({
+    //       url: 'http://47.97.152.219:82/edit_fleet',
+    //       method: 'post',
+    //       data: {'fleet_old_name' : Record.fleet_name, 'fleet_new_name': document.querySelector('#fleet_edit_name').value}
+    //     }).then( res => {
+    //       console.log('edit_res', res)
+    //     })
+    //   }
+    //   // console.log(FleetType)
+    //   dispatch({
+    //     type: 'fleets/edit',
+    //     payload: {values: { 
+    //       "fleet_id": Record.id,
+    //       "fleet_name": document.querySelector('#fleet_edit_name').value,
+    //       "fleet_type": FleetType,
+    //       "fleet_description": document.querySelector('#fleet_edit_des').value
+    //       }}        
+    //   });
+    //   setModalVisble(false);
+    // }
   
     const handleCancel = (e) => {
       setModalVisble(false);
@@ -435,24 +611,90 @@ const index = ({fleets, dispatch}) => {
       setFleetType(value);
     }
 
+    const uploadprops = {
+      name: 'file',
+      accept: '.wav',
+      multiple: true,
+      action: 'http://47.97.152.219:82/upload',
+      data: {'fleet_name': ''},
+      showUploadList: false,
+      onChange(info) {
+        const { status } = info.file;
+        if (status !== 'uploading') {
+          // console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+          // console.log(info.file.response);
+          if(info.file.response == 'target not exists!'){
+            message.error('目标船舰不存在!');
+          }else if (info.file.response == 'please choose target!') {
+            alert('请选择目标!');
+          }else{
+            let sound_infor = info.file.response;
+            // console.log("fleet_id: "+fleet_id_now);
+            // console.log(sound_infor);
+            axios({
+              url: "http://47.97.152.219:82/v1/datamanage/upload",
+              method: "POST",
+              data: {
+                fleet_id: localStorage['fleet_id_now'],
+                sound_name: sound_infor['name'],
+                sound_path: sound_infor['path'],
+              }
+            }).then(res => {
+              message.success(`${info.file.name} 文件上传成功.`);
+              dispatch({
+                type: 'fleets/getRemote',
+              });
+            })
+          }
+        } else if (status === 'error') {
+          message.error(`${info.file.name} 文件上传失败.`);
+        }
+      },
+    };
+
+    useEffect(() => {
+      var MutationObserver = window.MutationObserver || window.WebkitMutationObserver || window.MozMutationObserver;
+
+      const targetNode = document.getElementById('targetName');
+      const config = { 'characterData':true, attributes:true };
+      var observer = new MutationObserver(function(mutations) {
+        // console.log(targetNode.innerHTML);
+        uploadprops.data.fleet_name = targetNode.innerHTML;
+
+      });
+      observer.observe(targetNode, config);
+    })
+    
+
     return(
-      <div className='rightContent'>
-          <div className='rightCenter' style={{backgroundColor: '',height:630}}>
-              <h3>数据入库</h3>
-              <h4 id='targetName'>请在左侧选择目标上传声音文件</h4>
-              <div style={{width:'100%',height:200,marginBottom: 50}}>
-                  <Dragger {...uploadprops} >
-                      <p className="ant-upload-drag-icon">
-                      <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">单击或将文件拖到该区域以上传</p>
-                      <p className="ant-upload-hint">
-                      目前仅支持单个文件上传
-                      </p>
-                  </Dragger>
-              </div>
-              <Add />
-              <Modal
+      <div className={style.rightContent}>       
+        <div className={style.rightCenter} style={{backgroundColor: '',height:630}}>
+          <h3>数据管理</h3>
+          <h4 id='targetName'>一、上传数据</h4>
+          <h5>1. 上传音频</h5>
+          <div style={{width:'100%',height:220,marginBottom: 50}}>
+            
+            <Dragger {...uploadprops}>
+                <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">单击或将文件拖到该区域以上传</p>
+                <p className="ant-upload-hint">
+                目前仅支持单个文件上传
+                </p>
+            </Dragger>
+          </div>
+
+          <h5 >2. 完善音频信息</h5>
+          <AddSound />
+
+          <h4 style={{marginTop: 30}}>二、已上传音频文件</h4>
+          <TestList />
+
+              {/* <AddFleet /> */}
+              {/* <Modal
                 title="修改目标 "
                 visible={ModalVisble}
                 onOk={handleOk}
@@ -475,7 +717,7 @@ const index = ({fleets, dispatch}) => {
                   </Form.Item>
                 </Form> 
               </Modal>
-              <Table columns={columns} dataSource={data} pagination={{defaultPageSize: 3}} />
+              <Table columns={columns} dataSource={data} pagination={{defaultPageSize: 3}} /> */}
           </div>
       </div>
     )
@@ -483,42 +725,7 @@ const index = ({fleets, dispatch}) => {
 
   return(
     <div>
-      <Layout>
-        <Header style={{height:50,backgroundColor:'#464646',color:'white',borderBottom: "1px solid black"}}>
-          <div style={{marginTop: -7,float:'left',border:0,position:'absolute',left:10}} className='header'>
-            <TwitterOutlined style={{fontSize:22}} />
-            <span style={{width:70,fontSize:22}}> | 水声数据库系统</span>
-          </div>
-          <div style={{fontSize:22,marginTop:-7,position:'absolute',right:10}}>
-            <span>张三 | </span>
-            <span style={{marginRight:20}}>数据管理员</span>
-            <span><UserOutlined /></span>
-          </div>
-        </Header>
-        <Layout style={{backgroundColor:'#343434'}}>
-          <Sider className='side' width={380}>
-            <div className='sideContainer'>
-              <div className='mainMenu'>
-                <Sidermenu />
-              </div>
-              <div className='fileMenu'>
-                <div className='topMenu' style={{width:220,height:60,marginLeft:30}}>
-                  <TopMenu />
-                </div>
-                <div style={{width:'100%',height:1,backgroundColor:'#2D2D2D'}}></div>
-                <div className='fileContainer'>
-                  <SearchTree/>
-                </div>                
-              </div>
-            </div>
-          </Sider>
-          <Content>       
-            <MainContent />
-          </Content>
-        </Layout>
-        
-        <Footer>海工小分队</Footer>
-      </Layout>
+      <MainContent />
     </div>
   )
 }

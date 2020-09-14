@@ -16,7 +16,8 @@ export default defineConfig({
       .test(/\.(wav)$/)
       .use('file-loader')
       .loader(require.resolve('file-loader'))
-  }
+  },
+  dynamicImport: {}
   // routes: [
   //   { path: '/', component: '@/pages/index' },
   // ],

@@ -228,17 +228,7 @@ class PowerApp extends React.Component {
   render() {
     return (
       <div className="App" style={{textAlign:"center",width:813,height:490}}>
-        {/* <h1>Hello World</h1>
-        <p>It is for test!</p> */}
-        {/* <input value={this.state.StartTime} onChange={(e) => { this.ChangeIfo('StartTime', e) }}></input>
-        <br />
-        <input value={this.state.EndTime} onChange={(e) => { this.ChangeIfo('EndTime', e) }}></input> */}
-        {/* <button onClick={this.test} style={{color:'black'}}>Click me and for test</button> */}
-        {/* <button onClick={this.test1} style={{color:'black'}}>Click me and for power_show</button>
-        <button onClick={this.test2} style={{color:'black'}}>Click me and for feature_onethree</button>
-        <br /> */}
-        {/* <img src={this.state.Pic.data} alt='2' />
-        <img src={this.state.Zpic.data} alt='3' /> */}       
+  
         <div id="chartdiv" style={{ width: 813, height: 460,backgroundColor:'gray'}}></div>
         <Button onClick={this.test1} type='dashed' style={{}}>功率谱</Button>
         <Button onClick={this.test2} type='dashed'>三分之一</Button>
