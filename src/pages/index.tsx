@@ -29,42 +29,37 @@ const ProportionAudio = React.lazy(
 );
 
 interface mainContentProps {
-  dispatch: Dispatch;
-  InforImport: any;
-  // powerEngine: any;
-  // loading: boolean;
+  MainPage: any;
 }
 
 const MainContent: React.FC<mainContentProps> = (props) => {
-  const { dispatch, InforImport } = props;
-  //const audioPieData = InforImport;
-  //const peopleData = InforImport;
+  const { MainPage } = props;
   const audioPieData = [
     {
-      x: '声音一',
-      y: 4544,
+      x: 'active_pulse',
+      y: MainPage.active_pulseData ? MainPage.active_pulseData : 0,
     },
     {
-      x: '声音二',
-      y: 3321,
+      x: 'target_echo',
+      y: MainPage.target_echoData ? MainPage.target_echoData : 0,
     },
     {
-      x: '声音三',
-      y: 3113,
+      x: 'radiated_noise',
+      y: MainPage.radiated_noiseData ? MainPage.radiated_noiseData : 0,
     },
   ];
   const peopleData = [
     {
       x: '管理人员',
-      y: 4544,
+      y: MainPage.peopleData ? MainPage.peopleData.administrator_count : 0,
     },
     {
       x: '老师',
-      y: 3321,
+      y: MainPage.peopleData ? MainPage.peopleData.instructor_count : 0,
     },
     {
       x: '学生',
-      y: 3113,
+      y: MainPage.peopleData ? MainPage.peopleData.student_count : 0,
     },
   ];
 
@@ -264,10 +259,9 @@ const MainContent: React.FC<mainContentProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ inforImport }: { inforImport: any }) => {
+const mapStateToProps = ({ mainPage }: { mainPage: any }) => {
   return {
-    InforImport: inforImport,
-    // powerEngine: inforImport.powerEngine
+    MainPage: mainPage,
   };
 };
 
