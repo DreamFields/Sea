@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import { Input, Space, Form, Button, Checkbox  } from 'antd';
 import { Link } from 'umi';
 import { UserOutlined  } from '@ant-design/icons';
 import style from './style.less';
-import logo from '../../../assets/sealogo.png'
+import logo from '../../../assets/sea-white-logo.png'
 
 const index = ()=>{
     const layout = {
@@ -105,11 +105,23 @@ const index = ()=>{
         );
     };
 
+    useEffect(() => {
+      // let labels = document.getElementsByClassName("ant-form-item-required")
+      // console.log(labels);
+      // for(let i=0;i<labels.length;i++){
+      //   labels[i].style.color = "black";
+      // }
+
+      // let password_input = document.getElementById('basic_password');
+      // password_input.style.color = "black";
+
+
+    })
 
     return(
         <div className={style.loginDiv}>
             <img src={logo} style={{height: 45,width:45,marginLeft:155}} />
-            <h2 style={{marginLeft: 215,marginTop: -40,marginBottom: 30}}>水声数据库系统</h2>
+            <h2 style={{marginLeft: 215,marginTop: -40,marginBottom: 30,color: "white"}}>水声数据库系统</h2>
             <Login />
         </div>
     )

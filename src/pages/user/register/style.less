@@ -3,15 +3,36 @@
     height: 300px;
     padding: 10px 10px;
     padding-top: 100px;
+    animation: down 1.2s;
+    -webkit-animation: down 0.8s; /* Safari 与 Chrome */
+    -moz-animation: down 0.8s;
+}
+
+@keyframes down
+{
+    from   {padding-top: 0px;}
+    to  {padding-top: 100px;}
+}
+ 
+@-webkit-keyframes down /* Safari 与 Chrome */
+{
+    from   {padding-top: 0px;}
+    to  {padding-top: 100px;}
+}
+
+@-moz-keyframes down  /* firefox */
+{
+    from   {padding-top: 0px;}
+    to  {padding-top: 100px;}
 }
 
 .user {
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 5px;
 }
 
 .password {
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 5px;
 }
 

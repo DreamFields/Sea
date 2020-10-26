@@ -5,7 +5,7 @@ import {Link} from 'umi';
 import { UserOutlined, HomeOutlined, MenuUnfoldOutlined, ScissorOutlined, SnippetsOutlined, EditOutlined} from '@ant-design/icons';
 import { FileOutlined, HistoryOutlined} from '@ant-design/icons';
 import { Layout,Input,Button,Tree,Avatar } from 'antd';
-import logo from '../assets/sealogo.png'
+import logo from '../assets/sea-white-logo.png'
 import axios from 'axios';
 const { Header, Sider, Footer, Content } = Layout;
 
