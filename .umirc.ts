@@ -1,8 +1,15 @@
 import { defineConfig } from 'umi';
+import proxy from './proxy';
+
+// process.env包含着关于系统环境的信息
+const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
+  },
+  theme: {
+    'primary-color': '#08979c',
   },
   antd: {
     dark: true, // 开启暗色主题
@@ -22,7 +29,8 @@ export default defineConfig({
       .use('file-loader')
       .loader(require.resolve('file-loader'))
   },
-  dynamicImport: {}
+  dynamicImport: {},
+  proxy: proxy[REACT_APP_ENV || 'dev'],
   // routes: [
   //   { path: '/', component: '@/pages/index' },
   // ],

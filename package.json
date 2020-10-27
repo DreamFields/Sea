@@ -26,6 +26,7 @@
     "ajv-errors": "^1.0.1",
     "antd": "^4.6.4",
     "axios": "^0.19.2",
+    "js-cookie": "^2.2.1",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",

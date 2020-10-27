@@ -1,105 +1,237 @@
-import {Reducer, Effect, Subscription} from 'umi';
-import { getRemoteList, deleteRecord, editRecord, getMainList} from './secvice';
+import { Effect, Reducer } from 'umi';
 import { message } from 'antd';
+import {
+    AddRnType,
+    GetRnType,
+    AddTeType,
+    GetTeType,
+    AddApType,
+    GetApType,
+    AddAsType,
+    GetAsType,
+    GetCountry,
+    AddPowerEngine,
+    GetPowerEngine,
+    AddPropeller,
+    GetPropeller,
+    ModifyPulse,
+    ModifyNoise,
+    ModifyEcho
+} from './service';
 
-interface FleetType {
-    namespace: 'fleets',
-    state: {},
-    reducers: {
-        getList: Reducer;
-    },
+export interface StateType {
+    //辐射噪声目标类别
+    rnType?: any;     
+    //目标回声类别       
+    teType?: any;
+    //主动脉冲目标类别
+    apType?: any;
+    //主动脉冲声呐类型
+    asType?: any;
+    //国别
+    country?: any;
+    //动力装置
+    powerEngine?: any;
+    //螺旋桨
+    propeller?: any;
+}
+
+export interface ModelType {
+    namespace: string;
+    state: StateType;
     effects: {
-        getRemote: Effect;
-        edit: Effect;
-        // add: Effect;
-        delete: Effect;
-    },
-    subscriptions: {
-        setup: Subscription;
-    }
-}   
-
-
-const fleet: FleetType = {
-    namespace: 'fleets',
-    state: {},
-    //下面的这些里面都是一个个的函数
-
-    //同步，只能通过reducer返回
+        addRnType: Effect;
+        getRnType: Effect;
+        addTeType: Effect;
+        getTeType: Effect;
+        addApType: Effect;
+        getApType: Effect;
+        addAsType: Effect;
+        getAsType: Effect;
+        getCountry: Effect;
+        addPowerEngine: Effect;
+        getPowerEngine: Effect;
+        addPropeller: Effect;
+        getPropeller: Effect;
+        modifyPulse: Effect;
+        modifyNoise: Effect;
+        modifyEcho: Effect
+    };
     reducers: {
-        getList(state, {payload}) {
-            return payload;
-            // return newState;
+        save: Reducer<StateType>;
+    };
+}
+
+const Model: ModelType = {
+    namespace: 'inforImport',
+
+    state: {
+        rnType: undefined,
+        teType: undefined,
+        apType: undefined,
+        asType: undefined,
+        country: undefined,
+        powerEngine: undefined,
+        propeller: undefined,
+    },
+
+    effects: {
+        *getRnType({ payload }, { call, put }) {
+            const data = yield call(GetRnType, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        rntype: data,
+                    },
+                });
+            }
+        },
+        *addRnType({ payload }, { call, put }) {
+            const data = yield call(AddRnType, payload);
+            if (data) {
+                message.success('添加辐射噪声目标类别成功！')
+            } else {
+                message.error('添加辐射噪声目标类别失败！');
+            }
+        },
+        *getTeType({ payload }, { call, put }) {
+            const data = yield call(GetTeType, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        teType: data,
+                    },
+                });
+            }
+        },
+        *addTeType({ payload }, { call, put }) {
+            const data = yield call(AddTeType, payload);
+            if (data) {
+                message.success('添加目标回声类别成功！')
+            } else {
+                message.error('添加目标回声类别失败！');
+            }
+        },
+        *getApType({ payload }, { call, put }) {
+            const data = yield call(GetApType, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        apType: data,
+                    },
+                });
+            }
+        },
+        *addApType({ payload }, { call, put }) {
+            const data = yield call(AddApType, payload);
+            if (data) {
+                message.success('添加主动脉冲目标类别成功！')
+            } else {
+                message.error('添加主动脉冲目标类别失败！');
+            }
+        },
+        *getAsType({ payload }, { call, put }) {
+            const data = yield call(GetAsType, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        asType: data,
+                    },
+                });
+            }
+        },
+        *addAsType({ payload }, { call, put }) {
+            const data = yield call(AddAsType, payload);
+            if (data) {
+                message.success('添加主动脉冲声呐类型成功！')
+            } else {
+                message.error('添加主动脉冲声呐类型失败！');
+            }
+        },
+        *getCountry({ payload }, {call, put }) {
+            const data = yield call(GetCountry, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        country: data,
+                    }
+                })
+            }
+        },
+        *getPowerEngine({ payload }, { call, put }) {
+            const data = yield call(GetPowerEngine, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        powerEngine: data,
+                    },
+                });
+            }
+        },
+        *addPowerEngine({ payload }, { call, put }) {
+            const data = yield call(AddPowerEngine, payload);
+            if (data) {
+                message.success('添加动力装置成功！')
+            } else {
+                message.error('添加动力装置失败！');
+            }
+        },
+        *getPropeller({ payload }, { call, put }) {
+            const data = yield call(GetPropeller, payload);
+            if (data) {
+                yield put({
+                    type: 'save',
+                    payload: {
+                        propeller: data,
+                    },
+                });
+            }
+        },
+        *addPropeller({ payload }, { call, put }) {
+            const data = yield call(AddPropeller, payload);
+            if (data) {
+                message.success('添加螺旋桨类别成功！')
+            } else {
+                message.error('添加螺旋桨类别失败！');
+            }
+        },
+        *modifyPulse({ payload }, { call, put }) {
+            const data = yield call(ModifyPulse, payload);
+            if (data) {
+                message.success('录入主动脉冲类型信息成功！')
+            } else {
+                message.error('录入主动脉冲类型失败！');
+            }
+        },
+        *modifyNoise({ payload }, { call, put }) {
+            const data = yield call(ModifyNoise, payload);
+            if (data) {
+                message.success('录入辐射噪声类型信息成功！')
+            } else {
+                message.error('录入辐射噪声类型信息失败！');
+            }
+        },
+        *modifyEcho({ payload }, { call, put }) {
+            const data = yield call(ModifyEcho, payload);
+            if (data) {
+                message.success('录入目标回声类型信息成功！')
+            } else {
+                message.error('录入目标回声类型信息失败！');
+            }
         },
     },
-    //异步，不需要return
-    effects: {
-        //effects={put(推给Reducer), call(请求Service)}
-        *getRemote(action, {put, call}) {
-            const targetData = yield call(getRemoteList);
-            const treeData = yield call(getMainList);
-            const _payload = {targetData: targetData, treeData:treeData}
-            // console.log(_payload);
-            //yield put() //传递数据只能通过put给reducer
-            yield put({
-                type: 'getList',
-                payload: _payload
-            })
-            },
-        *edit({payload:{values}}, {put, call}){
-            // console.log(values)
-            const data = yield call(editRecord, {values });
-            if(data){
-                message.success('编辑成功.')
-                yield put({
-                    type: 'getRemote',
-                });
-            }
-            else
-                message.error('Edit Failed')
-            },
-        // *add({payload:{values}}, {put, call}){
-        //     const data = yield call(addRecord, { values });
-        //     console.log(data);
-        //     if(data){
-        //         message.success('Add Successfully.')
-        //         yield put({
-        //             type: 'getRemote',
-        //         });
-        //     }
-        //     else
-        //         message.error('Add Failed')
-        // },
-        *delete({payload:{ id }}, {put, call}){
-            // alert('delete!')
-            const data = yield call(deleteRecord, id);
-            if(data){
-                message.success('删除成功.')
-                yield put({
-                    type: 'getRemote',
-                });
-            }
-            else
-                message.error('Delete Failed')
-        }
+
+    reducers: {
+        save(state, { payload }) {
+            return { ...state, ...payload };
+        },
     },
-    // 订阅
-    subscriptions: {
-        setup({ dispatch, history }) {
-            //dispatch(action)
-            // action = Object{
-            //     type = '同步异步里的函数名',
-            //     payload = {'要传递数据的汇总'}
-            // }
-            history.listen(({pathname}) => {
-                if(pathname === '/audioImport') {
-                    dispatch({
-                        type: 'getRemote',
-                    })
-                }
-            });
-        }
-    }   
 };
 
-export default fleet;
+export default Model;
