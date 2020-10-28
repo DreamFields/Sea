@@ -44,13 +44,13 @@ const config = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log("response", response)
+  console.log('response', response);
   if (response && response.status) {
-  //   const { code ,msg, request } = response;
-  //   const errorText = msg;
-  //   notification.error({
-  //     message: `请求错误 ${code}: ${request}`,
-  //     description: errorText,
+    //   const { code ,msg, request } = response;
+    //   const errorText = msg;
+    //   notification.error({
+    //     message: `请求错误 ${code}: ${request}`,
+    //     description: errorText,
     // });
   } else if (!response) {
     notification.error({
@@ -76,7 +76,10 @@ export const post_prefix = config[ENV];
 
 let COOKIE_CONFIRM = true;
 
-function custom_request(url: string, { method = 'GET', params = {}, data = {} }) {
+function custom_request(
+  url: string,
+  { method = 'GET', params = {}, data = {} },
+) {
   let prefix: string;
 
   if (/sea/.test(url)) {
@@ -90,6 +93,8 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
 
   // 判断cookie是否失效
   if (url !== '/v1/token' && Cookies.get('token') === undefined) {
+    console.log(url);
+    console.log(Cookies.get('token'));
     // 防止同时多次请求
     if (!COOKIE_CONFIRM) {
       return false;
@@ -101,7 +106,7 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
   }
   if (!COOKIE_CONFIRM) COOKIE_CONFIRM = true; // 防止同时多次请求
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     request(prefix + url, {
       method,
       params: removeNull(params),
@@ -112,7 +117,7 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
         'Content-Type': 'application/json',
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
-    }).then((res) => {
+    }).then(res => {
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
         if (res.total !== undefined) {
@@ -121,17 +126,17 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
           resolve(res.data !== undefined ? res.data : true);
         }
       } else if (res) {
-        // console.log(res.msg);
-        if(res.msg.nickname){
-          notification.error({
-            message: res.msg.nickname,
-          });
-        };
-        if(res.msg.password){
-          notification.error({
-            message: res.msg.password,
-          });
-        }
+        console.log('res', res);
+        // if(res.msg.nickname){
+        //   notification.error({
+        //     message: res.msg.nickname,
+        //   });
+        // };
+        // if(res.msg.password){
+        //   notification.error({
+        //     message: res.msg.password,
+        //   });
+        // }
       }
       resolve(); // 错误不能reject 会导致generator call函数出错
     });

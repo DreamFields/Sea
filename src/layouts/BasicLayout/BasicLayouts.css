@@ -1,0 +1,52 @@
+.side {
+  height: 1340px;
+  background-color: #343434;
+  border-right: 1px solid black;
+}
+
+.sideContainer {
+  height: 1300px;
+  width: 350px;
+  /* background-color: blanchedalmond; */
+  margin: 20px 10px;
+  border-radius: 5px;
+}
+
+.mainMenu {
+  height: 100%;
+  width: 82px;
+  background-color: #2D2D2D;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid black;
+  float: left;
+}
+
+.fileMenu {
+  height: 100%;
+  width: 268px;
+  margin-left: 82px;
+  background-color: #2D2D2D;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.fileContainer {
+  width: 100%;
+  height: 94%;
+  /* background-color: blue; */
+  margin-top: 10px;
+}
+
+
+.site-tree-search-value {
+  color: #f50;
+}
+
+.logo {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50px 250px 1000px 270px;
+  grid-template-rows: 50px;
+}

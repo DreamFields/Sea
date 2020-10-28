@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Cascader, Carousel, DatePicker, TimePicker } from 'antd';
+import { Cascader, Carousel, DatePicker, TimePicker, Card, Result } from 'antd';
+import { Row, Col } from 'antd';
 import { Link, connect, Dispatch } from 'umi';
 import moment from 'moment';
-import { Input, Button, Popconfirm, Select } from 'antd';
+import { Input, Button, Popconfirm, Select, InputNumber } from 'antd';
 import { Upload, message, Modal, Form } from 'antd';
 import { Table, Tag, Space, Radio, Steps } from 'antd';
 import { InboxOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { StateType } from './model';
-import style from "./style.less";
-import axios from 'axios';
+import Cookies from 'js-cookie';
+import style from './style.less';
 import TestList from '../../components/DataTable/index.jsx';
 
 const { TextArea } = Input;
@@ -16,66 +16,50 @@ const { Dragger } = Upload;
 const { Option } = Select;
 const { Step } = Steps;
 
-interface IndexContentProps {
+interface AudioImportContentProps {
   dispatch: Dispatch;
-  importInfo: any;
-  loading: boolean;
+  InforImport: any;
+  // powerEngine: any;
+  // loading: boolean;
 }
 
+const AudioImport: React.FC<AudioImportContentProps> = props => {
+  const { dispatch, InforImport } = props;
+  const [id, setId] = useState(undefined);
+  const [current, setCurrent] = useState(0);
+  // setId(5);
 
-const Index: React.FC<IndexContentProps> = (props: any) => {
-  const { dispatch, importInfo, loading } = props;
+  const [sumForm] = Form.useForm();
 
   const AddSound: React.FC<{}> = () => {
-    const [card, setCard] = useState(undefined);
+    const [type, settype] = useState(1);
 
     const TypeRadio = () => {
-      const [value, setValue] = useState(1);
-
       const onChange = e => {
+        // type = e.target.value;
+        settype(e.target.value);
         console.log('radio checked', e.target);
-        setValue(e.target.value);
-        let radiation = document.getElementById('radiation_target_div');
-        let echo = document.getElementById('echo_target_div');
-        let pulse = document.getElementById('pulse_target_div');
-        let power = document.getElementById('powerplant_div');
-        let propeller = document.getElementById('propeller_div');
-        console.log(echo);
-        if (e.target.value == 1) {
-          radiation.style.display = "block";
-          echo.style.display = "none";
-          pulse.style.display = "none";
-
-          power.style.display = "block";
-          propeller.style.display = "block";
-        } else if (e.target.value == 2) {
-          radiation.style.display = "none";
-          echo.style.display = "block";
-          pulse.style.display = "none";
-
-          power.style.display = "block";
-          propeller.style.display = "block";
-        } else if (e.target.value == 3) {
-          radiation.style.display = "none";
-          echo.style.display = "none";
-          pulse.style.display = "block";
-          power.style.display = "none";
-          propeller.style.display = "none";
-        }
       };
 
       return (
-        <Radio.Group onChange={onChange} value={value}>
-          <Radio value={1} >辐射噪声</Radio>
-          <Radio value={2} >目标回声</Radio>
-          <Radio value={3} >主动脉冲</Radio>
-        </Radio.Group>
+        <>
+          <Form.Item name="signal_type" label="信号类型">
+            <Radio.Group onChange={onChange} value={type}>
+              <Radio value={1}>辐射噪声</Radio>
+              <Radio value={2}>目标回声</Radio>
+              <Radio value={3}>主动脉冲</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </>
       );
-    }
+    };
 
     const RadiationTarget = () => {
-      const [value_1, setValue_1] = useState(1);
-      const [value_2, setValue_2] = useState(1);
+      const [value_1, setValue_1] = useState(-1);
+      const [value_2, setValue_2] = useState(-1);
+      const [visible, setVisible] = useState(false);
+
+      const [form] = Form.useForm();
 
       const onChange_1 = e => {
         console.log('RadiationTarget checked', e.target);
@@ -84,166 +68,379 @@ const Index: React.FC<IndexContentProps> = (props: any) => {
       const onChange_2 = e => {
         console.log('RadiationTarget checked', e.target);
         setValue_2(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible(true);
+        }
       };
 
       return (
-        <Form name="radiation_target" >
-          <Form.Item name='position' label="水面/水下">
-            <Radio.Group onChange={onChange_1} value={value_1}>
-              <Radio value={1} >水面</Radio>
-              <Radio value={2} >水下</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name='type' label="目标类型">
-            <Radio.Group onChange={onChange_2} value={value_2}>
-              <Radio value={1} >商船</Radio>
-              <Radio value={2} >民船</Radio>
-              <Radio value={3} >军舰-驱逐舰</Radio>
-              <Radio value={4} >军舰-护卫舰</Radio>
-              <Radio value={5} >潜艇-常规</Radio>
-              <Radio value={6} >潜艇-战略核潜艇</Radio>
-              <Radio value={7} >潜艇-攻击核潜艇</Radio>
-              <Radio value={8} >监听船</Radio>
-              <Radio value={9} >海洋科考船</Radio>
-              <Radio value={10} >航空母舰</Radio>
-              <Radio value={11} >未知类别</Radio>
-              <Radio value={12} >添加新类别</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name='country' label="国别">
-            <Select defaultValue="china" style={{ width: 120 }} >
-              <Option value="china">中国</Option>
-              <Option value="UK">英国</Option>
-              <Option value="USA">USA</Option>
-              <Option value="France">法国</Option>
-              <Option value="Russia">俄罗斯</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name='name' label="目标舰号或名称">
-            <Input placeholder="名称" id='fleet_name' />
-          </Form.Item>
-        </Form>
+        <>
+          <Row gutter={16}>
+            <Col span={10}>
+              <Form.Item name="is_over_water" label="水面/水下">
+                <Radio.Group onChange={onChange_1} value={value_1}>
+                  <Radio value={1}>水面</Radio>
+                  <Radio value={0}>水下</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={14}>
+              <Form.Item name="rn_type" label="目标类型">
+                <Radio.Group onChange={onChange_2} value={value_2}>
+                  {InforImport.rnType?.map(item => {
+                    return <Radio value={item.name}>{item.name}</Radio>;
+                  })}
+                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={10}>
+              <Form.Item name="country" label="国别">
+                <Select style={{ width: 120 }}>
+                  {InforImport.country?.map(item => {
+                    return (
+                      <Option value={item.label} key={item.id}>
+                        {item.label}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={14}>
+              <Form.Item name="name" label="目标舰号或名称">
+                <Input placeholder="名称" id="fleet_name" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Modal
+            visible={visible}
+            onCancel={() => {
+              setVisible(false);
+            }}
+            onOk={() => {
+              form.submit();
+              setVisible(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addRnType',
+                  payload: { name: values.addRnFleet },
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form}
+            >
+              <Form.Item
+                name="addRnFleet"
+                label="类别名"
+                style={{ marginTop: 20 }}
+              >
+                <Input style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </>
       );
     };
 
-
     const EchoTarget = () => {
-      const [value, setValue] = useState(1);
+      const [value, setValue] = useState(-1);
+      const [visible, setVisible] = useState(false);
+
+      const [form] = Form.useForm();
 
       const onChange = e => {
         console.log('EchoTarget checked', e.target);
         setValue(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible(true);
+        }
       };
 
       return (
-        <Form name="echo_target" >
-          <Form.Item name='type' label="目标类型">
-            <Radio.Group onChange={onChange} value={value}>
-              <Radio value={1} >水面船舰</Radio>
-              <Radio value={2} >潜艇-常规</Radio>
-              <Radio value={3} >潜艇-战略核潜艇</Radio>
-              <Radio value={4} >潜艇-攻击核潜艇</Radio>
-              <Radio value={5} >礁石</Radio>
-              <Radio value={6} >浅滩</Radio>
-              <Radio value={7} >沉船</Radio>
-              <Radio value={8} >混响</Radio>
-              <Radio value={9} >未知类别</Radio>
-              <Radio value={10} >添加新类别</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name='country' label="国别">
-            <Select defaultValue="china" style={{ width: 120 }} >
-              <Option value="china">中国</Option>
-              <Option value="UK">英国</Option>
-              <Option value="USA">USA</Option>
-              <Option value="France">法国</Option>
-              <Option value="Russia">俄罗斯</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name='name' label="目标舰号或名称">
-            <Input placeholder="名称" id='fleet_name' />
-          </Form.Item>
-        </Form>
+        <>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item name="te_type" label="目标类型">
+                <Radio.Group onChange={onChange} value={value}>
+                  {InforImport.teType?.map(item => {
+                    return <Radio value={item.name}>{item.name}</Radio>;
+                  })}
+                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={10}>
+              <Form.Item name="country" label="国别">
+                <Select style={{ width: 120 }}>
+                  {InforImport.country?.map(item => {
+                    return <Option value={item.label}>{item.label}</Option>;
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={14}>
+              <Form.Item name="name" label="目标舰号或名称">
+                <Input placeholder="名称" id="fleet_name" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Modal
+            visible={visible}
+            onCancel={() => {
+              setVisible(false);
+            }}
+            onOk={() => {
+              form.submit();
+              setVisible(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addTeType',
+                  payload: { name: values.addEchoFleet },
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form}
+            >
+              <Form.Item
+                name="addEchoFleet"
+                label="类别名"
+                style={{ marginTop: 20 }}
+              >
+                <Input style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </>
       );
     };
-
 
     const PulseTarget = () => {
       const [value_1, setValue_1] = useState(1);
       const [value_2, setValue_2] = useState(1);
+      const [visible_1, setVisible_1] = useState(false);
+      const [visible_2, setVisible_2] = useState(false);
+
+      const [form_1] = Form.useForm();
+      const [form_2] = Form.useForm();
 
       const onChange_1 = e => {
         console.log('PulseTarget checked', e.target);
         setValue_1(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible_1(true);
+        }
       };
       const onChange_2 = e => {
         console.log('PulseTarget checked', e.target);
         setValue_2(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible_2(true);
+        }
       };
 
       return (
-        <Form name="pulse_target" >
-          <Form.Item name='type' label="目标类型">
-            <Radio.Group onChange={onChange_2} value={value_2}>
-              <Radio value={1} >水面船舰</Radio>
-              <Radio value={2} >潜艇-常规</Radio>
-              <Radio value={3} >潜艇-战略核潜艇</Radio>
-              <Radio value={4} >潜艇-攻击核潜艇</Radio>
-              <Radio value={5} >浮标</Radio>
-              <Radio value={6} >潜标</Radio>
-              <Radio value={7} >未知类别</Radio>
-              <Radio value={8} >添加新类别</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name='sonar_type' label="主动声纳类型">
-            <Radio.Group onChange={onChange_1} value={value_1}>
-              <Radio value={1} >舰壳-xxx</Radio>
-              <Radio value={2} >拖曳-xxx</Radio>
-              <Radio value={3} >未知类别</Radio>
-              <Radio value={4} >添加新类别</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name='country' label="国别">
-            <Select defaultValue="china" style={{ width: 120 }} >
-              <Option value="china">中国</Option>
-              <Option value="UK">英国</Option>
-              <Option value="USA">USA</Option>
-              <Option value="France">法国</Option>
-              <Option value="Russia">俄罗斯</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name='name' label="目标舰号或名称">
-            <Input placeholder="名称" id='fleet_name' />
-          </Form.Item>
-        </Form>
+        <>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="ap_type" label="目标类型">
+                <Radio.Group onChange={onChange_2} value={value_2}>
+                  {InforImport.apType?.map(item => {
+                    return <Radio value={item.name}>{item.name}</Radio>;
+                  })}
+                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="as_type" label="主动声纳类型">
+                <Radio.Group onChange={onChange_1} value={value_1}>
+                  {InforImport.asType?.map(item => {
+                    return <Radio value={item.name}>{item.name}</Radio>;
+                  })}
+                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="country" label="国别">
+                <Select style={{ width: 120 }}>
+                  {InforImport.country?.map(item => {
+                    return <Option value={item.label}>{item.label}</Option>;
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="name" label="目标舰号或名称">
+                <Input placeholder="名称" id="fleet_name" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Modal
+            visible={visible_2}
+            onCancel={() => {
+              setVisible_2(false);
+            }}
+            onOk={() => {
+              form_2.submit();
+              setVisible_2(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addApType',
+                  payload: { name: values.addPluseFleet },
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form_2}
+            >
+              <Form.Item
+                name="addPluseFleet"
+                label="类别名"
+                style={{ marginTop: 20 }}
+              >
+                <Input style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+
+          <Modal
+            visible={visible_1}
+            onCancel={() => {
+              setVisible_1(false);
+            }}
+            onOk={() => {
+              form_1.submit();
+              setVisible_1(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addAsType',
+                  payload: { name: values.addAsType },
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form_1}
+            >
+              <Form.Item
+                name="addAsType"
+                label="声呐类型名"
+                style={{ marginTop: 20 }}
+              >
+                <Input style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </>
       );
     };
 
-
     const Powerplant = () => {
       const [value, setValue] = useState(1);
+      const [visible, setVisible] = useState(false);
+      const [form] = Form.useForm();
 
       const onChange = e => {
         console.log('Powerplant checked', e.target);
         setValue(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible(true);
+        }
       };
 
       return (
-        <Radio.Group onChange={onChange} value={value}>
-          <Radio value={1} >柴油机</Radio>
-          <Radio value={2} >燃气轮机</Radio>
-          <Radio value={3} >涡轮机</Radio>
-          <Radio value={4} >电机</Radio>
-          <Radio value={5} >柴电-联合动力</Radio>
-          <Radio value={6} >未知类别</Radio>
-          <Radio value={7} >添加新类别</Radio>
-        </Radio.Group>
+        <>
+          <Form.Item name="power_engine" label="动力装置">
+            <Radio.Group onChange={onChange} value={value}>
+              {InforImport.powerEngine?.map(item => {
+                return <Radio value={item.name}>{item.name}</Radio>;
+              })}
+              <Radio value={'添加新类别'}>添加新类别</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Modal
+            visible={visible}
+            onCancel={() => {
+              setVisible(false);
+            }}
+            onOk={() => {
+              form.submit();
+              setVisible(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addPowerEngine',
+                  payload: { name: values.addPower },
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form}
+            >
+              <Form.Item
+                name="addPower"
+                label="类别名"
+                style={{ marginTop: 20 }}
+              >
+                <Input style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </>
       );
-    }
+    };
 
     const Propeller = () => {
-      const [value_1, setValue_1] = useState(1);
-      const [value_2, setValue_2] = useState(1);
+      const [value_1, setValue_1] = useState(-1);
+      const [value_2, setValue_2] = useState(-1);
+      const [visible, setVisible] = useState(false);
+      const [form] = Form.useForm();
 
       const onChange_1 = e => {
         console.log('Propeller checked', e.target);
@@ -252,223 +449,325 @@ const Index: React.FC<IndexContentProps> = (props: any) => {
       const onChange_2 = e => {
         console.log('Propeller checked', e.target);
         setValue_2(e.target.value);
+        if (e.target.value === '添加新类别') {
+          setVisible(true);
+        }
       };
 
       return (
-        <Form name="propeller">
-          <Form.Item name="axis_num" label="轴数">
-            <Radio.Group onChange={onChange_1} value={value_1}>
-              <Radio value={1} >单轴</Radio>
-              <Radio value={2} >双轴</Radio>
-              <Radio value={3} >四轴</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name="leaf_num" label="叶数">
-            <Radio.Group onChange={onChange_2} value={value_2}>
-              <Radio value={1} >3叶</Radio>
-              <Radio value={2} >4叶</Radio>
-              <Radio value={3} >5叶</Radio>
-              <Radio value={4} >6叶</Radio>
-              <Radio value={5} >7叶</Radio>
-            </Radio.Group>
-          </Form.Item>
-        </Form>
+        <>
+          <Row gutter={16}>
+            <Col span={10}>
+              <Form.Item name="shaft_count" label="轴数">
+                <Radio.Group onChange={onChange_1} value={value_1}>
+                  {InforImport.propeller?.map(item => {
+                    return (
+                      <Radio value={item.shaft_count}>
+                        {item.shaft_count}轴
+                      </Radio>
+                    );
+                  })}
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={14}>
+              <Form.Item name="blade_count" label="叶数">
+                <Radio.Group onChange={onChange_2} value={value_2}>
+                  {InforImport.propeller?.map(item => {
+                    return (
+                      <Radio value={item.blade_count}>
+                        {item.blade_count}叶
+                      </Radio>
+                    );
+                  })}
+                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Modal
+            visible={visible}
+            onCancel={() => {
+              setVisible(false);
+            }}
+            onOk={() => {
+              form.submit();
+              setVisible(false);
+            }}
+            okText="保存"
+            cancelText="取消"
+            title="添加新类别"
+          >
+            <Form
+              onFinish={(values: any) => {
+                console.log(values);
+                dispatch({
+                  type: 'inforImport/addPropeller',
+                  payload: values,
+                }).then(() => {
+                  settype(-1);
+                });
+              }}
+              form={form}
+            >
+              <Form.Item
+                name="shaft_count"
+                label="轴数"
+                style={{ marginTop: 20 }}
+              >
+                <InputNumber style={{ width: '80%' }} />
+              </Form.Item>
+              <Form.Item
+                name="blade_count"
+                label="叶数"
+                style={{ marginTop: 20 }}
+              >
+                <InputNumber style={{ width: '80%' }} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </>
       );
     };
 
     const SignalInfor = () => {
-      function dateChange(date, dateString) {
-        console.log(date, dateString);
-      };
-
-      function timeChange(time, timeString) {
-        console.log(time, timeString);
-      }
-
       return (
-        <Form name="signal_information">
-          <Form.Item name="time" label="采集时间">
-            <DatePicker onChange={dateChange} />
-            <TimePicker onChange={timeChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />
-          </Form.Item>
-          <Form.Item name="platform" label="采集平台">
-            <Input />
-          </Form.Item>
-          <Form.Item name="task_source" label="采集任务源">
-            <Input />
-          </Form.Item>
-          <Form.Item name="position" label="采集海区位置及深度">
-            <Input />
-          </Form.Item>
-          <Form.Item name="new_type" label="添加新类别">
-            <Input />
-          </Form.Item>
-        </Form>
-      )
-    }
+        <>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="collect_time" label="采集时间">
+                {/* <Form.Item name="collect_date">
+              <DatePicker onChange={dateChange} />
+            </Form.Item>
+            <Form.Item name="collect_time">
+              <TimePicker onChange={timeChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />
+            </Form.Item> */}
+                <Input placeholder="YY-MM-DD HH:mm:ss" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="collect_platform" label="采集平台">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="task_source" label="采集任务源">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="location" label="采集海区位置">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item name="depth" label="深度">
+                <InputNumber />
+              </Form.Item>
+            </Col>
+          </Row>
+        </>
+      );
+    };
 
+    const modifyNoise = (values: any) => {
+      dispatch({
+        type: 'inforImport/modifyNoise',
+        payload: { id: id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
+    };
 
+    const modifyEcho = (values: any) => {
+      dispatch({
+        type: 'inforImport/modifyEcho',
+        payload: { id: id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
+    };
+
+    const modifyPulse = (values: any) => {
+      dispatch({
+        type: 'inforImport/modifyPulse',
+        payload: { id: id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
+    };
+
+    const modify = [modifyNoise, modifyEcho, modifyPulse];
 
     return (
-      <div>
-        <button
-          className={style.leftButton}
-          // style={{ left: 26 }}
-          onClick={() => {
-            // 通过获取走马灯dom，调用Carousel的prev()方法
-            card.prev();
+      <div style={{ width: '100%' }}>
+        <Form
+          onFinish={(values: any) => {
+            console.log(values);
+            modify[type - 1]({ ...values });
           }}
+          form={sumForm}
         >
-          {/* <IconFont type="icon-previous" /> */}<LeftOutlined />
-        </button>
-        <button
-          className={style.rightButton}
-          // style={{ right: 26 }}
-          onClick={() => {
-            // 通过获取走马灯dom，调用Carousel的next()方法
-            card.next();
-          }}
-        >
-          {/* <IconFont type="icon-next" /> */}<RightOutlined />
-        </button>
-        <Form>
-          <Carousel
-            ref={(e: any) => {
-              // 走马灯dom名card
-              setCard(e);
-            }}
-          // autoplay
-          >
-            <div>
-              <div className={style.contentStyle}>
-                <span>1. 选择信号类型</span>
-                <div style={{ marginTop: 150 }}>
-                  <TypeRadio />
-                </div>
+          <p>
+            <b style={{ color: '#08979c' }}>信号类型</b>
+          </p>
+          <Row gutter={16}>
+            <Col span={24}>
+              <div style={{ marginTop: 0 }}>
+                <TypeRadio />
               </div>
-            </div>
-            <div>
-              <div className={style.contentStyle}>
-                <span>2. 选择目标船舰类型</span>
-                <div style={{ marginTop: 50 }} id='radiation_target_div'>
+            </Col>
+          </Row>
+          <p>
+            <b style={{ color: '#08979c' }}>信号目标船舰信息</b>
+          </p>
+          <Row gutter={16}>
+            <Col span={24}>
+              <div style={{ marginTop: 0 }}>
+                <div
+                  style={{
+                    marginTop: 0,
+                    display: type === 1 ? 'block' : 'none',
+                  }}
+                  id="radiation_target_div"
+                >
                   <RadiationTarget />
                 </div>
-                <div style={{ marginTop: 80, display: "none" }} id="echo_target_div">
+                <div
+                  style={{
+                    marginTop: 0,
+                    display: type === 2 ? 'block' : 'none',
+                  }}
+                  id="echo_target_div"
+                >
                   <EchoTarget />
                 </div>
-                <div style={{ marginTop: 50, display: "none" }} id="pulse_target_div">
+                <div
+                  style={{
+                    marginTop: 0,
+                    display: type === 3 ? 'block' : 'none',
+                  }}
+                  id="pulse_target_div"
+                >
                   <PulseTarget />
                 </div>
               </div>
-            </div>
-            <div>
-              <div className={style.contentStyle}>
-                <span>3. 录入目标动力装置</span>
-                <div style={{ marginTop: 150 }} id="powerplant_div">
-                  <Powerplant />
-                </div>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <div
+                style={{
+                  marginTop: 0,
+                  display: type === 1 || type === 2 ? 'block' : 'none',
+                }}
+                id="powerplant_div"
+              >
+                <Powerplant />
               </div>
-            </div>
-            <div>
-              <div className={style.contentStyle}>
-                <span>4. 录入目标螺旋桨情况</span>
-                <div style={{ marginTop: 120 }} id="propeller_div">
-                  <Propeller />
-                </div>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <div
+                style={{ marginTop: 0, display: type === 1 ? 'block' : 'none' }}
+                id="propeller_div"
+              >
+                <Propeller />
               </div>
-            </div>
-            <div>
-              <div className={style.contentStyle}>
-                <span>5. 信号采集信息</span>
-                <div style={{ marginTop: 40 }}>
-                  <SignalInfor />
-                </div>
+            </Col>
+          </Row>
+          <p>
+            <b style={{ color: '#08979c' }}>信号采集相关信息</b>
+          </p>
+          <Row gutter={16}>
+            <Col span={24}>
+              <div style={{ marginTop: 0 }}>
+                <SignalInfor />
               </div>
-            </div>
-            {/* <div>
-            <div className={style.contentStyle}>
-              <span>6. 其他需要录入信息(图片等)</span>
-              <div style={{marginTop:80}}>
-                <OtherFiles />
-              </div>
-            </div>
-          </div> */}
-          </Carousel>
+            </Col>
+          </Row>
         </Form>
-
       </div>
     );
-  }
+  };
 
   const OtherFiles: React.FC<{}> = () => {
     const props = {
-      name: 'file',
-      multiple: true,
-      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-      onChange(info) {
-        const { status } = info.file;
-        if (status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully.`);
-        } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
-        }
+      name: 'picture',
+      accept: '.jpg, .png, .jpeg , .gif',
+      // multiple: true,
+      action: `http://47.97.152.219/v1/sound/upload_picture/${id}`,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
       },
-    };
-
-    return (
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">点击或拖动文件以上传</p>
-        <p className="ant-upload-hint">
-          支持单次或者批量上传
-        </p>
-      </Dragger>
-    )
-  }
-
-  const SoundFiles: React.FC<{}> = () => {
-
-    const uploadprops = {
-      name: 'file',
-      accept: '.wav',
-      multiple: true,
-      action: 'http://47.97.152.219:82/upload',
-      data: { 'fleet_name': '' },
-      showUploadList: false,
       onChange(info) {
         const { status } = info.file;
         if (status !== 'uploading') {
           // console.log(info.file, info.fileList);
         }
         if (status === 'done') {
-          // console.log(info.file.response);
-          if (info.file.response == 'target not exists!') {
-            message.error('目标船舰不存在!');
-          } else if (info.file.response == 'please choose target!') {
-            alert('请选择目标!');
+          console.log(info.file.response);
+          if (info.file.response.code === 200) {
+            message.success(`${info.file.name} 文件上传成功.`);
+            setId(undefined);
+            message.success('录入完成！');
           } else {
-            let sound_infor = info.file.response;
-            // console.log("fleet_id: "+fleet_id_now);
-            // console.log(sound_infor);
-            axios({
-              url: "http://47.97.152.219:82/v1/datamanage/upload",
-              method: "POST",
-              data: {
-                fleet_id: localStorage['fleet_id_now'],
-                sound_name: sound_infor['name'],
-                sound_path: sound_infor['path'],
-              }
-            }).then(res => {
-              message.success(`${info.file.name} 文件上传成功.`);
-              dispatch({
-                type: 'fleets/getRemote',
-              });
-            })
+            message.error(`${info.file.name} 文件上传失败.`);
+            message.error(`${info.file.response.msg}`);
+          }
+        } else if (status === 'error') {
+          message.error(`${info.file.name} 文件上传失败.`);
+        }
+      },
+    };
+
+    return (
+      <div style={{ width: '100%', height: 220, marginBottom: 50 }}>
+        <Dragger {...props}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">点击或拖动文件以上传</p>
+          <p className="ant-upload-hint">目前只支持单个上传</p>
+        </Dragger>
+      </div>
+    );
+  };
+
+  const SoundFiles: React.FC<{}> = () => {
+    const uploadprops = {
+      name: 'audio',
+      accept: '.wav',
+      // multiple: true,
+      action: 'http://47.97.152.219/v1/sound/upload_sound',
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+      showUploadList: true,
+      onChange(info) {
+        const { status } = info.file;
+        if (status !== 'uploading') {
+          // console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+          console.log(info.file.response);
+          if (info.file.response.code === 200) {
+            message.success(`${info.file.name} 文件上传成功.`);
+            setId(info.file.response.data.id);
+          } else {
+            message.error(`${info.file.response.msg} 文件上传失败.`);
           }
         } else if (status === 'error') {
           message.error(`${info.file.name} 文件上传失败.`);
@@ -478,24 +777,30 @@ const Index: React.FC<IndexContentProps> = (props: any) => {
 
     return (
       <>
-        <div style={{ width: '100%', height: 220, marginBottom: 50 }}>
+        <div style={{ width: '100%', height: 220 }}>
           <Dragger {...uploadprops}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
             <p className="ant-upload-text">单击或将文件拖到该区域以上传</p>
-            <p className="ant-upload-hint">
-              目前仅支持单个文件上传
-                </p>
+            <p className="ant-upload-hint">目前仅支持单个文件上传</p>
           </Dragger>
         </div>
       </>
-    )
-  }
+    );
+  };
+
+  const SuccessResult: React.FC<{}> = () => {
+    return (
+      <Result
+        status="success"
+        title="成功导入声音文件！"
+        // subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+      />
+    );
+  };
 
   const MainContent = () => {
-    const [current, setCurrent] = useState(0);
-
     const steps = [
       {
         title: '上传音频',
@@ -509,70 +814,96 @@ const Index: React.FC<IndexContentProps> = (props: any) => {
         title: '上传图片信息',
         content: <OtherFiles />,
       },
+      {
+        title: '完成',
+        content: <SuccessResult />,
+      },
     ];
 
-    const next = () => {
-      setCurrent(current + 1);
-    }
+    const next_1 = () => {
+      if (id === undefined) {
+        message.warning('请先上传一个音频文件');
+        // setCurrent(current + 1);
+      } else {
+        console.log('id', id);
+        setCurrent(current + 1);
+      }
+    };
 
-    // const prev = () => {
-    //   setCurrent(current - 1);
-    // }
+    const next_2 = () => {
+      setCurrent(current + 1);
+      sumForm.submit();
+    };
 
     return (
       <div className={style.rightContent}>
-        <div className={style.rightCenter} style={{ backgroundColor: '', height: 630 }}>
+        <div
+          className={style.rightCenter}
+          style={{ backgroundColor: '', height: 630 }}
+        >
           <h3>数据管理</h3>
-          <h4 id='targetName'>一、上传数据</h4>
+          <h4 id="targetName">一、上传数据</h4>
 
           <Steps current={current}>
             {steps.map(item => (
               <Step key={item.title} title={item.title} />
             ))}
           </Steps>
-          <div className={style.steps_content} style={{ height: current === 1 ? 400 : 220 }}>{steps[current].content}</div>
+          <div
+            className={style.steps_content}
+            style={{ height: current === 1 ? 570 : 250 }}
+          >
+            {steps[current].content}
+          </div>
           <div className={style.steps_action}>
-            {current < steps.length - 1 && (
-              <Button type="primary" onClick={next}>
+            {current === 0 && (
+              <Button type="primary" onClick={next_1}>
                 下一步
               </Button>
             )}
-            {current === steps.length - 1 && (
-              <Button type="primary" onClick={() => {message.success('完成!');setCurrent(0);}}>
+            {current === 1 && (
+              <Button type="primary" onClick={next_2}>
+                下一步
+              </Button>
+            )}
+            {current === 2 && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  setCurrent(current + 1);
+                  setId(undefined);
+                }}
+              >
+                下一步
+              </Button>
+            )}
+            {current === 3 && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  setCurrent(0);
+                }}
+              >
                 完成
               </Button>
             )}
-
-            {/* {current > 0 && (
-              <Button style={{ margin: '0 8px' }} onClick={prev}>
-                Previous
-              </Button>
-            )} */}
           </div>
           <h4 style={{ marginTop: 30 }}>二、已上传音频文件</h4>
           <TestList />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
-  return (
-    <MainContent />
-  )
-}
+  return <MainContent />;
+};
 
-const mapStateToProps = ({
-  importInfo,
-  // loading
-}: {
-  importInfo: StateType,
-  // loading: { effects: { [key: string]: boolean } }
-}) => {
-  // console.log(importInfo)
+const mapStateToProps = ({ inforImport }: { inforImport: any }) => {
+  console.log('inforImport', inforImport);
   return {
-    importInfo: importInfo,
+    InforImport: inforImport,
+    // powerEngine: inforImport.powerEngine
+  };
+};
 
-  }
-}
-
-export default connect(mapStateToProps)(Index);
+export default connect(mapStateToProps)(AudioImport);

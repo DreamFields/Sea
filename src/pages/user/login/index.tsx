@@ -7,7 +7,7 @@ import style from './style.less';
 import logo from '../../../assets/sea-white-logo.png';
 // import Cookies from 'js-cookie';
 
-const Index = (props:any) => {
+const Index = (props: any) => {
   const { dispatch } = props;
   // console.log(Cookies.get('token'));
 
@@ -27,19 +27,19 @@ const Index = (props:any) => {
   };
 
   const Login = () => {
-    const onFinish = (values) => {
+    const onFinish = values => {
       dispatch({
         type: 'login/login',
-        payload: values
-      }).then((res:any)=>{
+        payload: values,
+      }).then((res: any) => {
         // console.log(res);
-        if(res){
+        if (res) {
           history.push('/');
         }
       });
     };
 
-    const onFinishFailed = (errorInfo) => {
+    const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
     };
 
@@ -64,7 +64,12 @@ const Index = (props:any) => {
             },
           ]}
         >
-          <Input size="large" placeholder="Loskyer" className={style.user}  id="user" />
+          <Input
+            size="large"
+            placeholder="hlgdbzds"
+            className={style.user}
+            id="user"
+          />
         </Form.Item>
 
         <Form.Item
@@ -78,44 +83,60 @@ const Index = (props:any) => {
             },
           ]}
         >
-          <Input.Password size="large" placeholder="Xsc123456@" className={style.password} id="password" />
+          <Input.Password
+            size="large"
+            placeholder="Hrb123456@"
+            className={style.password}
+            id="password"
+          />
         </Form.Item>
 
-        <Form.Item {...tailLayout}  valuePropName="checked">
-          <Checkbox >记住我</Checkbox>
-          <Link to="/user/register"><span style={{ marginLeft: 110 }} className={style.linkto}>注册账户</span></Link>
-          <a style={{ marginLeft: 20 }} href="#" className={style.linkto}>忘记密码</a>
+        <Form.Item {...tailLayout} valuePropName="checked">
+          <Checkbox>记住我</Checkbox>
+          <Link to="/user/register">
+            <span style={{ marginLeft: 110 }} className={style.linkto}>
+              注册账户
+            </span>
+          </Link>
+          <a style={{ marginLeft: 20 }} href="#" className={style.linkto}>
+            忘记密码
+          </a>
         </Form.Item>
-
 
         <Form.Item {...tailLayout}>
           <Button type="primary" id="loginBtn" htmlType="submit">
             {/* <Link to="/">登录</Link> */}
-                登录
-              </Button>
+            登录
+          </Button>
         </Form.Item>
       </Form>
     );
   };
 
-
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   return (
     <div className={style.loginDiv}>
       <img src={logo} style={{ height: 45, width: 45, marginLeft: 155 }} />
-      <h2 style={{ marginLeft: 215, marginTop: -40, marginBottom: 30, color: 'white' }}>水声数据库系统</h2>
+      <h2
+        style={{
+          marginLeft: 215,
+          marginTop: -40,
+          marginBottom: 30,
+          color: 'white',
+        }}
+      >
+        水声数据库系统
+      </h2>
       <Login />
     </div>
-  )
+  );
 };
 
-function mapStateToProps(state:any) {
+function mapStateToProps(state: any) {
   return {
-    loading: state.loading
-  }
+    loading: state.loading,
+  };
 }
 
 export default connect(mapStateToProps)(Index);

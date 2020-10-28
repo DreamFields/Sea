@@ -15,21 +15,23 @@ export default defineConfig({
     dark: true, // 开启暗色主题
     // compact: true, // 开启紧凑主题
   },
-  publicPath: '/public/',
+  publicPath: './',
   history: { type: 'hash' },
+  hash: true,
   chainWebpack(memo) {
     memo.module
       .rule('media')
       .test(/\.(wav)$/)
       .use('file-loader')
       .loader(require.resolve('file-loader')),
-    memo.module
-      .rule('media')
-      .test(/\.(mp4)$/)
-      .use('file-loader')
-      .loader(require.resolve('file-loader'))
+      memo.module
+        .rule('media')
+        .test(/\.(mp4)$/)
+        .use('file-loader')
+        .loader(require.resolve('file-loader'));
   },
   dynamicImport: {},
+  dva: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   // routes: [
   //   { path: '/', component: '@/pages/index' },
