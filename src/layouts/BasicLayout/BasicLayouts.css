@@ -1,11 +1,11 @@
 .side {
-  height: 1340px;
+  height: 1190px;
   background-color: #343434;
   border-right: 1px solid black;
 }
 
 .sideContainer {
-  height: 1300px;
+  height: 1150px;
   width: 350px;
   /* background-color: blanchedalmond; */
   margin: 20px 10px;
