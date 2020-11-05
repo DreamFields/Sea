@@ -21,14 +21,9 @@ export default defineConfig({
   chainWebpack(memo) {
     memo.module
       .rule('media')
-      .test(/\.(wav)$/)
+      .test(/\.(wav|mp4)$/)
       .use('file-loader')
-      .loader(require.resolve('file-loader')),
-      memo.module
-        .rule('media')
-        .test(/\.(mp4)$/)
-        .use('file-loader')
-        .loader(require.resolve('file-loader'));
+      .loader(require.resolve('file-loader'));
   },
   dynamicImport: {},
   dva: {},

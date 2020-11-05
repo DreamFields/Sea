@@ -36,6 +36,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
   const [id, setId] = useState(undefined);
   const [current, setCurrent] = useState(0);
   // setId(5);
+  console.log(dispatch);
 
   const [sumForm] = Form.useForm();
 
