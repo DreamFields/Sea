@@ -102,34 +102,9 @@ const MainContent: React.FC<mainContentProps> = props => {
         </div>
       </div>
       <div style={{ width: 1040, marginLeft: 20, height: 350, marginTop: 30 }}>
-        <div
-          style={{ backgroundColor: '#AE7CDF', marginLeft: 0 }}
-          className={style.featuresDiv}
-        >
-          <div
-            style={{
-              float: 'left',
-              fontSize: 80,
-              marginTop: 15,
-              marginLeft: 63,
-            }}
-          >
-            <UserOutlined />
-          </div>
-          <div
-            style={{
-              float: 'left',
-              fontSize: 25,
-              marginTop: 60,
-              marginLeft: 10,
-            }}
-          >
-            <span>权限管理</span>
-          </div>
-        </div>
         <Link to="/audioImport">
           <div
-            style={{ backgroundColor: '#77A5D5' }}
+            style={{ backgroundColor: '#77A5D5', marginLeft: 0 }}
             className={style.featuresDiv}
           >
             <div
@@ -183,7 +158,7 @@ const MainContent: React.FC<mainContentProps> = props => {
         </Link>
         <Link to="/features">
           <div
-            style={{ backgroundColor: '#DDCB76', marginTop: 20, marginLeft: 0 }}
+            style={{ backgroundColor: '#DDCB76' }}
             className={style.featuresDiv}
           >
             <div
@@ -210,7 +185,7 @@ const MainContent: React.FC<mainContentProps> = props => {
         </Link>
         <Link to="/">
           <div
-            style={{ backgroundColor: '#D44444', marginTop: 20 }}
+            style={{ backgroundColor: '#D44444', marginTop: 20, marginLeft: 0 }}
             className={style.featuresDiv}
           >
             <div
@@ -261,7 +236,7 @@ const MainContent: React.FC<mainContentProps> = props => {
           </div>
         </div>
         <div
-          style={{ backgroundColor: '#00b894', marginLeft: 0, marginTop: 20 }}
+          style={{ backgroundColor: '#00b894', marginTop: 20 }}
           className={style.featuresDiv}
         >
           <div
