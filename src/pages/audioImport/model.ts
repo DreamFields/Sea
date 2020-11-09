@@ -81,7 +81,6 @@ const Model: ModelType = {
   effects: {
     *getRnType({ payload }, { call, put }) {
       const data = yield call(GetRnType, payload);
-      // console.log(data);
       if (data) {
         yield put({
           type: 'save',

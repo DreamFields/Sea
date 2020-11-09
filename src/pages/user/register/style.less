@@ -1,46 +1,56 @@
 .loginDiv {
-    width: 500px;
-    height: 300px;
-    padding: 10px 10px;
+  width: 500px;
+  height: 300px;
+  padding: 10px 10px;
+  padding-top: 100px;
+  animation: down 1.2s;
+  margin-left: 85%;
+  -webkit-animation: down 0.8s; /* Safari 与 Chrome */
+  -moz-animation: down 0.8s;
+}
+
+@keyframes down {
+  from {
+    padding-top: 0px;
+  }
+  to {
     padding-top: 100px;
-    animation: down 1.2s;
-    -webkit-animation: down 0.8s; /* Safari 与 Chrome */
-    -moz-animation: down 0.8s;
+  }
 }
 
-@keyframes down
-{
-    from   {padding-top: 0px;}
-    to  {padding-top: 100px;}
-}
- 
-@-webkit-keyframes down /* Safari 与 Chrome */
-{
-    from   {padding-top: 0px;}
-    to  {padding-top: 100px;}
+@-webkit-keyframes down /* Safari 与 Chrome */ {
+  from {
+    padding-top: 0px;
+  }
+  to {
+    padding-top: 100px;
+  }
 }
 
-@-moz-keyframes down  /* firefox */
-{
-    from   {padding-top: 0px;}
-    to  {padding-top: 100px;}
+@-moz-keyframes down  /* firefox */ {
+  from {
+    padding-top: 0px;
+  }
+  to {
+    padding-top: 100px;
+  }
 }
 
 .user {
-    border: 1px solid black;
-    border-radius: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .password {
-    border: 1px solid black;
-    border-radius: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .back {
-    color: white;
-    transition: 0.5s;
+  color: white;
+  transition: 0.5s;
 }
 
 .back:hover {
-    color: #3498db;
+  color: #3498db;
 }

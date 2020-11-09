@@ -7,6 +7,7 @@ import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import Cookies from 'js-cookie';
 import { removeNull } from './util';
+import { string } from 'prop-types';
 
 // #region 设置
 const codeMessage = {
@@ -127,6 +128,9 @@ function custom_request(
         }
       } else if (res) {
         console.log('res', res);
+        if (typeof res === 'string' && res.search('http') !== -1) {
+          resolve({ url: res });
+        }
         // if(res.msg.nickname){
         //   notification.error({
         //     message: res.msg.nickname,

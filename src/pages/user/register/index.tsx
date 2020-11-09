@@ -1,11 +1,20 @@
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-10-26 15:36:10
+ * @LastEditTime : 2020-11-07 11:07:38
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\src\pages\user\register\index.tsx
+ */
 import React, { useEffect } from 'react';
 import { Input, Space, Form, Button, Checkbox } from 'antd';
 import { Link, connect, history } from 'umi';
 import { UserOutlined } from '@ant-design/icons';
 import style from './style.less';
-import logo from '../../../assets/sea-white-logo.png'
+import logo from '../../../assets/sea-white-logo.png';
 
-const Index = (props:any) => {
+const Index = (props: any) => {
   const { dispatch } = props;
 
   const layout = {
@@ -24,16 +33,16 @@ const Index = (props:any) => {
   };
 
   const Login = () => {
-    const onFinish = (values) => {
+    const onFinish = values => {
       dispatch({
         type: 'register/register',
-        payload: {...values, type: 100}
+        payload: { ...values, type: 100 },
       }).then(() => {
         history.push('/user/login');
-      })
+      });
     };
 
-    const onFinishFailed = (errorInfo) => {
+    const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
     };
 
@@ -100,11 +109,13 @@ const Index = (props:any) => {
         </Form.Item>
 
         <Form.Item {...tailLayout} name="back">
-          <Link to="/user/login"><span className={style.back}>已有账号，点此登录...</span></Link>
+          <Link to="/user/login">
+            <span className={style.back}>已有账号，点此登录...</span>
+          </Link>
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" >
+          <Button type="primary" htmlType="submit">
             注册
           </Button>
         </Form.Item>
@@ -118,26 +129,32 @@ const Index = (props:any) => {
     // for(let i=0;i<labels.length;i++){
     //   labels[i].style.color = "black";
     // }
-
     // let password_input = document.getElementById('basic_password');
     // password_input.style.color = "black";
-
-
-  })
+  });
 
   return (
     <div className={style.loginDiv}>
       <img src={logo} style={{ height: 45, width: 45, marginLeft: 155 }} />
-      <h2 style={{ marginLeft: 215, marginTop: -40, marginBottom: 30, color: "white" }}>水声数据库系统</h2>
+      <h2
+        style={{
+          marginLeft: 215,
+          marginTop: -40,
+          marginBottom: 30,
+          color: 'white',
+        }}
+      >
+        水声数据库系统
+      </h2>
       <Login />
     </div>
-  )
-}
+  );
+};
 
-function mapStateToProps(state:any) {
+function mapStateToProps(state: any) {
   return {
-    loading: state.loading
-  }
+    loading: state.loading,
+  };
 }
 
 export default connect(mapStateToProps)(Index);

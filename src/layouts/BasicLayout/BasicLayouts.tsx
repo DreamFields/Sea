@@ -13,6 +13,7 @@ import {
 import { FileOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Layout, Input, Button, Tree, Avatar } from 'antd';
 import logo from '@/assets/sea-white-logo.png';
+import CookieUtil from '@/utils/cookie.js';
 import axios from 'axios';
 const { Header, Sider, Footer, Content } = Layout;
 
@@ -38,7 +39,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
   useEffect(() => {
     if (sound_list) {
-      console.log(sound_list);
+      console.log('sound_list', sound_list);
     }
   }, [sound_list]);
 
@@ -54,6 +55,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     let _collect: any;
 
     useEffect(() => {
+      // console.log(document.cookie);
+
       if (item) {
         if (item.target_type_str) {
           switch (item.target_type_str) {
@@ -219,8 +222,20 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <ShowForm normal={normal} fleet={fleet} collect={collect} />
           ) : null}
         </Modal>
-        <Button onClick={() => setvisible(true)} style={{ width: '100%' }}>
+        <Button onClick={() => setvisible(true)} style={{ width: '50%' }}>
           查看
+        </Button>
+        {/* 通过在layout中dispatch页面中的effect达到传递参数并重新渲染页面的效果 */}
+        <Button
+          onClick={() => {
+            dispatch({
+              type: 'pretreatment/setAudio',
+              payload: { audio_id: item.id, audio_name: item.name },
+            });
+          }}
+          style={{ width: '50%' }}
+        >
+          加载
         </Button>
       </>
     );
