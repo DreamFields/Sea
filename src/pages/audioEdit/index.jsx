@@ -1,45 +1,112 @@
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-10-26 15:36:10
+ * @LastEditTime : 2020-11-08 21:43:41
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
+ */
 import React, { useEffect, useState } from 'react';
 import style from './edit.less';
 import { connect, Dispatch } from 'umi';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
-import { Input, Button, Timeline } from 'antd';
+import {
+  Input,
+  Button,
+  Timeline,
+  Form,
+  Row,
+  Col,
+  Tabs,
+  Spin,
+  Popover,
+} from 'antd';
 import axios from 'axios';
 import demoWav from '@/assets/demo0.wav';
 import request from '@/utils/request';
 import Cookies from 'js-cookie';
 
-let sound_name = '';
-let sound_path = '';
-let sound_id = '';
 let region_now;
 
+const { TabPane } = Tabs;
+
 const Index = props => {
-  const { dispatch, Pretreatment } = props;
+  const { dispatch, Pretreatment, versionsLoading } = props;
   const [path, setpath] = useState(undefined);
+  const [tab, settab] = useState('1');
+  const [form] = Form.useForm();
+
+  //定义音频可视化组件
+  let wavesurfer;
 
   useEffect(() => {
     console.log('pretreatment', Pretreatment);
-    if (Pretreatment?.audio) {
-      if (Pretreatment.audio.audio_name) {
-        request(`/v1/file/audio_url/${Pretreatment.audio.audio_name}`, {
+    if (Pretreatment.audio_id) {
+      if (tab === '1') {
+        request(`/v1/file/duplicate_url/${Pretreatment.audio_id}`, {
           method: 'GET',
         }).then(res => {
-          // console.log(res)
-          setpath(res.url);
-          // console.log(path);
+          console.log(res);
+          if (res !== path) {
+            setpath(res.url);
+          }
+        });
+      } else {
+        request(`/v1/file/now_version_url/${Pretreatment.audio_id}`, {
+          method: 'GET',
+        }).then(res => {
+          console.log(res);
+          if (res !== path) {
+            setpath(res.url);
+          }
         });
       }
     }
-  }, [Pretreatment]);
+  }, [Pretreatment, tab]);
+
+  useEffect(() => {
+    if (Pretreatment.audio_id) {
+      dispatch({
+        type: 'pretreatment/getTips',
+        payload: Pretreatment.audio_id,
+      });
+    }
+  }, [tab]);
 
   const Waveform = () => {
+    function editAnnotation(region) {
+      form.setFieldsValue({
+        start: region.start.toFixed(3),
+        end: region.end.toFixed(3),
+        note: region.data.note || '',
+      });
+      region_now = region;
+    }
+
+    /**
+     * Load regions.
+     */
+    function loadRegions(regions) {
+      let _regions = undefined;
+      if (regions) {
+        _regions = JSON.parse(regions);
+      }
+      if (tab === '2' && _regions) {
+        _regions.forEach(function(region) {
+          region.color = 'rgba(112,500,130,0.3)';
+          wavesurfer.addRegion(region);
+        });
+      }
+    }
+
     useEffect(() => {
       var menu = document.getElementById('editMenu');
       document.onclick = function() {
         menu.style.display = 'none';
       };
 
-      var wavesurfer = WaveSurfer.create({
+      wavesurfer = WaveSurfer.create({
         backgroundColor: 'black',
         container: '#waveform',
         waveColor: '#2ecc71',
@@ -77,67 +144,24 @@ const Index = props => {
         ],
       });
 
-      wavesurfer.load(path ? path : '123');
+      if (path) {
+        wavesurfer.load(path);
+      }
 
       wavesurfer.on('ready', function() {
         wavesurfer.enableDragSelection({
           color: 'rgba(112,500,130,0.3)',
         });
-        const data = [{ start: 10, end: 20, data: { note: 'yes!' } }];
         wavesurfer.clearRegions();
-        loadRegions(data);
-        // axios({
-        //   url: 'https://hv90v1ql-xloskyer.mock.coding.io/v1/pretreatment/getTips/2',
-        //   method: 'GET',
-        // }).then(res => {
-        //   console.log(eval(res.data.data));
-        //   wavesurfer.clearRegions();
-        //   loadRegions(eval(res.data.data));
-        // });
+        loadRegions(Pretreatment.tips);
       });
-
       wavesurfer.on('region-click', function(region, e) {
         e.stopPropagation();
         // Play on click, loop on shift click
         e.shiftKey ? region.playLoop() : region.play();
       });
-
       wavesurfer.on('region-click', editAnnotation);
       wavesurfer.on('region-in', showNote);
-      // wavesurfer.on('region-updated', saveRegions);
-      // wavesurfer.on('region-removed', saveRegions);
-
-      /**
-       * Save annotations to localStorage.
-       */
-      function saveRegions() {
-        var regions = Object.keys(wavesurfer.regions.list).map(function(id) {
-          var region = wavesurfer.regions.list[id];
-          return {
-            start: region.start,
-            end: region.end,
-            data: region.data,
-          };
-        });
-        // console.log(regions)
-        axios({
-          url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
-          method: 'POST',
-          data: { sound_id: sound_id, regions: JSON.stringify(regions) },
-        }).then(res => {
-          // console.log(res)
-        });
-      }
-
-      /**
-       * Load regions from localStorage.
-       */
-      function loadRegions(regions) {
-        regions.forEach(function(region) {
-          region.color = 'rgba(112,500,130,0.3)';
-          wavesurfer.addRegion(region);
-        });
-      }
 
       /**
        * Display annotation.
@@ -149,221 +173,9 @@ const Index = props => {
         showNote.el.textContent = region.data.note || '–';
       }
 
-      function editAnnotation(region) {
-        var form = document.forms.edit;
-        (form.elements.start.value = region.start.toFixed(3)),
-          (form.elements.end.value = region.end.toFixed(3));
-        form.elements.note.value = region.data.note || '';
-
-        region_now = region;
-
-        form.dataset.region = region.id;
-      }
-
-      saveRegion.addEventListener('click', function(e) {
-        // form.style.opacity = 1;
-        // console.log(region_now)
-        if (region_now != undefined) {
-          region_now.update({
-            start: document.querySelector('#regionStart').value,
-            end: document.querySelector('#regionEnd').value,
-            data: {
-              note: document.querySelector('#regionNote').value,
-            },
-          });
-        }
-
-        // console.log(region_now);
-        saveRegions();
-        alert('success save!');
-      });
-
       deleteRegion.addEventListener('click', function(e) {
-        // form.style.opacity = 0;
         region_now.remove();
-        // form.dataset.region = null;
-        saveRegions();
       });
-
-      audioDelete.addEventListener('click', function() {
-        axios({
-          url: 'http://47.97.152.219:82/v1/datamanage/sounds/' + sound_id,
-          method: 'delete',
-        }).then(res => {
-          alert(res.data.msg);
-        });
-      });
-
-      btnPlay.addEventListener('click', function() {
-        wavesurfer.playPause();
-      });
-
-      btnLoad.addEventListener('click', function() {
-        if (sound_path == '') {
-          alert(
-            '请点击左侧文件树上的节点选取单个音频，注意不是点击节点前的复选框!',
-          );
-        } else {
-          console.log(sound_path);
-          let str = '/var/www/html/seadist';
-          wavesurfer.load(sound_path.replace(str, '.'));
-        }
-      });
-      btncopy.addEventListener('click', function() {
-        const sound_path =
-          'D:\\万老师项目\\海工demo\\Seadata-front\\public\\demo0.wav';
-        const user_id = 1;
-        dispatch({
-          type: 'pretreatment/editAudio',
-          payload: {
-            operateName: 'btncopy',
-            start: 10.0,
-            end: 20.0,
-            audio_path: sound_path,
-            user_id: user_id,
-          },
-        });
-      });
-      btncut.addEventListener('click', function() {
-        const sound_path = 'D:\\test.wav';
-        const user_id = 1;
-        dispatch({
-          type: 'pretreatment/editAudio',
-          payload: {
-            operateName: 'btncut',
-            start: 0.0,
-            end: 5.0,
-            audio_path: sound_path,
-            user_id: user_id,
-          },
-        });
-      });
-      btndelete.addEventListener('click', function() {
-        const sound_path = 'D:\\test.wav';
-        const user_id = 2;
-        dispatch({
-          type: 'pretreatment/editAudio',
-          payload: {
-            operateName: 'btndelete',
-            start: 0.0,
-            end: 3.0,
-            audio_path: sound_path,
-            user_id: user_id,
-          },
-        });
-      });
-      btnpaste.addEventListener('click', function() {
-        const sound_path = 'D:\\test.wav';
-        const user_id = 3;
-        dispatch({
-          type: 'pretreatment/editAudio',
-          payload: {
-            operateName: 'btnpaste',
-            start: 0.0,
-            end: 3.0,
-            audio_path: sound_path,
-            user_id: user_id,
-          },
-        });
-      });
-
-      function sendEdit(node) {
-        var operateName = node.getAttribute('id');
-        var start = document.querySelector('#regionStart').value;
-        var end = document.querySelector('#regionEnd').value;
-        axios({
-          url: 'http://47.97.152.219:82/v1/pretreatment/editAudio',
-          method: 'POST',
-          data: {
-            operateName: operateName,
-            start: start,
-            end: end,
-            audio_path: sound_path,
-          },
-        }).then(res => {
-          alert(res.data.status);
-          // console.log(res.data);
-          let str = '/var/www/html/seadist';
-          let origin_len = region_now.end - region_now.start;
-          console.log(origin_len);
-          let paste_len = res.data.paste_len / 1000;
-          if (operateName == 'btnpaste') {
-            // console.log(paste_len - origin_len)
-            axios({
-              url:
-                'http://47.97.152.219:82/v1/pretreatment/getTips/' + sound_id,
-              method: 'GET',
-            }).then(res => {
-              let pre_regions = JSON.parse(res.data.regions);
-              // console.log(pre_regions);
-              pre_regions.forEach(function(reg) {
-                // console.log(reg);
-                if (reg.start > region_now.start) {
-                  reg.start = reg.start + paste_len - origin_len;
-                  reg.end = reg.end + paste_len - origin_len;
-                } else if (
-                  reg.start == region_now.start &&
-                  reg.end == region_now.end
-                ) {
-                  reg.end = reg.start + paste_len;
-                }
-              });
-
-              // console.log(pre_regions);
-              axios({
-                url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
-                method: 'POST',
-                data: {
-                  sound_id: sound_id,
-                  regions: JSON.stringify(pre_regions),
-                },
-              }).then(res => {
-                wavesurfer.load(sound_path.replace(str, '.'));
-              });
-            });
-          } else if (operateName == 'btncut' || operateName == 'btndelete') {
-            axios({
-              url:
-                'http://47.97.152.219:82/v1/pretreatment/getTips/' + sound_id,
-              method: 'GET',
-            }).then(res => {
-              let pre_regions = JSON.parse(res.data.regions);
-              // console.log(pre_regions);
-              console.log(pre_regions);
-              let index = 0;
-              pre_regions.forEach(function(reg) {
-                console.log(reg);
-                if (reg.start > region_now.start) {
-                  reg.start = reg.start - origin_len;
-                  reg.end = reg.end - origin_len;
-                }
-              });
-              pre_regions.forEach(function(reg) {
-                console.log(reg);
-                if (
-                  reg.start == region_now.start &&
-                  reg.end == region_now.end
-                ) {
-                  pre_regions.splice(index, 1);
-                }
-                index += 1;
-              });
-
-              // console.log(pre_regions);
-              axios({
-                url: 'http://47.97.152.219:82/v1/pretreatment/saveTips',
-                method: 'POST',
-                data: {
-                  sound_id: sound_id,
-                  regions: JSON.stringify(pre_regions),
-                },
-              }).then(res => {
-                wavesurfer.load(sound_path.replace(str, '.'));
-              });
-            });
-          }
-        });
-      }
 
       // Progress bar
       (function() {
@@ -384,7 +196,46 @@ const Index = props => {
         wavesurfer.on('destroy', hideProgress);
         wavesurfer.on('error', hideProgress);
       })();
-    }, [1]);
+    }, [Pretreatment, tab]);
+
+    const handle_save_audio = () => {
+      console.log(Pretreatment);
+      dispatch({
+        type: 'pretreatment/saveAudio',
+        payload: {
+          file_name: Pretreatment.audio_name,
+          audio_id: Pretreatment.audio_id,
+        },
+      });
+    };
+
+    const handle_reset = version => {
+      dispatch({
+        type: 'pretreatment/reset',
+        payload: {
+          file_name: Pretreatment.audio_name,
+        },
+      }).then(() => {});
+    };
+
+    const handle_save_regions = () => {
+      var regions = Object.keys(wavesurfer.regions.list).map(function(id) {
+        var region = wavesurfer.regions.list[id];
+        return {
+          start: region.start,
+          end: region.end,
+          data: region.data,
+        };
+      });
+      console.log(JSON.stringify(regions));
+      dispatch({
+        type: 'pretreatment/saveTips',
+        payload: {
+          audio_id: Pretreatment.audio_id,
+          regions: JSON.stringify(regions),
+        },
+      });
+    };
 
     return (
       <>
@@ -398,23 +249,64 @@ const Index = props => {
               <div className="progress-bar progress-bar-info"></div>
             </div>
           </div>
-          <div id="wave-spectrogram"></div>
-          <div style={{ marginTop: 10, marginLeft: 10, float: 'left' }}>
-            <Button
-              type="dashed"
-              id="btnLoad"
-              style={{ float: 'left', marginRight: 20 }}
+          <div
+            id="wave-spectrogram"
+            style={{ display: tab === '1' ? 'block' : 'none' }}
+          ></div>
+          <div style={{ marginTop: 20, float: 'left' }}>
+            <Popover
+              content="将修改后的音频保存为一个版本存储，会在下方的版本记录中显示历史版本。"
+              title="保存音频"
             >
-              保存
-            </Button>
-            <Button
-              type="dashed"
-              id="audioDelete"
-              style={{ float: 'left', marginRight: 20 }}
+              <Button
+                type="primary"
+                onClick={handle_save_audio}
+                style={{
+                  float: 'left',
+                  marginRight: 20,
+                  display: tab === '1' ? 'block' : 'none',
+                }}
+              >
+                保存音频
+              </Button>
+            </Popover>
+            <Popover
+              content="将当前被修改后的音频重置到当前版本状态，注意不是重置到最初状态。"
+              title="重置"
             >
-              删除
-            </Button>
-            <Button type="dashed" id="btnPlay" style={{ fontSize: 15 }}>
+              <Button
+                type="primary"
+                onClick={handle_reset}
+                style={{
+                  float: 'left',
+                  marginRight: 20,
+                  display: tab === '1' ? 'block' : 'none',
+                }}
+              >
+                重置为当前版本
+              </Button>
+            </Popover>
+            <Popover content="将所有设置过的标签保存。" title="保存所有标签">
+              <Button
+                type="primary"
+                onClick={handle_save_regions}
+                style={{
+                  float: 'left',
+                  marginRight: 20,
+                  display: tab === '2' ? 'block' : 'none',
+                }}
+              >
+                保存所有标签
+              </Button>
+            </Popover>
+            <Button
+              type="primary"
+              id="btnPlay"
+              style={{ fontSize: 15 }}
+              onClick={() => {
+                wavesurfer.playPause();
+              }}
+            >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
           </div>
@@ -423,58 +315,156 @@ const Index = props => {
     );
   };
 
-  // useEffect(() => {
-  //   const targetNode = document.getElementById('fileName');
-  //   const config = { 'characterData': true, attributes: true };
-  //   var observer = new MutationObserver(function (mutations) {
-  //     // console.log(targetNode.innerHTML);
-  //     sound_id = localStorage['sound_id'];
-  //     console.log(localStorage['sound_path']);
-  //     sound_path = localStorage['sound_path'];
+  //保存某个区域到wavesurfer的regions数组里
+  const handle_save_region = () => {
+    // console.log(form.getFieldsValue())
+    if (region_now != undefined) {
+      region_now.update({
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        data: {
+          note: form.getFieldsValue().note,
+        },
+      });
+    }
+  };
 
-  //   });
-  //   observer.observe(targetNode, config);
+  const handle_copy = () => {
+    console.log(Pretreatment);
+    dispatch({
+      type: 'pretreatment/editAudio',
+      payload: {
+        operateName: 'btncopy',
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        file_name: Pretreatment.audio_name,
+      },
+    });
+  };
 
-  // })
+  const handle_paste = () => {
+    console.log(Pretreatment);
+    dispatch({
+      type: 'pretreatment/editAudio',
+      payload: {
+        operateName: 'btnpaste',
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        file_name: Pretreatment.audio_name,
+      },
+    });
+  };
 
-  const roll_back_data = [
-    {
-      version: 3,
-      time: '2020-11-01 15:36:21',
-    },
-    {
-      version: 2,
-      time: '2020-10-28 17:28:39',
-    },
-    {
-      version: 1,
-      time: '2020-10-22 09:33:17',
-    },
-    {
-      version: 0,
-      time: '2020-10-20 13:55:20',
-    },
-  ];
+  const handle_delete = () => {
+    console.log(Pretreatment);
+    dispatch({
+      type: 'pretreatment/editAudio',
+      payload: {
+        operateName: 'btndelete',
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        file_name: Pretreatment.audio_name,
+      },
+    });
+  };
+
+  const handle_cut = () => {
+    console.log(Pretreatment);
+    dispatch({
+      type: 'pretreatment/editAudio',
+      payload: {
+        operateName: 'btncut',
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        file_name: Pretreatment.audio_name,
+      },
+    });
+  };
+
+  const handle_rollBack = version => {
+    dispatch({
+      type: 'pretreatment/rollBack',
+      payload: {
+        target_version: version,
+        file_name: Pretreatment.audio_name,
+      },
+    }).then(() => {
+      dispatch({
+        type: 'pretreatment/getVersions',
+        payload: Pretreatment.audio_id,
+      });
+    });
+  };
 
   const RollBackLine = props => {
+    useEffect(() => {
+      // console.log('pretreatment', Pretreatment);
+      if (Pretreatment.audio_id && !Pretreatment.audio_versions) {
+        dispatch({
+          type: 'pretreatment/getVersions',
+          payload: Pretreatment.audio_id,
+        });
+      } else {
+        // dispatch({
+        //   type: 'pretreatment/getVersions',
+        //   payload: -1
+        // })
+      }
+    }, [Pretreatment]);
+
     return (
-      <>
-        <Timeline mode="right">
-          {roll_back_data.map(item => {
-            return (
-              <Timeline.Item
-                label={item.time}
-                position="left"
-                style={{ marginLeft: '-80%' }}
-              >
-                <a style={{ marginRight: 20 }}>回滚</a>
-                版本{item.version}
-              </Timeline.Item>
-            );
-          })}
-        </Timeline>
-      </>
+      <div
+        style={{
+          overflowY: 'scroll',
+          height: 350,
+          display: Pretreatment.audio_versions ? 'block' : 'none',
+        }}
+      >
+        <Spin spinning={versionsLoading}>
+          <h4>
+            <b>
+              音频版本信息(当前版本：
+              {Pretreatment.audio_versions
+                ? Pretreatment.audio_versions[0].now_version
+                : '初始版本'}
+              ):
+            </b>
+          </h4>
+          <Timeline style={{ marginTop: 20 }}>
+            {Pretreatment.audio_versions?.map(item => {
+              return (
+                <Timeline.Item>
+                  <p style={{ color: '#08979c' }}>
+                    {item.generate_time}&nbsp;&nbsp;&nbsp;&nbsp;
+                  </p>
+                  <p>
+                    id为
+                    <span style={{ color: '#08979c' }}> {item.user_id} </span>
+                    的用户保存了版本
+                    <span style={{ color: '#08979c' }}> {item.version} </span>，
+                    保存文件名为：
+                    <span style={{ color: '#08979c' }}> {item.filename} </span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                  </p>
+                  <a
+                    style={{ marginRight: 20, color: '#ff4d4f' }}
+                    onClick={() => {
+                      handle_rollBack(item.version);
+                    }}
+                  >
+                    回滚
+                  </a>
+                </Timeline.Item>
+              );
+            })}
+          </Timeline>
+        </Spin>
+      </div>
     );
+  };
+
+  const handle_type_change = key => {
+    settab(key);
   };
 
   return (
@@ -492,39 +482,46 @@ const Index = props => {
             }}
           ></div>
           <h3 id="fileName">从左栏选取文件进行编辑</h3>
-          <form
+          <Tabs defaultActiveKey="1" onChange={handle_type_change}>
+            <TabPane tab="音频编辑" key="1"></TabPane>
+            <TabPane tab="标签处理" key="2"></TabPane>
+          </Tabs>
+          <Form
             name="edit"
-            role="form"
+            form={form}
             style={{ marginTop: 20, marginBottom: 20, height: 32 }}
           >
-            <Input
-              id="regionStart"
-              name="start"
-              autoComplete="off"
-              style={{ width: 120, float: 'left', marginLeft: 0 }}
-              placeholder="开始时间"
-            />
-            <Input
-              id="regionEnd"
-              name="end"
-              autoComplete="off"
-              style={{ width: 120, float: 'left', marginLeft: 20 }}
-              placeholder="结束时间"
-            />
-            <Input
-              id="regionNote"
-              name="note"
-              autoComplete="off"
-              style={{ width: 720, float: 'left', marginLeft: 20 }}
-              placeholder="标签"
-            />
-          </form>
-          <div className={style.showWave}>
+            <Row gutter={16}>
+              <Col span={6}>
+                <Form.Item name="start" label="开始时间">
+                  <Input id="regionStart" name="start" autoComplete="off" />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item name="end" label="结束时间">
+                  <Input id="regionEnd" name="end" autoComplete="off" />
+                </Form.Item>
+              </Col>
+              <Col
+                span={12}
+                style={{ display: tab === '2' ? 'block' : 'none' }}
+              >
+                <Form.Item name="note" label="标签">
+                  <Input id="regionNote" name="note" autoComplete="off" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <div
+            className={style.showWave}
+            style={{ height: tab === '2' ? 260 : 460 }}
+          >
             <Waveform />
           </div>
           <RollBackLine />
         </div>
       </div>
+
       <div
         style={{
           width: 150,
@@ -534,27 +531,53 @@ const Index = props => {
           top: 0,
           zIndex: 9,
           display: 'none',
+          borderRadius: 0,
         }}
         id="editMenu"
         className="btn-group-vertical"
         role="group"
       >
-        <button type="button" className="btn btn-default" id="saveRegion">
-          保存
+        <button
+          type="button"
+          className="btn btn-default"
+          id="saveRegion"
+          onClick={handle_save_region}
+        >
+          设置标记
         </button>
         <button type="button" className="btn btn-default" id="deleteRegion">
           删除标记
         </button>
-        <button type="button" className="btn btn-default" id="btncopy">
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={handle_copy}
+          style={{ display: tab === '1' ? 'block' : 'none' }}
+        >
           复制
         </button>
-        <button type="button" className="btn btn-default" id="btnpaste">
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={handle_paste}
+          style={{ display: tab === '1' ? 'block' : 'none' }}
+        >
           粘贴
         </button>
-        <button type="button" className="btn btn-default" id="btndelete">
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={handle_delete}
+          style={{ display: tab === '1' ? 'block' : 'none' }}
+        >
           删除区域
         </button>
-        <button type="button" className="btn btn-default" id="btncut">
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={handle_cut}
+          style={{ display: tab === '1' ? 'block' : 'none' }}
+        >
           剪切
         </button>
       </div>
@@ -562,10 +585,10 @@ const Index = props => {
   );
 };
 
-const mapStateToProps = ({ pretreatment }) => {
-  // console.log("pretreatment", pretreatment);
+const mapStateToProps = ({ pretreatment, loading }) => {
   return {
     Pretreatment: pretreatment,
+    versionsLoading: loading.effects['pretreatment/getVersions'],
   };
 };
 

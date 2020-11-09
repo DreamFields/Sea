@@ -89,3 +89,20 @@
 .steps_action {
   margin-top: 0px;
 }
+
+/* 滚动条区域的宽度 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+/* 滚动槽的样式设置 */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5);
+}
+/* 滚动条滑块的样式设置 */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 6px #08979c;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #08979c;
+}

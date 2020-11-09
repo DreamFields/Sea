@@ -1,3 +1,12 @@
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-10-27 08:25:16
+ * @LastEditTime : 2020-11-08 21:45:05
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\proxy.ts
+ */
 /**
  * 在生产环境 代理是无法生效的，所以这里没有生产环境的配置
  * The agent cannot take effect in the production environment

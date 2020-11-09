@@ -1,3 +1,12 @@
+/*
+ * @Descripttion:
+ * @github: https://github.com/HlgdB/Seadata
+ * @Author: HuRenbin
+ * @Date: 2020-10-26 15:36:10
+ * @LastEditors  : HuRenbin
+ * @LastEditTime : 2020-11-08 21:47:38
+ * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
+ */
 import React, { useState, useEffect } from 'react';
 import {
   Cascader,
@@ -36,7 +45,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
   const [id, setId] = useState(undefined);
   const [current, setCurrent] = useState(0);
   // setId(5);
-  console.log(dispatch);
+  // console.log(dispatch);
 
   const [sumForm] = Form.useForm();
 
@@ -829,6 +838,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
       accept: '.wav',
       // multiple: true,
       action: 'http://47.97.152.219/v1/sound/upload_sound',
+      // action: 'http://127.0.0.1:5000/v1/sound/upload_sound',
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
@@ -843,6 +853,9 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
           if (info.file.response.code === 200) {
             message.success(`${info.file.name} 文件上传成功.`);
             setId(info.file.response.data.id);
+            dispatch({
+              type: 'soundList/fetchSoundList',
+            });
           } else {
             message.error(`${info.file.response.msg} 文件上传失败.`);
           }
@@ -973,7 +986,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
 };
 
 const mapStateToProps = ({ inforImport }: { inforImport: any }) => {
-  console.log('inforImport', inforImport);
+  // console.log('inforImport', inforImport);
   return {
     InforImport: inforImport,
     // powerEngine: inforImport.powerEngine

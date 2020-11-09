@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
     <title>demo0</title>
     <link href="<%= context.config.publicPath %>bootstrap.min.css" rel="stylesheet">
     <link rel='stylesheet' href="<%= context.config.publicPath %>style.css" />
@@ -16,7 +20,9 @@
     <script src="<%= context.config.publicPath %>wavesurfer.timeline.js"></script>
     <script src="<%= context.config.publicPath %>wavesurfer.spectrogram.js"></script>
 </head>
+
 <body style="padding:0 0">
     <div id='root' style="margin-top: 0px;height: 100%;width: 100%;"></div>
 </body>
+
 </html>

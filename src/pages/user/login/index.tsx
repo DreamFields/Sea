@@ -1,3 +1,12 @@
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-10-26 15:36:10
+ * @LastEditTime : 2020-11-07 11:07:54
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
+ */
 import React, { useEffect } from 'react';
 import { Input, Space, Form, Button, Checkbox } from 'antd';
 import { Link, history, connect } from 'umi';

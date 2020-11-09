@@ -1,7 +1,7 @@
 .rightContent {
   width: 1080px;
   height: 890px;
-  background-color: #2F2F2F;
+  background-color: #2f2f2f;
   margin: 20px 20px;
   border: 1px solid black;
   border-radius: 5px;
@@ -9,21 +9,38 @@
 
 .userDiv {
   width: 200px;
-  height:100%;
+  height: 100%;
   background-color: #292929;
   float: left;
-  border-Radius:5px
+  border-radius: 5px;
 }
 
-.featuresDiv{
+.featuresDiv {
   width: 326px;
-  height:165px;
+  height: 165px;
   float: left;
-  margin-left:31px;
+  margin-left: 31px;
   border-radius: 5px;
   color: white;
 }
 
 .site-tree-search-value {
   color: #f50;
+}
+
+/* 滚动条区域的宽度 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+/* 滚动槽的样式设置 */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5);
+}
+/* 滚动条滑块的样式设置 */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 6px #08979c;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #0000;
 }
