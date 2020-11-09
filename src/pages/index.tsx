@@ -13,7 +13,7 @@ import { Layout, Input, Button, Tree, Avatar, Dropdown, Menu } from 'antd';
 import axios from 'axios';
 
 const ProportionAudio = React.lazy(() =>
-  import('./components/ProportionAudio'),
+  import('@/components/pie/ProportionAudio'),
 );
 
 interface mainContentProps {
