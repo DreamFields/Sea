@@ -25,7 +25,7 @@ const PowerApp = (props) => {
     };
     $.ajax({
       url: 'http://47.97.152.219/v1/feature/Power',
-      // url: "http://127.0.0.1:5000/v1/feature/Power",
+      //   url: "http://127.0.0.1:5000/v1/feature/Power",
       method: 'post',
       data: JSON.stringify(send_data),
       headers: {
@@ -54,7 +54,7 @@ const PowerApp = (props) => {
     };
     $.ajax({
       url: 'http://47.97.152.219/v1/feature/Power',
-      // url: "http://127.0.0.1:5000/v1/feature/Power",
+      //   url: "http://127.0.0.1:5000/v1/feature/Power",
       method: 'post',
       data: JSON.stringify(send_data),
       headers: {
@@ -82,7 +82,7 @@ const PowerApp = (props) => {
     };
     $.ajax({
       url: 'http://47.97.152.219/v1/feature/onethree',
-      // url: "http://127.0.0.1:5000/v1/feature/onethree",
+      //   url: "http://127.0.0.1:5000/v1/feature/onethree",
       method: 'post',
       data: JSON.stringify(send_data),
       headers: {
