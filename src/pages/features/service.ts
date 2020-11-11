@@ -2,11 +2,12 @@
  * @Descripttion :
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
- * @Date         : 2020-11-02 23:02:28
- * @LastEditTime : 2020-11-11 19:06:23
+ * @Date         : 2020-11-11 18:39:41
+ * @LastEditTime : 2020-11-11 19:05:52
  * @github       : https://github.com/HlgdB/Seadata
- * @FilePath     : \Seadata-front\src\pages\audioEdit\service.ts
+ * @FilePath     : \Seadata-front\src\pages\features\service.ts
  */
+
 import request from '@/utils/request';
 
 export async function EditAudio(body: any) {

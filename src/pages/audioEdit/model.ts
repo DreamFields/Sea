@@ -1,8 +1,12 @@
-/**
- * author: zt
- * date: 2020-11-02
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-11-02 23:02:28
+ * @LastEditTime : 2020-11-11 19:06:08
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\src\pages\audioEdit\model.ts
  */
-
 import { Effect, Reducer } from 'umi';
 import { message } from 'antd';
 import {

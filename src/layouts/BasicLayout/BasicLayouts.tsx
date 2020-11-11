@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './BasicLayouts.css';
-import { Menu, List, Card, Modal, Form, InputNumber, Spin } from 'antd';
+import {
+  Menu,
+  List,
+  Card,
+  Modal,
+  Form,
+  InputNumber,
+  Spin,
+  message,
+} from 'antd';
 import { Link, connect, Dispatch } from 'umi';
 import {
   UserOutlined,
@@ -51,6 +60,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         audio_name: undefined,
         audio_versions: undefined,
         tips: undefined,
+      },
+    });
+    dispatch({
+      type: 'features/setAudio',
+      payload: {
+        audio_id: undefined,
+        audio_name: undefined,
       },
     });
   }, [location]);
@@ -229,7 +245,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           okText="确认"
           cancelText="取消"
         >
-          {/* {item?.target_type_str ? showInfor[item?.target_type_str] : null} */}
           {item?.target_type_str ? (
             <ShowForm normal={normal} fleet={fleet} collect={collect} />
           ) : null}
@@ -240,14 +255,26 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         {/* 通过在layout中dispatch页面中的effect达到传递参数并重新渲染页面的效果 */}
         <Button
           onClick={() => {
-            dispatch({
-              type: 'pretreatment/setAudio',
-              payload: {
-                audio_id: item.id,
-                audio_name: item.name,
-                audio_versions: undefined,
-              },
-            });
+            if (location.pathname === '/audioEdit') {
+              dispatch({
+                type: 'pretreatment/setAudio',
+                payload: {
+                  audio_id: item.id,
+                  audio_name: item.name,
+                  audio_versions: undefined,
+                },
+              });
+            } else if (location.pathname === '/features') {
+              dispatch({
+                type: 'features/setAudio',
+                payload: {
+                  audio_id: item.id,
+                  audio_name: item.name,
+                },
+              });
+            } else {
+              message.error('请在音频编辑或者特征提取界面加载音频！');
+            }
           }}
           style={{ width: '50%' }}
         >
@@ -441,7 +468,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           <Content>{props.children}</Content>
         </Layout>
 
-        <Footer>海工小分队</Footer>
+        <Footer style={{ backgroundColor: '#2f2f2f' }}>海工小分队</Footer>
       </Layout>
     </div>
   );

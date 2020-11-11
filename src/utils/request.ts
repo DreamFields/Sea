@@ -107,7 +107,7 @@ function custom_request(
   }
   if (!COOKIE_CONFIRM) COOKIE_CONFIRM = true; // 防止同时多次请求
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     request(prefix + url, {
       method,
       params: removeNull(params),
@@ -118,7 +118,7 @@ function custom_request(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
-    }).then(res => {
+    }).then((res) => {
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
         if (res.total !== undefined) {
@@ -130,6 +130,9 @@ function custom_request(
         console.log('res', res);
         if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });
+        }
+        if (typeof res === 'string' && res.search('data:') !== -1) {
+          resolve({ data: res });
         }
         // if(res.msg.nickname){
         //   notification.error({
