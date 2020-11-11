@@ -4,7 +4,7 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-11-08 21:47:38
+ * @LastEditTime : 2020-11-10 16:30:40
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
@@ -40,7 +40,7 @@ interface AudioImportContentProps {
   // loading: boolean;
 }
 
-const AudioImport: React.FC<AudioImportContentProps> = props => {
+const AudioImport: React.FC<AudioImportContentProps> = (props) => {
   const { dispatch, InforImport } = props;
   const [id, setId] = useState(undefined);
   const [current, setCurrent] = useState(0);
@@ -53,7 +53,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
     const [type, settype] = useState(-1);
 
     const TypeRadio = () => {
-      const onChange = e => {
+      const onChange = (e) => {
         // type = e.target.value;
         settype(e.target.value);
         console.log('radio checked', e.target);
@@ -79,11 +79,11 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
 
       const [form] = Form.useForm();
 
-      const onChange_1 = e => {
+      const onChange_1 = (e) => {
         console.log('RadiationTarget checked', e.target);
         setValue_1(e.target.value);
       };
-      const onChange_2 = e => {
+      const onChange_2 = (e) => {
         console.log('RadiationTarget checked', e.target);
         setValue_2(e.target.value);
         if (e.target.value === '添加新类别') {
@@ -107,7 +107,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={24}>
               <Form.Item name="rn_type" label="目标类型">
                 <Radio.Group onChange={onChange_2} value={value_2}>
-                  {InforImport.rnType?.map(item => {
+                  {InforImport.rnType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
@@ -119,7 +119,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={10}>
               <Form.Item name="country" label="国别">
                 <Select style={{ width: 120 }}>
-                  {InforImport.country?.map(item => {
+                  {InforImport.country?.map((item) => {
                     return (
                       <Option value={item.label} key={item.id}>
                         {item.label}
@@ -189,7 +189,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
 
       const [form] = Form.useForm();
 
-      const onChange = e => {
+      const onChange = (e) => {
         console.log('EchoTarget checked', e.target);
         setValue(e.target.value);
         if (e.target.value === '添加新类别') {
@@ -203,7 +203,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={24}>
               <Form.Item name="te_type" label="目标类型">
                 <Radio.Group onChange={onChange} value={value}>
-                  {InforImport.teType?.map(item => {
+                  {InforImport.teType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
@@ -215,7 +215,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={10}>
               <Form.Item name="country" label="国别">
                 <Select style={{ width: 120 }}>
-                  {InforImport.country?.map(item => {
+                  {InforImport.country?.map((item) => {
                     return <Option value={item.label}>{item.label}</Option>;
                   })}
                 </Select>
@@ -284,14 +284,14 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
       const [form_1] = Form.useForm();
       const [form_2] = Form.useForm();
 
-      const onChange_1 = e => {
+      const onChange_1 = (e) => {
         console.log('PulseTarget checked', e.target);
         setValue_1(e.target.value);
         if (e.target.value === '添加新类别') {
           setVisible_1(true);
         }
       };
-      const onChange_2 = e => {
+      const onChange_2 = (e) => {
         console.log('PulseTarget checked', e.target);
         setValue_2(e.target.value);
         if (e.target.value === '添加新类别') {
@@ -305,7 +305,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={24}>
               <Form.Item name="ap_type" label="目标类型">
                 <Radio.Group onChange={onChange_2} value={value_2}>
-                  {InforImport.apType?.map(item => {
+                  {InforImport.apType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
@@ -317,7 +317,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={24}>
               <Form.Item name="as_type" label="主动声纳类型">
                 <Radio.Group onChange={onChange_1} value={value_1}>
-                  {InforImport.asType?.map(item => {
+                  {InforImport.asType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
@@ -329,7 +329,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={12}>
               <Form.Item name="country" label="国别">
                 <Select style={{ width: 120 }}>
-                  {InforImport.country?.map(item => {
+                  {InforImport.country?.map((item) => {
                     return <Option value={item.label}>{item.label}</Option>;
                   })}
                 </Select>
@@ -429,7 +429,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
       const [visible, setVisible] = useState(false);
       const [form] = Form.useForm();
 
-      const onChange = e => {
+      const onChange = (e) => {
         console.log('Powerplant checked', e.target);
         setValue(e.target.value);
         if (e.target.value === '添加新类别') {
@@ -441,7 +441,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
         <>
           <Form.Item name="power_engine" label="动力装置">
             <Radio.Group onChange={onChange} value={value}>
-              {InforImport.powerEngine?.map(item => {
+              {InforImport.powerEngine?.map((item) => {
                 return <Radio value={item.name}>{item.name}</Radio>;
               })}
               <Radio value={'添加新类别'}>添加新类别</Radio>
@@ -496,7 +496,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
       //   setValue_1(e.target.value);
       // };
 
-      const onChange_2 = e => {
+      const onChange_2 = (e) => {
         console.log('Propeller checked', e.target);
         setValue_2(e.target.value);
         if (e.target.value === '添加新类别') {
@@ -522,7 +522,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
             <Col span={24}>
               <Form.Item name="shaft_blade_count" label="叶数">
                 <Radio.Group onChange={onChange_2} value={value_2}>
-                  {InforImport.propeller?.map(item => {
+                  {InforImport.propeller?.map((item) => {
                     return (
                       <Radio value={`${item.shaft_count}_${item.blade_count}`}>
                         {item.shaft_count}轴{item.blade_count}叶
@@ -867,8 +867,8 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
 
     return (
       <>
-        <div style={{ width: '100%', height: 220, marginBottom: 30 }}>
-          <Dragger {...uploadprops} showUploadList>
+        <div style={{ width: '100%', height: 220, marginBottom: 50 }}>
+          <Dragger {...uploadprops}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
@@ -937,7 +937,7 @@ const AudioImport: React.FC<AudioImportContentProps> = props => {
           <h4 id="targetName">一、上传数据</h4>
 
           <Steps current={current}>
-            {steps.map(item => (
+            {steps.map((item) => (
               <Step key={item.title} title={item.title} />
             ))}
           </Steps>

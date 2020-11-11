@@ -20,7 +20,7 @@
     ]
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.9.34", 
+    "@amcharts/amcharts4": "^4.9.34",
     "@antv/data-set": "^0.11.0",
     "@antv/l7-react": "^2.1.9",
     "@types/classnames": "^2.2.11",
@@ -34,7 +34,7 @@
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "js-cookie": "^2.2.1",
     "lint-staged": "^10.0.7",
-    "prettier": "^1.19.1",
+    "prettier": "^2.1.2",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

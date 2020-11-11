@@ -19,21 +19,28 @@ const Index = (props: any) => {
 
   const layout = {
     labelCol: {
-      span: 8,
+      span: 6,
     },
     wrapperCol: {
-      span: 16,
+      span: 18,
     },
   };
   const tailLayout = {
     wrapperCol: {
-      offset: 8,
-      span: 16,
+      offset: 6,
+      span: 20,
+    },
+  };
+
+  const _tailLayout = {
+    wrapperCol: {
+      offset: 10,
+      span: 4,
     },
   };
 
   const Login = () => {
-    const onFinish = values => {
+    const onFinish = (values) => {
       dispatch({
         type: 'register/register',
         payload: { ...values, type: 100 },
@@ -42,7 +49,7 @@ const Index = (props: any) => {
       });
     };
 
-    const onFinishFailed = errorInfo => {
+    const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
     };
 
@@ -114,7 +121,7 @@ const Index = (props: any) => {
           </Link>
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item {..._tailLayout}>
           <Button type="primary" htmlType="submit">
             注册
           </Button>
@@ -135,10 +142,10 @@ const Index = (props: any) => {
 
   return (
     <div className={style.loginDiv}>
-      <img src={logo} style={{ height: 45, width: 45, marginLeft: 155 }} />
+      <img src={logo} style={{ height: 45, width: 45, marginLeft: '25%' }} />
       <h2
         style={{
-          marginLeft: 215,
+          marginLeft: '38%',
           marginTop: -40,
           marginBottom: 30,
           color: 'white',

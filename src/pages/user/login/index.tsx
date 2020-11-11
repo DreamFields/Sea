@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-07 11:07:54
+ * @LastEditTime : 2020-11-10 15:02:18
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
@@ -22,21 +22,28 @@ const Index = (props: any) => {
 
   const layout = {
     labelCol: {
-      span: 8,
+      span: 4,
     },
     wrapperCol: {
-      span: 16,
+      span: 20,
     },
   };
   const tailLayout = {
     wrapperCol: {
-      offset: 8,
-      span: 16,
+      offset: 4,
+      span: 20,
+    },
+  };
+
+  const _tailLayout = {
+    wrapperCol: {
+      offset: 10,
+      span: 4,
     },
   };
 
   const Login = () => {
-    const onFinish = values => {
+    const onFinish = (values) => {
       dispatch({
         type: 'login/login',
         payload: values,
@@ -48,13 +55,14 @@ const Index = (props: any) => {
       });
     };
 
-    const onFinishFailed = errorInfo => {
+    const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
     };
 
     return (
       <Form
         {...layout}
+        labelAlign="right"
         name="basic"
         size="large"
         initialValues={{
@@ -112,7 +120,7 @@ const Index = (props: any) => {
           </a>
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item {..._tailLayout}>
           <Button type="primary" id="loginBtn" htmlType="submit">
             {/* <Link to="/">登录</Link> */}
             登录
@@ -126,10 +134,10 @@ const Index = (props: any) => {
 
   return (
     <div className={style.loginDiv}>
-      <img src={logo} style={{ height: 45, width: 45, marginLeft: 155 }} />
+      <img src={logo} style={{ height: 45, width: 45, marginLeft: '20%' }} />
       <h2
         style={{
-          marginLeft: 215,
+          marginLeft: '34%',
           marginTop: -40,
           marginBottom: 30,
           color: 'white',

@@ -28,7 +28,7 @@ interface BasicLayoutsContentProps {
 }
 
 const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
-  const { dispatch, sound_list, soundListLoading } = props;
+  const { dispatch, sound_list, soundListLoading, location } = props;
 
   useEffect(() => {
     dispatch({
@@ -42,6 +42,18 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       console.log('sound_list', sound_list);
     }
   }, [sound_list]);
+
+  useEffect(() => {
+    dispatch({
+      type: 'pretreatment/setAudio',
+      payload: {
+        audio_id: undefined,
+        audio_name: undefined,
+        audio_versions: undefined,
+        tips: undefined,
+      },
+    });
+  }, [location]);
 
   const InforModal = ({ item }) => {
     const [visible, setvisible] = useState(false);
@@ -125,7 +137,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       normal: any;
       fleet: any;
       collect: any;
-    }> = showProps => {
+    }> = (showProps) => {
       const { normal, fleet, collect } = showProps;
 
       return (
@@ -230,7 +242,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           onClick={() => {
             dispatch({
               type: 'pretreatment/setAudio',
-              payload: { audio_id: item.id, audio_name: item.name },
+              payload: {
+                audio_id: item.id,
+                audio_name: item.name,
+                audio_versions: undefined,
+              },
             });
           }}
           style={{ width: '50%' }}
@@ -278,7 +294,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   };
 
   class Sidermenu extends React.Component {
-    handleClick = e => {
+    handleClick = (e) => {
       // console.log('click ', e);
     };
 
@@ -324,7 +340,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   }
 
   class TopMenu extends React.Component {
-    handleClick = e => {
+    handleClick = (e) => {
       // console.log('click ', e);
     };
 
@@ -395,7 +411,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </div>
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
-          <Sider className="side" width={380}>
+          <Sider className="side" width={'25%'}>
             <div className="sideContainer">
               <div className="mainMenu">
                 <Sidermenu />

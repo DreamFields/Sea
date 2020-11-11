@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-08 21:43:41
+ * @LastEditTime : 2020-11-11 13:11:58
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -21,18 +21,20 @@ import {
   Tabs,
   Spin,
   Popover,
+  message,
 } from 'antd';
-import axios from 'axios';
-import demoWav from '@/assets/demo0.wav';
 import request from '@/utils/request';
+import randomString from '@/utils/random.js';
 import Cookies from 'js-cookie';
 
 let region_now;
+let audio_id_dup = undefined;
 
 const { TabPane } = Tabs;
 
-const Index = props => {
-  const { dispatch, Pretreatment, versionsLoading } = props;
+const Index = (props) => {
+  console.log(props);
+  const { dispatch, Pretreatment, versionsLoading, location } = props;
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
@@ -42,39 +44,47 @@ const Index = props => {
 
   useEffect(() => {
     console.log('pretreatment', Pretreatment);
-    if (Pretreatment.audio_id) {
-      if (tab === '1') {
-        request(`/v1/file/duplicate_url/${Pretreatment.audio_id}`, {
-          method: 'GET',
-        }).then(res => {
-          console.log(res);
-          if (res !== path) {
+    if (Pretreatment.audio_id !== audio_id_dup) {
+      if (Pretreatment.audio_id) {
+        if (tab === '1') {
+          request(`/v1/file/duplicate_url/${Pretreatment.audio_id}`, {
+            method: 'GET',
+          }).then((res) => {
+            console.log(
+              '经过随机化处理的副本路径',
+              res.url + '?ran=' + randomString(true, 5, 15),
+            );
+            setpath(res.url + '?ran=' + randomString(true, 5, 15));
+          });
+        } else {
+          request(`/v1/file/now_version_url/${Pretreatment.audio_id}`, {
+            method: 'GET',
+          }).then((res) => {
+            console.log('版本文件路径', res.url);
             setpath(res.url);
-          }
-        });
-      } else {
-        request(`/v1/file/now_version_url/${Pretreatment.audio_id}`, {
-          method: 'GET',
-        }).then(res => {
-          console.log(res);
-          if (res !== path) {
-            setpath(res.url);
-          }
-        });
+          });
+        }
       }
+
+      audio_id_dup = Pretreatment.audio_id;
     }
+    return () => {};
   }, [Pretreatment, tab]);
 
   useEffect(() => {
     if (Pretreatment.audio_id) {
-      dispatch({
-        type: 'pretreatment/getTips',
-        payload: Pretreatment.audio_id,
-      });
+      if (tab === '2') {
+        dispatch({
+          type: 'pretreatment/getTips',
+          payload: Pretreatment.audio_id,
+        });
+      }
     }
   }, [tab]);
 
   const Waveform = () => {
+    const [loading, setloading] = useState(undefined);
+
     function editAnnotation(region) {
       form.setFieldsValue({
         start: region.start.toFixed(3),
@@ -93,7 +103,7 @@ const Index = props => {
         _regions = JSON.parse(regions);
       }
       if (tab === '2' && _regions) {
-        _regions.forEach(function(region) {
+        _regions.forEach(function (region) {
           region.color = 'rgba(112,500,130,0.3)';
           wavesurfer.addRegion(region);
         });
@@ -101,8 +111,10 @@ const Index = props => {
     }
 
     useEffect(() => {
+      console.log(path);
+      console.log(audio_id_dup);
       var menu = document.getElementById('editMenu');
-      document.onclick = function() {
+      document.onclick = function () {
         menu.style.display = 'none';
       };
 
@@ -148,16 +160,15 @@ const Index = props => {
         wavesurfer.load(path);
       }
 
-      wavesurfer.on('ready', function() {
+      wavesurfer.on('ready', function () {
         wavesurfer.enableDragSelection({
           color: 'rgba(112,500,130,0.3)',
         });
         wavesurfer.clearRegions();
         loadRegions(Pretreatment.tips);
       });
-      wavesurfer.on('region-click', function(region, e) {
+      wavesurfer.on('region-click', function (region, e) {
         e.stopPropagation();
-        // Play on click, loop on shift click
         e.shiftKey ? region.playLoop() : region.play();
       });
       wavesurfer.on('region-click', editAnnotation);
@@ -173,21 +184,17 @@ const Index = props => {
         showNote.el.textContent = region.data.note || '–';
       }
 
-      deleteRegion.addEventListener('click', function(e) {
-        region_now.remove();
-      });
-
       // Progress bar
-      (function() {
+      (function () {
         var progressDiv = document.querySelector('#progress-bar');
         var progressBar = progressDiv.querySelector('.progress-bar');
 
-        var showProgress = function(percent) {
+        var showProgress = function (percent) {
           progressDiv.style.display = 'block';
           progressBar.style.width = percent + '%';
         };
 
-        var hideProgress = function() {
+        var hideProgress = function () {
           progressDiv.style.display = 'none';
         };
 
@@ -196,7 +203,9 @@ const Index = props => {
         wavesurfer.on('destroy', hideProgress);
         wavesurfer.on('error', hideProgress);
       })();
-    }, [Pretreatment, tab]);
+
+      return () => {};
+    }, [path]);
 
     const handle_save_audio = () => {
       console.log(Pretreatment);
@@ -209,17 +218,20 @@ const Index = props => {
       });
     };
 
-    const handle_reset = version => {
+    const handle_reset = (version) => {
       dispatch({
         type: 'pretreatment/reset',
         payload: {
           file_name: Pretreatment.audio_name,
         },
-      }).then(() => {});
+      }).then(() => {
+        const _path = path + '?ran=' + randomString(true, 5, 15);
+        setpath(_path);
+      });
     };
 
     const handle_save_regions = () => {
-      var regions = Object.keys(wavesurfer.regions.list).map(function(id) {
+      var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
         var region = wavesurfer.regions.list[id];
         return {
           start: region.start,
@@ -352,6 +364,9 @@ const Index = props => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
+    }).then(() => {
+      const _path = path + '?ran=' + randomString(true, 5, 15);
+      setpath(_path);
     });
   };
 
@@ -365,6 +380,9 @@ const Index = props => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
+    }).then(() => {
+      const _path = path + '?ran=' + randomString(true, 5, 15);
+      setpath(_path);
     });
   };
 
@@ -378,10 +396,13 @@ const Index = props => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
+    }).then(() => {
+      const _path = path + '?ran=' + randomString(true, 5, 15);
+      setpath(_path);
     });
   };
 
-  const handle_rollBack = version => {
+  const handle_rollBack = (version) => {
     dispatch({
       type: 'pretreatment/rollBack',
       payload: {
@@ -389,6 +410,8 @@ const Index = props => {
         file_name: Pretreatment.audio_name,
       },
     }).then(() => {
+      const _path = path + '?ran=' + randomString(true, 5, 15);
+      setpath(_path);
       dispatch({
         type: 'pretreatment/getVersions',
         payload: Pretreatment.audio_id,
@@ -396,7 +419,9 @@ const Index = props => {
     });
   };
 
-  const RollBackLine = props => {
+  const RollBackLine = (props) => {
+    const [title, settitle] = useState('初始版本');
+
     useEffect(() => {
       // console.log('pretreatment', Pretreatment);
       if (Pretreatment.audio_id && !Pretreatment.audio_versions) {
@@ -404,11 +429,11 @@ const Index = props => {
           type: 'pretreatment/getVersions',
           payload: Pretreatment.audio_id,
         });
-      } else {
-        // dispatch({
-        //   type: 'pretreatment/getVersions',
-        //   payload: -1
-        // })
+      }
+      if (Pretreatment?.audio_versions) {
+        if (Pretreatment.audio_versions[0]) {
+          settitle(Pretreatment.audio_versions[0].now_version);
+        }
       }
     }, [Pretreatment]);
 
@@ -424,14 +449,12 @@ const Index = props => {
           <h4>
             <b>
               音频版本信息(当前版本：
-              {Pretreatment.audio_versions
-                ? Pretreatment.audio_versions[0].now_version
-                : '初始版本'}
+              {title}
               ):
             </b>
           </h4>
-          <Timeline style={{ marginTop: 20 }}>
-            {Pretreatment.audio_versions?.map(item => {
+          <Timeline style={{ marginTop: 20 }} className={style.timeLine}>
+            {Pretreatment.audio_versions?.map((item) => {
               return (
                 <Timeline.Item>
                   <p style={{ color: '#08979c' }}>
@@ -463,8 +486,17 @@ const Index = props => {
     );
   };
 
-  const handle_type_change = key => {
+  const handle_type_change = (key) => {
+    audio_id_dup = undefined;
     settab(key);
+  };
+
+  const handle_remove_region = () => {
+    if (!region_now) {
+      message.warning('请先通过点击以选择一片区域！');
+    } else {
+      region_now.remove();
+    }
   };
 
   return (
@@ -545,7 +577,12 @@ const Index = props => {
         >
           设置标记
         </button>
-        <button type="button" className="btn btn-default" id="deleteRegion">
+        <button
+          type="button"
+          className="btn btn-default"
+          id="deleteRegion"
+          onClick={handle_remove_region}
+        >
           删除标记
         </button>
         <button
