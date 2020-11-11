@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-11 22:29:21
+ * @LastEditTime : 2020-11-11 23:37:00
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
 import '../main.less';
 import '../audioEdit/edit.less';
-import { Menu } from 'antd';
+import { Menu, Popover } from 'antd';
 import {
   PlayCircleOutlined,
   PauseOutlined,
@@ -205,13 +205,15 @@ const Index = (props) => {
             >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
-            <Button
-              type="primary"
-              style={{ marginLeft: 630 }}
-              onClick={this.getFeatures}
-            >
-              计算
-            </Button>
+            <Popover content="先在右侧特征栏选择特征，再点击计算" title="计算">
+              <Button
+                type="primary"
+                style={{ marginLeft: 630 }}
+                onClick={this.getFeatures}
+              >
+                计算
+              </Button>
+            </Popover>
           </div>
           <div id="wave-timeline" style={{ marginTop: 20 }}></div>
           <div id="waveform" style={{ backgroundColor: 'black' }}>

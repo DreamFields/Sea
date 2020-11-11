@@ -58,7 +58,7 @@ const Model: ModelType = {
 
   effects: {
     *setAudio({ payload }, { call, put }) {
-      console.log(payload);
+      // console.log(payload);
       if (payload) {
         yield put({
           type: 'save',

@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-11-11 18:39:31
- * @LastEditTime : 2020-11-11 18:39:32
+ * @LastEditTime : 2020-11-12 00:01:08
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\model.ts
  */
@@ -38,7 +38,7 @@ const Model: ModelType = {
 
   effects: {
     *setAudio({ payload }, { call, put }) {
-      console.log(payload);
+      // console.log(payload);
       if (payload) {
         yield put({
           type: 'save',

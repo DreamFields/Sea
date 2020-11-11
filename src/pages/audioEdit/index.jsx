@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-11 13:11:58
+ * @LastEditTime : 2020-11-12 00:07:54
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -30,17 +30,17 @@ import Cookies from 'js-cookie';
 let region_now;
 let audio_id_dup = undefined;
 
+//定义音频可视化组件
+let wavesurfer;
+
 const { TabPane } = Tabs;
 
 const Index = (props) => {
-  console.log(props);
+  // console.log(props);
   const { dispatch, Pretreatment, versionsLoading, location } = props;
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
-
-  //定义音频可视化组件
-  let wavesurfer;
 
   useEffect(() => {
     console.log('pretreatment', Pretreatment);
@@ -99,7 +99,7 @@ const Index = (props) => {
      */
     function loadRegions(regions) {
       let _regions = undefined;
-      if (regions) {
+      if (regions && regions.length !== 0) {
         _regions = JSON.parse(regions);
       }
       if (tab === '2' && _regions) {
@@ -111,8 +111,6 @@ const Index = (props) => {
     }
 
     useEffect(() => {
-      console.log(path);
-      console.log(audio_id_dup);
       var menu = document.getElementById('editMenu');
       document.onclick = function () {
         menu.style.display = 'none';
@@ -192,9 +190,15 @@ const Index = (props) => {
         var showProgress = function (percent) {
           progressDiv.style.display = 'block';
           progressBar.style.width = percent + '%';
+          // if(percent === 100) {
+          //   progressDiv.style.display = 'none';
+          // } else {
+          //   progressDiv.style.display = 'block';
+          // }
         };
 
         var hideProgress = function () {
+          console.log('over!!');
           progressDiv.style.display = 'none';
         };
 
@@ -205,7 +209,7 @@ const Index = (props) => {
       })();
 
       return () => {};
-    }, [path]);
+    }, []);
 
     const handle_save_audio = () => {
       console.log(Pretreatment);
@@ -257,7 +261,11 @@ const Index = (props) => {
           </p>
           <div id="wave-timeline"></div>
           <div id="waveform" style={{ backgroundColor: 'black' }}>
-            <div className="progress progress-striped active" id="progress-bar">
+            <div
+              className="progress progress-striped active"
+              id="progress-bar"
+              style={{ display: 'none' }}
+            >
               <div className="progress-bar progress-bar-info"></div>
             </div>
           </div>
@@ -488,6 +496,7 @@ const Index = (props) => {
 
   const handle_type_change = (key) => {
     audio_id_dup = undefined;
+    wavesurfer = undefined;
     settab(key);
   };
 
