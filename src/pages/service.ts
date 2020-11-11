@@ -9,3 +9,8 @@ export async function GetAudio(body: any) {
     method: 'GET',
   });
 }
+export async function GetPeople(body: any) {
+  return request('', {
+    method: 'GET',
+  });
+}

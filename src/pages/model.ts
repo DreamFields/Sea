@@ -3,13 +3,13 @@
  * date: 2020-11-03
  */
 import { Effect, Reducer, Subscription } from 'umi';
-import { GetAudio } from './service';
-export interface PieDataType {
+import { GetAudio, GetPeople } from './service';
+export interface DataType {
   x: string;
   y: number;
 }
 export interface stateType {
-  data: PieDataType[];
+  data: DataType[];
 }
 export interface ModelType {
   namespace: string;
@@ -19,6 +19,7 @@ export interface ModelType {
   };
   effects: {
     getAudio: Effect;
+    getPeople: Effect;
   };
 
   subscriptions: {
@@ -47,6 +48,15 @@ const Model: ModelType = {
         });
       }
     },
+    *getPeople({ payload }, { put, call }) {
+      const data = yield call(GetPeople, payload);
+      if (data) {
+        yield put({
+          type: 'save',
+          payload: data,
+        });
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -54,6 +64,9 @@ const Model: ModelType = {
         if (pathname === '/#') {
           dispatch({
             type: 'getAudio',
+          });
+          dispatch({
+            type: 'getPeople',
           });
         }
       });

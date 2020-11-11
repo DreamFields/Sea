@@ -21,6 +21,7 @@ import {
   Col,
 } from 'antd';
 import axios from 'axios';
+import PeopleShow from '@/components/PeopleShow/index';
 
 const ProportionAudio = React.lazy(
   () => import('@/components/pie/ProportionAudio'),
@@ -36,6 +37,7 @@ interface mainContentProps {
 const MainContent: React.FC<mainContentProps> = (props) => {
   const { dispatch, InforImport } = props;
   //const audioPieData = InforImport;
+  //const peopleData = InforImport;
   const audioPieData = [
     {
       x: '声音一',
@@ -47,6 +49,20 @@ const MainContent: React.FC<mainContentProps> = (props) => {
     },
     {
       x: '声音三',
+      y: 3113,
+    },
+  ];
+  const peopleData = [
+    {
+      x: '管理人员',
+      y: 4544,
+    },
+    {
+      x: '老师',
+      y: 3321,
+    },
+    {
+      x: '学生',
       y: 3113,
     },
   ];
@@ -99,7 +115,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
               </div>
             </div>
           </Col>
-          <Col span={19} style={{ height: '100%' }}>
+          <Col span={14} style={{ height: '100%' }}>
             <div
               style={{
                 width: '100%',
@@ -111,6 +127,21 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             >
               <Suspense fallback={null}>
                 <ProportionAudio audioPieData={audioPieData} />
+              </Suspense>
+            </div>
+          </Col>
+          <Col span={5} style={{ height: '100%' }}>
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#292929',
+                float: 'left',
+                borderRadius: 5,
+              }}
+            >
+              <Suspense fallback={null}>
+                <PeopleShow peopleData={peopleData} />
               </Suspense>
             </div>
           </Col>

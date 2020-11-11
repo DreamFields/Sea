@@ -1,0 +1,67 @@
+/*
+ * author: TimothyZhung
+ * date: 2020-11-10
+ */
+
+@import '~antd/es/style/themes/default.less';
+
+.peopleCard {
+  :global {
+    .ant-tabs-bar,
+    .ant-tabs-nav-wrap {
+      padding-left: 16px;
+
+      .ant-tabs-nav .ant-tabs-tab {
+        padding-top: 16px;
+        padding-bottom: 14px;
+        line-height: 24px;
+      }
+    }
+
+    .ant-card-head {
+      position: relative;
+    }
+
+    .ant-card-head-title {
+      align-items: normal;
+    }
+  }
+  background-color: #292929;
+}
+
+.peopleShow {
+  position: relative;
+  .people {
+    // min-width: 200px;
+    padding: 0;
+    list-style: none;
+    li {
+      height: 40px;
+      margin-bottom: 16px;
+      line-height: 40px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .peopleType {
+    color: @text-color;
+    font-size: 15px;
+    float: right;
+  }
+
+  .dot {
+    //文字左边的点
+    position: relative;
+    top: -1px;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    margin-left: 8px;
+    border-radius: 8px;
+  }
+}
