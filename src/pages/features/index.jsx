@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-11 19:40:50
+ * @LastEditTime : 2020-11-11 22:29:21
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -20,7 +20,7 @@ import {
 import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
-import PowerApp from '../power/index.js';
+import PowerApp from '../power/index.jsx';
 
 const { SubMenu } = Menu;
 
@@ -169,7 +169,7 @@ const Index = (props) => {
           console.log(res);
           loading.style.display = 'none';
           img.style.display = 'block';
-          img.setAttribute('src', res.data);
+          img.setAttribute('src', res.picIfo);
         });
       } else if (feature_key == '5') {
         show_1.style.display = 'none';
@@ -185,7 +185,7 @@ const Index = (props) => {
           console.log(res);
           loading.style.display = 'none';
           img.style.display = 'block';
-          img.setAttribute('src', res.data);
+          img.setAttribute('src', res.picIfo);
         });
       } else if (feature_key == '1') {
         show_0.style.display = 'none';
@@ -232,7 +232,7 @@ const Index = (props) => {
             </div>
           </div>
           <div id="divshow_1" style={{ display: 'none' }}>
-            <PowerApp />
+            <PowerApp audio_name={FeaturesInfor.audio_name} />
           </div>
         </div>
       );
