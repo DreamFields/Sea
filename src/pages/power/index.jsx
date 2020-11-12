@@ -1,104 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import Cookies from 'js-cookie';
+import request from '@/utils/request';
 
 const PowerApp = (props) => {
-  const { audio_name } = props;
-  // console.log(audio_name);
+  const { audio_id } = props;
+  console.log(audio_id);
 
-  const [StartTime, setStartTime] = useState('');
-  const [EndTime, setEndTime] = useState('');
-  const [Pic, setPic] = useState('');
-  const [Zpic, setZpic] = useState('');
+  const [loading, setloading] = useState(false);
+
+  // const [StartTime, setStartTime] = useState('');
+  // const [EndTime, setEndTime] = useState('');
+  // const [Pic, setPic] = useState('');
+  // const [Zpic, setZpic] = useState('');
   const [Powerdata, setPowerdata] = useState(null);
   const [data_forPower, setdata_forPower] = useState('');
   const [type, settype] = useState(null);
 
   const test2 = () => {
+    settype(2);
+    setdata_forPower('');
+    setloading(true);
     console.log('send requir');
-    let send_data = {
-      StartTime: StartTime,
-      EndTime: EndTime,
-      filename: audio_name,
-    };
-    $.ajax({
-      url: 'http://47.97.152.219/v1/feature/Power',
-      //   url: "http://127.0.0.1:5000/v1/feature/Power",
-      method: 'post',
-      data: JSON.stringify(send_data),
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${Cookies.get('token')}`,
-      },
-      dataType: 'json',
-      async: false,
-      success: (res) => {
-        setdata_forPower(res.data);
-        setPowerdata(res.data);
-        settype(2);
-        console.log(data_forPower);
-        console.log('200');
-      },
+
+    request('/v1/feature/Power', {
+      method: 'POST',
+      data: { file_id: audio_id },
+    }).then((res) => {
+      setdata_forPower(res);
+      setPowerdata(res);
+      console.log(data_forPower);
+      console.log('200');
+      setloading(false);
     });
   };
+
   const getPowerFeature = () => {
+    setdata_forPower('');
+    setloading(true);
+    settype(1);
     console.log('send requir');
-    let send_data = {
-      StartTime: StartTime,
-      EndTime: EndTime,
-      // "filepath": localStorage['sound_path'],
-      // "filename": localStorage['sound_name']
-      filename: audio_name,
-    };
-    $.ajax({
-      url: 'http://47.97.152.219/v1/feature/Power',
-      //   url: "http://127.0.0.1:5000/v1/feature/Power",
-      method: 'post',
-      data: JSON.stringify(send_data),
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${Cookies.get('token')}`,
-      },
-      dataType: 'json',
-      async: false,
-      success: (res) => {
-        // console.log(res.data)
-        setdata_forPower(res.data);
-        setPowerdata(res.data);
-        settype(1);
-        console.log(data_forPower);
-        console.log('200');
-      },
+
+    request('/v1/feature/Power', {
+      method: 'POST',
+      data: { file_id: audio_id },
+    }).then((res) => {
+      setdata_forPower(res);
+      setPowerdata(res);
+
+      console.log(data_forPower);
+      console.log('200');
+      setloading(false);
     });
   };
 
   const getOneThreeFeature = () => {
-    let send_data = {
-      StartTime: StartTime,
-      EndTime: EndTime,
-      filename: audio_name,
-    };
-    $.ajax({
-      url: 'http://47.97.152.219/v1/feature/onethree',
-      //   url: "http://127.0.0.1:5000/v1/feature/onethree",
-      method: 'post',
-      data: JSON.stringify(send_data),
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${Cookies.get('token')}`,
-      },
-      dataType: 'json',
-      async: false,
-      success: (res) => {
-        console.log(res);
-        setdata_forPower(res.data);
-        settype(0);
-        console.log(data_forPower);
-      },
+    setdata_forPower('');
+    setloading(true);
+    settype(0);
+    console.log('send requir');
+
+    request('/v1/feature/onethree', {
+      method: 'POST',
+      data: { file_id: audio_id },
+    }).then((res) => {
+      setdata_forPower(res);
+
+      console.log(data_forPower);
+      setloading(false);
     });
   };
+
   useEffect(() => {
     if (type == 0) {
       let chart = am4core.create('chartdiv', am4charts.XYChart); //创建XY图
@@ -118,8 +92,8 @@ const PowerApp = (props) => {
       }
       ///
 
-      console.log(data.length);
-      console.log(data1);
+      // console.log(data.length);
+      // console.log(data1);
       chart.data = data1;
 
       var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -306,10 +280,12 @@ const PowerApp = (props) => {
       className="App"
       style={{ textAlign: 'center', width: 813, height: 490 }}
     >
-      <div
-        id="chartdiv"
-        style={{ width: 813, height: 460, backgroundColor: 'gray' }}
-      ></div>
+      <Spin spinning={loading}>
+        <div
+          id="chartdiv"
+          style={{ width: 813, height: 460, backgroundColor: 'gray' }}
+        ></div>
+      </Spin>
       <Button onClick={getPowerFeature} type="dashed">
         获取功率谱
       </Button>

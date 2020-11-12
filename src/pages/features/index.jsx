@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-11 23:37:00
+ * @LastEditTime : 2020-11-12 15:30:12
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -163,7 +163,7 @@ const Index = (props) => {
         request(`/v1/feature/MCFF`, {
           method: 'POST',
           data: {
-            filename: FeaturesInfor.audio_name,
+            file_id: FeaturesInfor.audio_id,
           },
         }).then((res) => {
           console.log(res);
@@ -177,7 +177,7 @@ const Index = (props) => {
         request(`/v1/feature/Zero_Crossing`, {
           method: 'POST',
           data: {
-            filename: FeaturesInfor.audio_name,
+            file_id: FeaturesInfor.audio_id,
             StartTime: form.getFieldsValue().start,
             EndTime: form.getFieldsValue().end,
           },
@@ -234,7 +234,7 @@ const Index = (props) => {
             </div>
           </div>
           <div id="divshow_1" style={{ display: 'none' }}>
-            <PowerApp audio_name={FeaturesInfor.audio_name} />
+            <PowerApp audio_id={FeaturesInfor.audio_id} />
           </div>
         </div>
       );
