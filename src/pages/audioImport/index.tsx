@@ -4,29 +4,20 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-11-10 16:30:40
+ * @LastEditTime : 2020-11-12 15:07:49
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
-import {
-  Cascader,
-  Carousel,
-  DatePicker,
-  TimePicker,
-  Card,
-  Result,
-  Divider,
-} from 'antd';
+import { Cascader, Carousel, DatePicker, TimePicker, Card, Result } from 'antd';
 import { Row, Col } from 'antd';
-import { Link, connect, Dispatch } from 'umi';
+import { connect, Dispatch } from 'umi';
 import moment from 'moment';
-import { Input, Button, Popconfirm, Select, InputNumber } from 'antd';
+import { Input, Button, Select, InputNumber } from 'antd';
 import { Upload, message, Modal, Form } from 'antd';
-import { Table, Tag, Space, Radio, Steps } from 'antd';
-import { InboxOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Radio, Steps } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import style from './style.less';
-import TestList from '../../components/DataTable/index.jsx';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
@@ -57,11 +48,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         // type = e.target.value;
         settype(e.target.value);
         console.log('radio checked', e.target);
+        // console.log(sumForm.getFieldsValue());
       };
 
       return (
         <>
-          <Form.Item name="signal_type" label="信号类型">
+          <Form.Item
+            name="signal_type"
+            label="信号类型"
+            labelAlign="left"
+            labelCol={{ span: 2 }}
+          >
             <Radio.Group onChange={onChange} value={type}>
               <Radio value={1}>辐射噪声</Radio>
               <Radio value={2}>目标回声</Radio>
@@ -95,7 +92,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         <>
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="is_over_water" label="水面/水下">
+              <Form.Item
+                name="is_over_water"
+                label="水面/水下"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <Radio.Group onChange={onChange_1} value={value_1}>
                   <Radio value={1}>水面</Radio>
                   <Radio value={0}>水下</Radio>
@@ -105,7 +107,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           </Row>
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="rn_type" label="目标类型">
+              <Form.Item
+                name="rn_type"
+                label="目标类型"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.rnType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
@@ -116,8 +123,13 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={10}>
-              <Form.Item name="country" label="国别">
+            <Col span={12}>
+              <Form.Item
+                name="country"
+                label="国别"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
                     return (
@@ -129,7 +141,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={14}>
+            <Col span={12}>
               <Form.Item
                 name="name"
                 label="目标舰号或名称"
@@ -201,7 +213,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         <>
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="te_type" label="目标类型">
+              <Form.Item
+                name="te_type"
+                label="目标类型"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <Radio.Group onChange={onChange} value={value}>
                   {InforImport.teType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
@@ -212,8 +229,13 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={10}>
-              <Form.Item name="country" label="国别">
+            <Col span={12}>
+              <Form.Item
+                name="country"
+                label="国别"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
                     return <Option value={item.label}>{item.label}</Option>;
@@ -221,7 +243,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={14}>
+            <Col span={12}>
               <Form.Item
                 name="name"
                 label="目标舰号或名称"
@@ -303,7 +325,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         <>
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="ap_type" label="目标类型">
+              <Form.Item
+                name="ap_type"
+                label="目标类型"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.apType?.map((item) => {
                     return <Radio value={item.name}>{item.name}</Radio>;
@@ -327,7 +354,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           </Row>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="country" label="国别">
+              <Form.Item
+                name="country"
+                label="国别"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
                     return <Option value={item.label}>{item.label}</Option>;
@@ -439,7 +471,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
 
       return (
         <>
-          <Form.Item name="power_engine" label="动力装置">
+          <Form.Item
+            name="power_engine"
+            label="动力装置"
+            labelAlign="left"
+            labelCol={{ span: 2 }}
+          >
             <Radio.Group onChange={onChange} value={value}>
               {InforImport.powerEngine?.map((item) => {
                 return <Radio value={item.name}>{item.name}</Radio>;
@@ -486,15 +523,9 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     };
 
     const Propeller = () => {
-      // const [value_1, setValue_1] = useState(-1);
       const [value_2, setValue_2] = useState(-1);
       const [visible, setVisible] = useState(false);
       const [form] = Form.useForm();
-
-      // const onChange_1 = e => {
-      //   console.log('Propeller checked', e.target);
-      //   setValue_1(e.target.value);
-      // };
 
       const onChange_2 = (e) => {
         console.log('Propeller checked', e.target);
@@ -520,7 +551,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               <Form.Item name="blade_count" label="轴数"></Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item name="shaft_blade_count" label="叶数">
+              <Form.Item
+                name="shaft_blade_count"
+                label="叶数"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.propeller?.map((item) => {
                     return (
@@ -585,31 +621,56 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         <>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="collect_time" label="采集时间">
+              <Form.Item
+                name="collect_time"
+                label="采集时间"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Input placeholder="YY-MM-DD HH:mm:ss" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="collect_platform" label="采集平台">
+              <Form.Item
+                name="collect_platform"
+                label="采集平台"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Input />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="task_source" label="采集任务源">
+              <Form.Item
+                name="task_source"
+                label="采集任务源"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="location" label="采集海区位置">
+              <Form.Item
+                name="location"
+                label="采集位置"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
                 <Input />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="depth" label="深度">
+              <Form.Item
+                name="depth"
+                label="深度"
+                labelAlign="left"
+                labelCol={{ span: 2 }}
+              >
                 <InputNumber />
               </Form.Item>
             </Col>
@@ -663,7 +724,6 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                 signal_type: undefined,
               });
             } else {
-              // console.log("目标信息表单值",values);
               console.log('目标信息表单值', values);
               modify[type - 1]({ ...values });
             }
@@ -682,6 +742,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               </div>
             </Col>
           </Row>
+          {/* 分割线 */}
           <div
             style={{
               width: '100%',
@@ -839,11 +900,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       // multiple: true,
       action: 'http://47.97.152.219/v1/sound/upload_sound',
       // action: 'http://127.0.0.1:5000/v1/sound/upload_sound',
+      // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
       showUploadList: true,
-      onChange(info) {
+      onChange(info: any) {
         const { status } = info.file;
         if (status !== 'uploading') {
           // console.log(info.file, info.fileList);
@@ -913,7 +975,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const next_1 = () => {
       if (id === undefined) {
         message.warning('请先上传一个音频文件');
-        setCurrent(current + 1);
+        // setCurrent(current + 1);
       } else {
         console.log('id', id);
         setCurrent(current + 1);
