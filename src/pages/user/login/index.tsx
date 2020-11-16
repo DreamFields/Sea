@@ -3,12 +3,12 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-10 15:02:18
+ * @LastEditTime : 2020-11-14 21:08:53
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
 import React, { useEffect } from 'react';
-import { Input, Space, Form, Button, Checkbox } from 'antd';
+import { Input, Space, Form, Button, Checkbox, message } from 'antd';
 import { Link, history, connect } from 'umi';
 import request from 'umi-request';
 import { UserOutlined } from '@ant-design/icons';
@@ -51,6 +51,8 @@ const Index = (props: any) => {
         // console.log(res);
         if (res) {
           history.push('/');
+        } else {
+          message.error('登录失败！');
         }
       });
     };
@@ -77,7 +79,11 @@ const Index = (props: any) => {
           rules={[
             {
               required: true,
-              message: 'Please input your username!',
+              message: '请输入用户名!',
+            },
+            {
+              pattern: /^[a-zA-Z0-9_-]{4,16}$/,
+              message: '用户名包含4到16位（字母，数字，下划线，减号）!',
             },
           ]}
         >
@@ -96,7 +102,12 @@ const Index = (props: any) => {
           rules={[
             {
               required: true,
-              message: 'Please input your password!',
+              message: '请输入密码!',
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,16}$/,
+              message:
+                '密码需要包含至少8个字符至多16个字符，至少1个大写字母，1个小写字母，1个数字和1个特殊字符!',
             },
           ]}
         >
@@ -115,7 +126,7 @@ const Index = (props: any) => {
               注册账户
             </span>
           </Link>
-          <a style={{ marginLeft: 20 }} href="#" className={style.linkto}>
+          <a style={{ marginLeft: 20 }} className={style.linkto}>
             忘记密码
           </a>
         </Form.Item>

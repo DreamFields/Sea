@@ -1,3 +1,12 @@
+/*
+ * @Descripttion :
+ * @Author       : HuRenbin
+ * @LastEditors  : HuRenbin
+ * @Date         : 2020-10-27 08:46:01
+ * @LastEditTime : 2020-11-14 17:15:41
+ * @github       : https://github.com/HlgdB/Seadata
+ * @FilePath     : \Seadata-front\src\pages\user\login\model.js
+ */
 import { Login } from './service';
 import CookieUtil from '@/utils/cookie.js';
 import { message } from 'antd';
@@ -22,6 +31,7 @@ const Model = {
       const data = yield call(Login, payload);
 
       if (data) {
+        console.log('token', data);
         const { token, userInfo } = data;
         // token 过期时间24小时
         const expires = new Date(+new Date() + 24 * 60 * 60 * 1000);

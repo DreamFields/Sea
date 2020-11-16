@@ -3,14 +3,14 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-12 15:30:12
+ * @LastEditTime : 2020-11-16 10:32:09
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
 import React, { useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
-import '../main.less';
-import '../audioEdit/edit.less';
+// import '../main.less';
+// import '../audioEdit/edit.less';
 import { Menu, Popover } from 'antd';
 import {
   PlayCircleOutlined,
@@ -59,7 +59,7 @@ const Index = (props) => {
       return (
         <Menu
           onClick={this.handleClick}
-          style={{ width: 250, backgroundColor: 'black' }}
+          style={{ width: '100%', backgroundColor: 'black' }}
           defaultSelectedKeys={[]}
           defaultOpenKeys={['sub1', 'sub2', 'sub3']}
           mode="inline"
@@ -208,7 +208,7 @@ const Index = (props) => {
             <Popover content="先在右侧特征栏选择特征，再点击计算" title="计算">
               <Button
                 type="primary"
-                style={{ marginLeft: 630 }}
+                style={{ marginLeft: '80%' }}
                 onClick={this.getFeatures}
               >
                 计算
@@ -245,7 +245,7 @@ const Index = (props) => {
     return (
       <div
         className="rightContent"
-        style={{ width: 815, float: 'left', height: 750 }}
+        style={{ width: '71%', float: 'left', height: 750 }}
       >
         <h3 style={{ width: 550, marginLeft: 20 }}>特征提取</h3>
         <div
@@ -257,7 +257,7 @@ const Index = (props) => {
             marginBottom: 5,
           }}
         ></div>
-        <h4 id="fileName" style={{ width: 850, marginLeft: 20 }}>
+        <h4 id="fileName" style={{ width: '100%', marginLeft: 20 }}>
           从左栏选取文件
         </h4>
         <Waveform />
@@ -274,7 +274,7 @@ const Index = (props) => {
       <div
         style={{
           backgroundColor: 'black',
-          width: 250,
+          width: '22%',
           height: 340,
           float: 'left',
           overflowY: 'auto',
@@ -284,11 +284,11 @@ const Index = (props) => {
       >
         <RightSidermenu />
       </div>
-      <div style={{ width: 250, height: 370, float: 'left', marginTop: 15 }}>
+      <div style={{ width: '22%', height: 370, float: 'left', marginTop: 15 }}>
         <div style={{ color: 'white', fontSize: 20 }}>参数选择</div>
         <div
           style={{
-            width: 250,
+            width: '100%',
             height: 340,
             border: '1px solid grey',
             backgroundColor: 'black',
@@ -299,9 +299,9 @@ const Index = (props) => {
           <div
             id="divPara"
             style={{
-              width: 240,
+              width: '96%',
               marginTop: 20,
-              marginLeft: 5,
+              marginLeft: '2%',
               display: 'none',
             }}
           >

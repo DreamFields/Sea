@@ -130,9 +130,10 @@ function custom_request(
         console.log('res', res);
         if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });
-        }
-        if (typeof res === 'string' && res.search('data:') !== -1) {
-          resolve({ data: res });
+        } else {
+          notification.error({
+            message: res.msg,
+          });
         }
         // if(res.msg.nickname){
         //   notification.error({

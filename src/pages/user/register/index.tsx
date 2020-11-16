@@ -3,12 +3,12 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-07 11:07:38
+ * @LastEditTime : 2020-11-14 21:04:47
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\register\index.tsx
  */
 import React, { useEffect } from 'react';
-import { Input, Space, Form, Button, Checkbox } from 'antd';
+import { Input, Space, Form, Button, Checkbox, message } from 'antd';
 import { Link, connect, history } from 'umi';
 import { UserOutlined } from '@ant-design/icons';
 import style from './style.less';
@@ -41,11 +41,16 @@ const Index = (props: any) => {
 
   const Login = () => {
     const onFinish = (values) => {
+      // console.log("hahah!")
       dispatch({
         type: 'register/register',
         payload: { ...values, type: 100 },
-      }).then(() => {
-        history.push('/user/login');
+      }).then((res: any) => {
+        if (res) {
+          history.push('/user/login');
+        } else {
+          message.error('注册失败, 检查邮箱或用户名是否重复！');
+        }
       });
     };
 
@@ -69,6 +74,10 @@ const Index = (props: any) => {
               required: true,
               message: '请输入用户名!',
             },
+            {
+              pattern: /^[a-zA-Z0-9_-]{4,16}$/,
+              message: '用户名包含4到16位（字母，数字，下划线，减号）!',
+            },
           ]}
         >
           <Input size="large" className={style.user} autoComplete="off" />
@@ -81,6 +90,10 @@ const Index = (props: any) => {
             {
               required: true,
               message: '请输入邮箱!',
+            },
+            {
+              type: 'email',
+              message: '请输入正确的邮箱格式!',
             },
           ]}
         >
@@ -96,7 +109,13 @@ const Index = (props: any) => {
               required: true,
               message: '请输入密码!',
             },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,16}$/,
+              message:
+                '密码需要包含至少8个字符至多16个字符，至少1个大写字母，1个小写字母，1个数字和1个特殊字符!',
+            },
           ]}
+          hasFeedback
         >
           <Input.Password size="large" className={style.password} />
         </Form.Item>
@@ -108,8 +127,16 @@ const Index = (props: any) => {
           rules={[
             {
               required: true,
-              message: '请确认密码!',
+              message: '请输入密码!',
             },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('两次输入的密码不一致！');
+              },
+            }),
           ]}
         >
           <Input.Password size="large" className={style.password} />
