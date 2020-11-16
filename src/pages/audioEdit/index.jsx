@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-12 00:07:54
+ * @LastEditTime : 2020-11-16 11:00:14
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -472,9 +472,9 @@ const Index = (props) => {
                     id为
                     <span style={{ color: '#08979c' }}> {item.user_id} </span>
                     的用户保存了版本
-                    <span style={{ color: '#08979c' }}> {item.version} </span>，
-                    保存文件名为：
-                    <span style={{ color: '#08979c' }}> {item.filename} </span>
+                    <span style={{ color: '#08979c' }}> {item.version} </span>。
+                    {/* 保存文件名为：
+                    <span style={{ color: '#08979c' }}> {item.filename} </span> */}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </p>
                   <a

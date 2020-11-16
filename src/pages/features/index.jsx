@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-16 10:32:09
+ * @LastEditTime : 2020-11-16 11:35:07
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -268,23 +268,40 @@ const Index = (props) => {
   return (
     <>
       <MainContent />
-      <div style={{ color: 'white', fontSize: 20, marginTop: 13 }}>
-        目标特征提取
-      </div>
       <div
         style={{
-          backgroundColor: 'black',
           width: '22%',
-          height: 340,
+          height: 390,
           float: 'left',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          border: '1px solid grey',
+          marginTop: 15,
+          marginLeft: 20,
         }}
       >
-        <RightSidermenu />
+        <div style={{ color: 'white', fontSize: 20 }}>特征选择</div>
+        <div
+          style={{
+            backgroundColor: 'black',
+            width: '100%',
+            height: 340,
+            float: 'left',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            border: '1px solid grey',
+          }}
+        >
+          <RightSidermenu />
+        </div>
       </div>
-      <div style={{ width: '22%', height: 370, float: 'left', marginTop: 15 }}>
+
+      <div
+        style={{
+          width: '22%',
+          height: 370,
+          float: 'left',
+          marginTop: 15,
+          marginLeft: 20,
+        }}
+      >
         <div style={{ color: 'white', fontSize: 20 }}>参数选择</div>
         <div
           style={{

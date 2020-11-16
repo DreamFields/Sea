@@ -19,6 +19,7 @@ import {
   Menu,
   Row,
   Col,
+  Space,
 } from 'antd';
 import axios from 'axios';
 import PeopleShow from '@/components/PeopleShow/index';
@@ -157,26 +158,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 style={{ backgroundColor: '#77A5D5' }}
                 className={style.featuresDiv}
               >
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 80,
-                    marginTop: '4.5%',
-                    marginLeft: '21%',
-                  }}
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '18%' }}
                 >
-                  <MenuUnfoldOutlined />
-                </div>
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 25,
-                    marginTop: '17.5%',
-                    marginLeft: 10,
-                  }}
-                >
-                  <span>数据管理</span>
-                </div>
+                  <span style={{ fontSize: 80 }}>
+                    <MenuUnfoldOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>数据管理</span>
+                </Space>
               </div>
             </Link>
           </Col>
@@ -186,26 +176,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 style={{ backgroundColor: '#94BF7A' }}
                 className={style.featuresDiv}
               >
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 80,
-                    marginTop: '4.5%',
-                    marginLeft: '18%',
-                  }}
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '14%' }}
                 >
-                  <ScissorOutlined />
-                </div>
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 25,
-                    marginTop: '17.5%',
-                    marginLeft: 10,
-                  }}
-                >
-                  <span>数据预处理</span>
-                </div>
+                  <span style={{ fontSize: 80 }}>
+                    <ScissorOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>数据预处理</span>
+                </Space>
               </div>
             </Link>
           </Col>
@@ -215,26 +194,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 style={{ backgroundColor: '#DDCB76' }}
                 className={style.featuresDiv}
               >
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 80,
-                    marginTop: '4.5%',
-                    marginLeft: '15%',
-                  }}
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '10%' }}
                 >
-                  <SnippetsOutlined />
-                </div>
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 25,
-                    marginTop: '17.5%',
-                    marginLeft: 10,
-                  }}
-                >
-                  <span>目标特征提取</span>
-                </div>
+                  <span style={{ fontSize: 80 }}>
+                    <SnippetsOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>目标特征提取</span>
+                </Space>
               </div>
             </Link>
           </Col>
@@ -246,26 +214,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 style={{ backgroundColor: '#D44444' }}
                 className={style.featuresDiv}
               >
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 80,
-                    marginTop: '4.5%',
-                    marginLeft: '15%',
-                  }}
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '10%' }}
                 >
-                  <EditOutlined />
-                </div>
-                <div
-                  style={{
-                    float: 'left',
-                    fontSize: 25,
-                    marginTop: '17.5%',
-                    marginLeft: 10,
-                  }}
-                >
-                  <span>数据质量评价</span>
-                </div>
+                  <span style={{ fontSize: 80 }}>
+                    <EditOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>数据质量评价</span>
+                </Space>
               </div>
             </Link>
           </Col>
@@ -274,26 +231,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
               style={{ backgroundColor: '#F79C32' }}
               className={style.featuresDiv}
             >
-              <div
-                style={{
-                  float: 'left',
-                  fontSize: 80,
-                  marginTop: '4.5%',
-                  marginLeft: '21%',
-                }}
+              <Space
+                align="center"
+                style={{ height: '100%', width: '100%', paddingLeft: '18%' }}
               >
-                <UserOutlined />
-              </div>
-              <div
-                style={{
-                  float: 'left',
-                  fontSize: 25,
-                  marginTop: '17.5%',
-                  marginLeft: 10,
-                }}
-              >
-                <span>听音训练</span>
-              </div>
+                <span style={{ fontSize: 80 }}>
+                  <UserOutlined />
+                </span>
+                <span style={{ fontSize: 25 }}>听音训练</span>
+              </Space>
             </div>
           </Col>
           <Col span={8} style={{ height: 160 }}>
@@ -301,26 +247,15 @@ const MainContent: React.FC<mainContentProps> = (props) => {
               style={{ backgroundColor: '#00b894' }}
               className={style.featuresDiv}
             >
-              <div
-                style={{
-                  float: 'left',
-                  fontSize: 80,
-                  marginTop: '4.5%',
-                  marginLeft: '12%',
-                }}
+              <Space
+                align="center"
+                style={{ height: '100%', width: '100%', paddingLeft: '6%' }}
               >
-                <RobotOutlined />
-              </div>
-              <div
-                style={{
-                  float: 'left',
-                  fontSize: 25,
-                  marginTop: '17.5%',
-                  marginLeft: 10,
-                }}
-              >
-                <span>小样本机器识别</span>
-              </div>
+                <div style={{ fontSize: 80, margin: '0 auto' }}>
+                  <RobotOutlined />
+                </div>
+                <div style={{ fontSize: 25 }}>小样本机器识别</div>
+              </Space>
             </div>
           </Col>
         </Row>
