@@ -29,7 +29,7 @@ const PeopleShow = ({ peopleData }: { peopleData: peopleDataType[] }) => (
             <div
               style={{
                 float: 'left',
-                fontSize: 20,
+                fontSize: 15,
               }}
             >
               <UserOutlined />
