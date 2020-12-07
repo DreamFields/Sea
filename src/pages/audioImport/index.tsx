@@ -4,7 +4,7 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-11-12 15:07:49
+ * @LastEditTime : 2020-11-17 11:08:59
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
@@ -853,7 +853,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
   const OtherFiles: React.FC<{}> = () => {
     const props = {
       name: 'picture',
-      accept: '.jpg, .png, .jpeg , .gif',
+      accept: '.jpg, .png',
       // multiple: true,
       action: `http://47.97.152.219/v1/sound/upload_picture/${id}`,
       headers: {
@@ -896,7 +896,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
   const SoundFiles: React.FC<{}> = () => {
     const uploadprops = {
       name: 'audio',
-      accept: '.wav',
+      accept: '.wav, .mp3',
       // multiple: true,
       action: 'http://47.97.152.219/v1/sound/upload_sound',
       // action: 'http://127.0.0.1:5000/v1/sound/upload_sound',

@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-14 21:08:53
+ * @LastEditTime : 2020-11-17 10:33:56
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
@@ -37,7 +37,7 @@ const Index = (props: any) => {
 
   const _tailLayout = {
     wrapperCol: {
-      offset: 10,
+      offset: 12,
       span: 4,
     },
   };
@@ -122,11 +122,11 @@ const Index = (props: any) => {
         <Form.Item {...tailLayout} valuePropName="checked">
           <Checkbox>记住我</Checkbox>
           <Link to="/user/register">
-            <span style={{ marginLeft: 110 }} className={style.linkto}>
+            <span style={{ marginLeft: '32%' }} className={style.linkto}>
               注册账户
             </span>
           </Link>
-          <a style={{ marginLeft: 20 }} className={style.linkto}>
+          <a style={{ marginLeft: '6%' }} className={style.linkto}>
             忘记密码
           </a>
         </Form.Item>

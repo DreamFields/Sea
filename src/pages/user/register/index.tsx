@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-14 21:04:47
+ * @LastEditTime : 2020-11-17 10:36:16
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\register\index.tsx
  */
@@ -34,13 +34,13 @@ const Index = (props: any) => {
 
   const _tailLayout = {
     wrapperCol: {
-      offset: 10,
+      offset: 12,
       span: 4,
     },
   };
 
   const Login = () => {
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
       // console.log("hahah!")
       dispatch({
         type: 'register/register',

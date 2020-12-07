@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-16 11:00:14
+ * @LastEditTime : 2020-11-17 14:11:12
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -155,6 +155,7 @@ const Index = (props) => {
       });
 
       if (path) {
+        console.log('path', path);
         wavesurfer.load(path);
       }
 
@@ -209,7 +210,7 @@ const Index = (props) => {
       })();
 
       return () => {};
-    }, []);
+    }, [path]);
 
     const handle_save_audio = () => {
       console.log(Pretreatment);
@@ -555,7 +556,7 @@ const Index = (props) => {
           </Form>
           <div
             className={style.showWave}
-            style={{ height: tab === '2' ? 260 : 460 }}
+            style={{ height: tab === '2' ? 260 : 480 }}
           >
             <Waveform />
           </div>
