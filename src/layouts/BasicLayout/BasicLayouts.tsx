@@ -37,7 +37,15 @@ interface BasicLayoutsContentProps {
 }
 
 const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
-  const { dispatch, sound_list, soundListLoading, location } = props;
+  const {
+    dispatch,
+    sound_list,
+    soundListLoading,
+    searchListLoading,
+    location,
+  } = props;
+
+  // console.log('searchListLoading', searchListLoading)
 
   useEffect(() => {
     dispatch({
@@ -115,7 +123,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               setnormal(_normal);
               _fleet = {
                 rn_type: item.fleet_detail.rn_type?.name,
-                as_type: item.fleet_detail.as_type?.name,
                 country: item.fleet_detail.country?.label,
                 name: item.fleet_detail.name,
               };
@@ -173,12 +180,16 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 <Form.Item name="power_engine" label="动力装置">
                   <Input />
                 </Form.Item>
-                <Form.Item name="shaft_count" label="轴数">
-                  <InputNumber />
-                </Form.Item>
-                <Form.Item name="blade_count" label="叶数">
-                  <InputNumber />
-                </Form.Item>
+                {item.target_information === '目标回声' ? null : (
+                  <>
+                    <Form.Item name="shaft_count" label="轴数">
+                      <InputNumber />
+                    </Form.Item>
+                    <Form.Item name="blade_count" label="叶数">
+                      <InputNumber />
+                    </Form.Item>
+                  </>
+                )}
               </>
             )}
           </Form>
@@ -272,6 +283,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   audio_name: item.name,
                 },
               });
+            } else if (location.pathname === '/audioImport') {
+              dispatch({
+                type: 'inforImport/setInfor',
+                payload: { ...normal, ...collect, ...fleet },
+              });
             } else {
               message.error('请在音频编辑或者特征提取界面加载音频！');
             }
@@ -294,7 +310,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           overflowX: 'hidden',
         }}
       >
-        <Spin spinning={soundListLoading}>
+        <Spin
+          spinning={
+            soundListLoading || (searchListLoading ? searchListLoading : false)
+          }
+        >
           <List
             grid={{ gutter: 16, column: 1 }}
             dataSource={sound_list}
@@ -390,6 +410,20 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     }
   }
 
+  const handleSearch = (e) => {
+    console.log(e);
+    if (e) {
+      dispatch({
+        type: 'soundList/searchSoundList',
+        payload: { id: e },
+      }).then(() => {});
+    } else {
+      dispatch({
+        type: 'soundList/fetchSoundList',
+      }).then(() => {});
+    }
+  };
+
   return (
     <div>
       <Layout>
@@ -457,9 +491,12 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                     backgroundColor: '#2D2D2D',
                   }}
                 ></div>
+                <Search
+                  placeholder="输入关键字"
+                  onSearch={handleSearch}
+                  enterButton
+                />
                 <div className="fileContainer">
-                  {/* <SearchTree/> */}
-
                   <SideCardList />
                 </div>
               </div>
@@ -475,9 +512,10 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 };
 
 const mapStateToProps = ({ loading, soundList }) => {
-  // console.log(soundList)
+  // console.log(loading)
   return {
     soundListLoading: loading.effects['soundList/fetchSoundList'],
+    searchListLoading: loading.effects['soundList/searchSoundList'],
     sound_list: soundList.sound_list,
   };
 };

@@ -17,6 +17,7 @@ import {
   ModifyPulse,
   ModifyNoise,
   ModifyEcho,
+  SearchSound,
 } from './service';
 
 export interface StateType {
@@ -34,6 +35,8 @@ export interface StateType {
   powerEngine?: any;
   //螺旋桨
   propeller?: any;
+  //搜索到的信息
+  searchInfor?: any;
 }
 
 export interface ModelType {
@@ -56,6 +59,8 @@ export interface ModelType {
     modifyPulse: Effect;
     modifyNoise: Effect;
     modifyEcho: Effect;
+    searchSound: Effect;
+    setInfor: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -76,6 +81,7 @@ const Model: ModelType = {
     country: undefined,
     powerEngine: undefined,
     propeller: undefined,
+    searchInfor: undefined,
   },
 
   effects: {
@@ -254,6 +260,33 @@ const Model: ModelType = {
         message.success('录入目标回声类型信息成功！');
       } else {
         message.error('录入目标回声类型信息失败！');
+      }
+    },
+    *searchSound({ payload }, { call, put }) {
+      const data = yield call(SearchSound, payload);
+      if (data) {
+        console.log(data);
+        yield put({
+          type: 'save',
+          payload: {
+            searchInfor: data,
+          },
+        });
+        message.success('搜索成功！');
+      } else {
+        message.error('搜索失败！');
+      }
+    },
+    *setInfor({ payload }, { call, put }) {
+      if (payload) {
+        console.log(payload);
+        yield put({
+          type: 'save',
+          payload: {
+            searchInfor: payload,
+          },
+        });
+      } else {
       }
     },
   },

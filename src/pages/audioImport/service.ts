@@ -122,3 +122,10 @@ export async function ModifyEcho({ id, body }: { id: number; body: any }) {
     data: body,
   });
 }
+
+//搜索声音
+export async function SearchSound({ id }: { id: any }) {
+  return request(`/v1/sound/${id}`, {
+    method: 'GET',
+  });
+}

@@ -4,7 +4,7 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-11-17 11:08:59
+ * @LastEditTime : 2020-12-08 15:30:17
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
@@ -15,14 +15,23 @@ import moment from 'moment';
 import { Input, Button, Select, InputNumber } from 'antd';
 import { Upload, message, Modal, Form } from 'antd';
 import { Radio, Steps } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, AudioOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import style from './style.less';
 
-const { TextArea } = Input;
+const { TextArea, Search } = Input;
 const { Dragger } = Upload;
 const { Option } = Select;
 const { Step } = Steps;
+
+const suffix = (
+  <AudioOutlined
+    style={{
+      fontSize: 16,
+      color: '#1890ff',
+    }}
+  />
+);
 
 interface AudioImportContentProps {
   dispatch: Dispatch;
@@ -42,6 +51,46 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
 
   const AddSound: React.FC<{}> = () => {
     const [type, settype] = useState(-1);
+
+    useEffect(() => {
+      if (InforImport.searchInfor) {
+        const infor = InforImport.searchInfor;
+        console.log(InforImport.searchInfor);
+        if (infor.target_type_str === '辐射噪声') {
+          settype(1);
+          sumForm.setFieldsValue({
+            signal_type: 1,
+            ...infor,
+            name: undefined,
+            collect_time: infor.collect_time_str,
+            depth: infor.depth_str,
+            shaft_blade_count: `${infor.shaft_count}_${infor.blade_count}`,
+          });
+        } else if (infor.target_type_str === '目标回声') {
+          settype(2);
+          sumForm.setFieldsValue({
+            signal_type: 2,
+            ...infor,
+            collect_time: infor.collect_time_str,
+            name: undefined,
+            depth: infor.depth_str,
+          });
+        } else if (infor.target_type_str === '主动脉冲') {
+          settype(3);
+          sumForm.setFieldsValue({
+            signal_type: 3,
+            ...infor,
+            collect_time: infor.collect_time_str,
+            name: undefined,
+            depth: infor.depth_str,
+          });
+        }
+        dispatch({
+          type: 'inforImport/setInfor',
+          payload: undefined,
+        });
+      }
+    }, [InforImport.searchInfor]);
 
     const TypeRadio = () => {
       const onChange = (e) => {
@@ -548,12 +597,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           <Row gutter={16}>
             <Col span={10} style={{ display: 'none' }}>
               <Form.Item name="shaft_count" label="轴数"></Form.Item>
-              <Form.Item name="blade_count" label="轴数"></Form.Item>
+              <Form.Item name="blade_count" label="叶数"></Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
                 name="shaft_blade_count"
-                label="叶数"
+                label="轴叶数"
                 labelAlign="left"
                 labelCol={{ span: 2 }}
               >
@@ -833,17 +882,19 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               </div>
             </Col>
           </Row>
-          <Row>
-            <Button
-              type="dashed"
-              onClick={() => {
-                sumForm.resetFields();
-                settype(-1);
-              }}
-              style={{ marginBottom: 20 }}
-            >
-              重置
-            </Button>
+          <Row gutter={16}>
+            <Col>
+              <Button
+                type="dashed"
+                onClick={() => {
+                  sumForm.resetFields();
+                  settype(-1);
+                }}
+                style={{ marginBottom: 20 }}
+              >
+                重置
+              </Button>
+            </Col>
           </Row>
         </Form>
       </div>
@@ -975,7 +1026,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const next_1 = () => {
       if (id === undefined) {
         message.warning('请先上传一个音频文件');
-        // setCurrent(current + 1);
+        setCurrent(current + 1);
       } else {
         console.log('id', id);
         setCurrent(current + 1);

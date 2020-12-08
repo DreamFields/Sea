@@ -3,13 +3,13 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-28 09:56:58
- * @LastEditTime : 2020-11-11 23:34:22
+ * @LastEditTime : 2020-12-08 15:02:46
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\models\soundList.ts
  */
 import { Effect, Reducer, Subscription } from 'umi';
 import { message } from 'antd';
-import { FetchSoundList } from '@/layouts/BasicLayout/service';
+import { FetchSoundList, SearchSoundList } from '@/layouts/BasicLayout/service';
 
 export interface StateType {
   sound_list?: any;
@@ -20,6 +20,7 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetchSoundList: Effect;
+    searchSoundList: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -44,6 +45,18 @@ const Model: ModelType = {
           type: 'save',
           payload: {
             sound_list: data.reverse(),
+          },
+        });
+      }
+    },
+    *searchSoundList({ payload }, { call, put }) {
+      const data = yield call(SearchSoundList, payload);
+      if (data) {
+        console.log('searchData', data);
+        yield put({
+          type: 'save',
+          payload: {
+            sound_list: data,
           },
         });
       }
