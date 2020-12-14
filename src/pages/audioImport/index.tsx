@@ -4,13 +4,13 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-12-08 15:30:17
+ * @LastEditTime : 2020-12-14 20:10:19
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
 import { Cascader, Carousel, DatePicker, TimePicker, Card, Result } from 'antd';
 import { Row, Col } from 'antd';
-import { connect, Dispatch } from 'umi';
+import { connect, Dispatch, history } from 'umi';
 import moment from 'moment';
 import { Input, Button, Select, InputNumber } from 'antd';
 import { Upload, message, Modal, Form } from 'antd';
@@ -1026,7 +1026,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const next_1 = () => {
       if (id === undefined) {
         message.warning('请先上传一个音频文件');
-        setCurrent(current + 1);
+        // setCurrent(current + 1);
       } else {
         console.log('id', id);
         setCurrent(current + 1);
@@ -1041,6 +1041,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         console.log('Failed:', errorInfo);
       }
       sumForm.submit();
+      // setCurrent(current + 1);
     };
 
     return (
@@ -1078,14 +1079,25 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               </Button>
             )}
             {current === 3 && (
-              <Button
-                type="primary"
-                onClick={() => {
-                  setCurrent(0);
-                }}
-              >
-                完成
-              </Button>
+              <>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setCurrent(0);
+                  }}
+                >
+                  完成
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    history.push('/audioEdit');
+                  }}
+                  style={{ marginLeft: 16 }}
+                >
+                  数据预处理
+                </Button>
+              </>
             )}
           </div>
           <h4 style={{ marginTop: 30 }}>二、已上传音频文件</h4>

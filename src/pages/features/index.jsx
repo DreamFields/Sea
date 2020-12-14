@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-16 11:35:07
+ * @LastEditTime : 2020-12-14 18:50:50
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -20,7 +20,7 @@ import {
 import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
-import PowerApp from '../power/index.jsx';
+import PowerApp from '../power/index.js';
 
 const { SubMenu } = Menu;
 

@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-17 14:11:12
+ * @LastEditTime : 2020-12-14 20:11:36
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -121,7 +121,7 @@ const Index = (props) => {
         container: '#waveform',
         waveColor: '#2ecc71',
         progressColor: '#2ecc71',
-        // splitChannels: true,
+        splitChannels: true,
         cursorColor: '#bdc3c7',
         cursorWidth: 1,
         // barWidth: 2,
@@ -556,7 +556,7 @@ const Index = (props) => {
           </Form>
           <div
             className={style.showWave}
-            style={{ height: tab === '2' ? 260 : 480 }}
+            style={{ height: tab === '2' ? 388 : 608 }}
           >
             <Waveform />
           </div>
