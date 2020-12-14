@@ -75,43 +75,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
         }}
       >
         <Row gutter={20} style={{ height: '100%' }}>
-          <Col span={5} style={{ height: '100%' }}>
-            <div className={style.userDiv}>
-              <Avatar
-                size={90}
-                style={{
-                  color: '#f56a00',
-                  backgroundColor: '#fde3cf',
-                  fontSize: 40,
-                  marginLeft: 55,
-                  marginTop: 20,
-                }}
-              >
-                ZS
-              </Avatar>
-              <div
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  fontSize: 20,
-                  marginTop: 20,
-                }}
-              >
-                张三
-              </div>
-              <div
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  fontSize: 15,
-                  marginTop: 20,
-                }}
-              >
-                数据管理员
-              </div>
-            </div>
-          </Col>
-          <Col span={14} style={{ height: '100%' }}>
+          <Col span={18} style={{ height: '100%' }}>
             <div
               style={{
                 width: '100%',
@@ -126,7 +90,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
               </Suspense>
             </div>
           </Col>
-          <Col span={5} style={{ height: '100%' }}>
+          <Col span={6} style={{ height: '100%' }}>
             <div
               style={{
                 width: '100%',
