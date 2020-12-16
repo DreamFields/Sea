@@ -24,8 +24,11 @@ import {
 import axios from 'axios';
 import PeopleShow from '@/components/PeopleShow/index';
 
+// const ProportionAudio = React.lazy(
+//   () => import('@/components/pie/ProportionAudio'),
+// );
 const ProportionAudio = React.lazy(
-  () => import('@/components/pie/ProportionAudio'),
+  () => import('@/components/3DPie/ProportionAudio'),
 );
 
 interface mainContentProps {
