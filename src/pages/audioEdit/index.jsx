@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-14 20:11:36
+ * @LastEditTime : 2020-12-22 18:57:25
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -104,7 +104,7 @@ const Index = (props) => {
       }
       if (tab === '2' && _regions) {
         _regions.forEach(function (region) {
-          region.color = 'rgba(112,500,130,0.3)';
+          region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
         });
       }
@@ -119,8 +119,8 @@ const Index = (props) => {
       wavesurfer = WaveSurfer.create({
         backgroundColor: 'black',
         container: '#waveform',
-        waveColor: '#2ecc71',
-        progressColor: '#2ecc71',
+        waveColor: '#74b9ff',
+        progressColor: '#1e90ff',
         splitChannels: true,
         cursorColor: '#bdc3c7',
         cursorWidth: 1,
@@ -161,7 +161,7 @@ const Index = (props) => {
 
       wavesurfer.on('ready', function () {
         wavesurfer.enableDragSelection({
-          color: 'rgba(112,500,130,0.3)',
+          color: 'rgba(100,149,237,0.3)',
         });
         wavesurfer.clearRegions();
         loadRegions(Pretreatment.tips);
