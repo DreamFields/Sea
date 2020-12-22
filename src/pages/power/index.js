@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import { Card, Spin } from 'antd';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
@@ -120,7 +120,11 @@ const TestApp = (props) => {
     console.log(params);
     console.log('分贝(db):' + params.value);
     console.log('频率(hz)):' + params.dataIndex);
-    alert('分贝(db):' + params.value);
+    // alert('分贝(db):' + params.value);
+    notification.open({
+      message: '信息',
+      description: `分贝(db):${params.value}`,
+    });
   };
   const changeToLog = () => {
     setmyType('log');
