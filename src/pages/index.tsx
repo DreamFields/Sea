@@ -37,20 +37,32 @@ interface mainContentProps {
 
 const MainContent: React.FC<mainContentProps> = (props) => {
   const { MainPage } = props;
-  const audioPieData = [
-    {
-      x: 'active_pulse',
-      y: MainPage.active_pulseData ? MainPage.active_pulseData : 0,
-    },
-    {
-      x: 'target_echo',
-      y: MainPage.target_echoData ? MainPage.target_echoData : 0,
-    },
-    {
-      x: 'radiated_noise',
-      y: MainPage.radiated_noiseData ? MainPage.radiated_noiseData : 0,
-    },
-  ];
+  let active_pulseData = MainPage.active_pulseData;
+  let target_echoData = MainPage.target_echoData;
+  let radiated_noiseData = MainPage.radiated_noiseData;
+  let audioPieData;
+  if (
+    active_pulseData !== undefined &&
+    target_echoData !== undefined &&
+    radiated_noiseData !== undefined
+  ) {
+    audioPieData = [
+      {
+        x: 'active_pulse',
+        y: active_pulseData,
+      },
+      {
+        x: 'target_echo',
+        y: target_echoData,
+      },
+      {
+        x: 'radiated_noise',
+        y: radiated_noiseData,
+      },
+    ];
+  }
+
+  console.log(audioPieData);
   const peopleData = [
     {
       x: '管理人员',

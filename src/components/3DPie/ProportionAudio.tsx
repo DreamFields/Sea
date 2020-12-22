@@ -57,17 +57,32 @@ const ProportionAudio = ({
               config={CONFIG}
               data={[
                 {
-                  value: audioPieData[0].y,
+                  value: audioPieData.reduce(function (total, item) {
+                    if (item.x === 'active_pulse') {
+                      total = total + item.y;
+                    }
+                    return total;
+                  }, 0),
                   label: 'active_pulse',
                   color: '#faebd7',
                 },
                 {
-                  value: audioPieData[1].y,
+                  value: audioPieData.reduce(function (total, item) {
+                    if (item.x === 'target_echo') {
+                      total = total + item.y;
+                    }
+                    return total;
+                  }, 0),
                   label: 'target_echo',
                   color: '#ff7f50',
                 },
                 {
-                  value: audioPieData[2].y,
+                  value: audioPieData.reduce(function (total, item) {
+                    if (item.x === 'radiated_noise') {
+                      total = total + item.y;
+                    }
+                    return total;
+                  }, 0),
                   label: 'radiated_noise',
                   color: '#cd5c5c',
                 },
