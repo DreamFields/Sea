@@ -60,9 +60,22 @@ const MainContent: React.FC<mainContentProps> = (props) => {
         y: radiated_noiseData,
       },
     ];
+  } else {
+    audioPieData = [
+      {
+        x: 'active_pulse',
+        y: 3,
+      },
+      {
+        x: 'target_echo',
+        y: 3,
+      },
+      {
+        x: 'radiated_noise',
+        y: 7,
+      },
+    ];
   }
-
-  console.log(audioPieData);
   const peopleData = [
     {
       x: '管理人员',
