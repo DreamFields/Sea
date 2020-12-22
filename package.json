@@ -43,6 +43,7 @@
     "react-fittext": "^1.0.0",
     "react-helmet-async": "^1.0.7",
     "react-highlight-words": "^0.16.0",
+    "react-pie3d": "^1.0.0",
     "react-wavesurfer": "^0.8.6",
     "umi": "^3.2.3",
     "wavesurfer.js": "^4.0.1",

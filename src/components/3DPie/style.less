@@ -1,0 +1,73 @@
+/*
+ * author: TimothyZhung
+ * date: 2020-11-03
+ */
+
+@import '~antd/es/style/themes/default.less';
+.audioCard {
+  :global {
+    .ant-tabs-bar,
+    .ant-tabs-nav-wrap {
+      padding-left: 16px;
+      .ant-tabs-nav .ant-tabs-tab {
+        padding-top: 16px;
+        line-height: 24px;
+      }
+    }
+    .ant-tabs-extra-content {
+      padding-right: 24px;
+      line-height: 55px;
+    }
+    .ant-card-head {
+      position: relative;
+    }
+    .ant-card-head-title {
+      align-items: normal;
+    }
+  }
+  .legend {
+    //右边文字
+    position: absolute;
+    top: 50%;
+    right: 0;
+    min-width: 200px;
+    margin: 0 50px;
+    padding: 0;
+    list-style: none;
+    transform: translateY(+30%);
+
+    li {
+      height: 22px;
+      margin-bottom: 16px;
+      line-height: 22px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .dot {
+    //文字左边的点
+    position: relative;
+    top: -1px;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 8px;
+  }
+  .legendTitle {
+    color: @text-color;
+  }
+
+  .percent {
+    color: @text-color-secondary;
+  }
+  .value {
+    position: absolute;
+    right: 0;
+  }
+  background-color: #292929;
+}
