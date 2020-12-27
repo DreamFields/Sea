@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-22 18:57:25
+ * @LastEditTime : 2020-12-27 18:17:58
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -119,7 +119,7 @@ const Index = (props) => {
       wavesurfer = WaveSurfer.create({
         backgroundColor: 'black',
         container: '#waveform',
-        waveColor: '#74b9ff',
+        waveColor: 'skyblue',
         progressColor: '#1e90ff',
         splitChannels: true,
         cursorColor: '#bdc3c7',

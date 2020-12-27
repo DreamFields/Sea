@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors  : HuRenbin
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-22 19:01:22
+ * @LastEditTime : 2020-12-27 18:17:10
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -90,7 +90,7 @@ const Index = (props) => {
     componentDidMount() {
       var wavesurfer = WaveSurfer.create({
         container: '#waveform',
-        waveColor: '#74b9ff',
+        waveColor: 'skyblue',
         progressColor: '#1e90ff',
         // splitChannels: true,
         cursorColor: '#bdc37',
