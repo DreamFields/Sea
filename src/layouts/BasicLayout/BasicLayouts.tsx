@@ -18,6 +18,7 @@ import {
   ScissorOutlined,
   SnippetsOutlined,
   EditOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import { FileOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Layout, Input, Button, Tree, Avatar } from 'antd';
@@ -72,6 +73,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     });
     dispatch({
       type: 'features/setAudio',
+      payload: {
+        audio_id: undefined,
+        audio_name: undefined,
+      },
+    });
+    dispatch({
+      type: 'target/setAudio',
       payload: {
         audio_id: undefined,
         audio_name: undefined,
@@ -288,6 +296,14 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 type: 'inforImport/setInfor',
                 payload: { ...normal, ...collect, ...fleet },
               });
+            } else if (location.pathname === '/targetRecognition') {
+              dispatch({
+                type: 'target/setAudio',
+                payload: {
+                  audio_id: item.id,
+                  audio_name: item.name,
+                },
+              });
             } else {
               message.error('请在音频编辑或者特征提取界面加载音频！');
             }
@@ -380,6 +396,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </Menu.Item>
           <Menu.Item key="5">
             <EditOutlined />
+          </Menu.Item>
+          <Menu.Item key="/targetRecognition">
+            <Link to="/targetRecognition">
+              <RobotOutlined />
+            </Link>
           </Menu.Item>
         </Menu>
       );

@@ -230,20 +230,22 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             </div>
           </Col>
           <Col span={8} style={{ height: 160 }}>
-            <div
-              style={{ backgroundColor: '#00b894' }}
-              className={style.featuresDiv}
-            >
-              <Space
-                align="center"
-                style={{ height: '100%', width: '100%', paddingLeft: '6%' }}
+            <Link to="/targetRecognition">
+              <div
+                style={{ backgroundColor: '#00b894' }}
+                className={style.featuresDiv}
               >
-                <div style={{ fontSize: 80, margin: '0 auto' }}>
-                  <RobotOutlined />
-                </div>
-                <div style={{ fontSize: 25 }}>小样本机器识别</div>
-              </Space>
-            </div>
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '6%' }}
+                >
+                  <div style={{ fontSize: 80, margin: '0 auto' }}>
+                    <RobotOutlined />
+                  </div>
+                  <div style={{ fontSize: 25 }}>目标自动识别</div>
+                </Space>
+              </div>
+            </Link>
           </Col>
         </Row>
       </div>
