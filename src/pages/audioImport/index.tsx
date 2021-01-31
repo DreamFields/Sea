@@ -671,18 +671,40 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="collect_time"
-                label="采集时间"
+                name="collect_d"
+                label="采集日期"
                 labelAlign="left"
                 labelCol={{ span: 4 }}
               >
-                <Input placeholder="YY-MM-DD HH:mm:ss" />
+                <DatePicker style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
+                name="collect_t"
+                label="采集时间"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <TimePicker style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
                 name="collect_platform"
                 label="采集平台"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="location"
+                label="采集位置"
                 labelAlign="left"
                 labelCol={{ span: 4 }}
               >
@@ -703,24 +725,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="location"
-                label="采集位置"
-                labelAlign="left"
-                labelCol={{ span: 4 }}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
                 name="depth"
                 label="深度"
                 labelAlign="left"
-                labelCol={{ span: 2 }}
+                labelCol={{ span: 4 }}
               >
-                <InputNumber />
+                <InputNumber style={{ width: '100%' }} />
               </Form.Item>
             </Col>
           </Row>
@@ -770,11 +780,27 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             if (type === -1) {
               console.log('目标信息表单值', {
                 ...values,
+                collect_time:
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('hh:mm:ss'),
                 signal_type: undefined,
               });
             } else {
-              console.log('目标信息表单值', values);
-              modify[type - 1]({ ...values });
+              console.log('目标信息表单值', {
+                ...values,
+                collect_time:
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('HH:mm:ss'),
+              });
+              modify[type - 1]({
+                ...values,
+                collect_time:
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('HH:mm:ss'),
+              });
             }
             sumForm.resetFields();
             setCurrent(current + 1);

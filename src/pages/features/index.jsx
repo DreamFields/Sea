@@ -70,10 +70,6 @@ const Index = (props) => {
           <SubMenu key="sub1" title="听音特征" disabled>
             <Menu.Item key="4">梅尔倒谱系数</Menu.Item>
             <Menu.Item key="5">过零率</Menu.Item>
-            <Menu.Item key="6">信息熵</Menu.Item>
-            <Menu.Item key="7">均值</Menu.Item>
-            <Menu.Item key="8">方差</Menu.Item>
-            <Menu.Item key="9">清晰度</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" title="主动脉冲特征" disabled>
             <Menu.Item key="10">信号形式</Menu.Item>
@@ -245,7 +241,7 @@ const Index = (props) => {
     return (
       <div
         className="rightContent"
-        style={{ width: '71%', float: 'left', height: 750 }}
+        style={{ width: '71%', float: 'left', height: 1000 }}
       >
         <h3 style={{ width: 550, marginLeft: 20 }}>特征提取</h3>
         <div
@@ -270,7 +266,7 @@ const Index = (props) => {
       <MainContent />
       <div
         style={{
-          width: '22%',
+          width: '25%',
           height: 390,
           float: 'left',
           marginTop: 15,
@@ -295,7 +291,7 @@ const Index = (props) => {
 
       <div
         style={{
-          width: '22%',
+          width: '25%',
           height: 370,
           float: 'left',
           marginTop: 15,
@@ -331,6 +327,38 @@ const Index = (props) => {
               </Form.Item>
             </Form>
           </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          width: '25%',
+          height: 390,
+          float: 'left',
+          marginTop: 25,
+          marginLeft: 20,
+        }}
+      >
+        <div style={{ color: 'white', fontSize: 20 }}>基本听音特征</div>
+        <div
+          style={{
+            backgroundColor: 'black',
+            width: '100%',
+            height: 340,
+            float: 'left',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            border: '1px solid grey',
+            padding: '20px 20px',
+          }}
+        >
+          <span>信息熵：</span>
+          <br />
+          <span>均值：</span>
+          <br />
+          <span>方差：</span>
+          <br />
+          <span>清晰度：</span>
         </div>
       </div>
     </>
