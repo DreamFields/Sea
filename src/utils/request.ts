@@ -4,6 +4,7 @@
  */
 
 import { extend } from 'umi-request';
+import { history } from 'umi';
 import { notification, message } from 'antd';
 import Cookies from 'js-cookie';
 import { removeNull } from './util';
@@ -92,6 +93,7 @@ function custom_request(
     prefix = NODE_ENV === 'development' ? '/api' : config[ENV];
   }
 
+  console.log(Cookies.get());
   // 判断cookie是否失效
   if (url !== '/v1/token' && Cookies.get('token') === undefined) {
     console.log(url);
@@ -128,6 +130,10 @@ function custom_request(
         }
       } else if (res) {
         console.log('res', res);
+        if (res?.msg === 'token is invalid' && res.code === 10031) {
+          history.push('/user/login');
+          message.warning('登陆状态失效，请重新登陆！');
+        }
         if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });
         } else {
