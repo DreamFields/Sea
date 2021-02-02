@@ -410,7 +410,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               <SnippetsOutlined />
             </Link>
           </Menu.Item>
-          <Menu.Item key="5">
+          <Menu.Item key="5" disabled>
             <EditOutlined />
           </Menu.Item>
           <Menu.Item key="/targetRecognition">
