@@ -30,6 +30,22 @@ const { Header, Sider, Footer, Content } = Layout;
 const { SubMenu } = Menu;
 const { Search } = Input;
 
+const pagesHeight = {
+  '/': 710,
+  '/audioImport': 1030,
+  '/audioEdit': 1318,
+  '/features': 1093,
+  '/targetRecognition': 1093,
+};
+
+const listHeight = {
+  '/': 582,
+  '/audioImport': 892,
+  '/audioEdit': 1172,
+  '/features': 955,
+  '/targetRecognition': 955,
+};
+
 interface BasicLayoutsContentProps {
   dispatch: Dispatch;
   sound_list: any;
@@ -493,7 +509,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </div>
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
-          <Sider className="side" width={'25%'}>
+          <Sider
+            className="side"
+            width={'25%'}
+            style={{ height: pagesHeight[location.pathname] }}
+          >
             <div className="sideContainer">
               <div className="mainMenu">
                 <Sidermenu />
@@ -517,7 +537,10 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   onSearch={handleSearch}
                   enterButton
                 />
-                <div className="fileContainer">
+                <div
+                  className="fileContainer"
+                  style={{ height: listHeight[location.pathname] }}
+                >
                   <SideCardList />
                 </div>
               </div>

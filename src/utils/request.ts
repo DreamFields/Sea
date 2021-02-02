@@ -131,8 +131,7 @@ function custom_request(
       } else if (res) {
         console.log('res', res);
         if (res?.msg === 'token is invalid' && res.code === 10031) {
-          history.push('/user/login');
-          message.warning('登陆状态失效，请重新登陆！');
+          document.cookie = '';
         }
         if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });

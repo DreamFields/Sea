@@ -23,6 +23,7 @@ import request from '@/utils/request';
 import PowerApp from '../power/index.js';
 
 const { SubMenu } = Menu;
+const rightWidth = '22%';
 
 let feature_key;
 
@@ -240,23 +241,40 @@ const Index = (props) => {
   const MainContent = () => {
     return (
       <div
-        className="rightContent"
-        style={{ width: '71%', float: 'left', height: 1000 }}
+        className="centerContent"
+        style={{
+          width: '74%',
+          float: 'left',
+          height: 1060,
+          backgroundColor: '#2F2F2F',
+          marginLeft: '1rem',
+          marginTop: 20,
+          borderRadius: '4px',
+        }}
       >
-        <h3 style={{ width: 550, marginLeft: 20 }}>特征提取</h3>
         <div
           style={{
-            backgroundColor: 'white',
-            height: 2,
-            width: '100%',
-            marginTop: -5,
-            marginBottom: 5,
+            height: '96%',
+            width: '96%',
+            marginLeft: '2%',
+            marginTop: '2%',
           }}
-        ></div>
-        <h4 id="fileName" style={{ width: '100%', marginLeft: 20 }}>
-          从左栏选取文件
-        </h4>
-        <Waveform />
+        >
+          <h3 style={{ width: '100%' }}>特征提取</h3>
+          <div
+            style={{
+              backgroundColor: 'white',
+              height: 2,
+              width: '100%',
+              marginTop: -5,
+              marginBottom: 5,
+            }}
+          ></div>
+          <h4 id="fileName" style={{ width: '100%' }}>
+            从左栏选取文件
+          </h4>
+          <Waveform />
+        </div>
       </div>
     );
   };
@@ -266,11 +284,11 @@ const Index = (props) => {
       <MainContent />
       <div
         style={{
-          width: '25%',
+          width: rightWidth,
           height: 390,
           float: 'left',
           marginTop: 15,
-          marginLeft: 20,
+          marginLeft: '1rem',
         }}
       >
         <div style={{ color: 'white', fontSize: 20 }}>特征选择</div>
@@ -291,18 +309,18 @@ const Index = (props) => {
 
       <div
         style={{
-          width: '25%',
-          height: 370,
+          width: rightWidth,
+          height: 340,
           float: 'left',
           marginTop: 15,
-          marginLeft: 20,
+          marginLeft: '1rem',
         }}
       >
         <div style={{ color: 'white', fontSize: 20 }}>参数选择</div>
         <div
           style={{
             width: '100%',
-            height: 340,
+            height: 310,
             border: '1px solid grey',
             backgroundColor: 'black',
             overflowY: 'auto',
@@ -332,11 +350,11 @@ const Index = (props) => {
 
       <div
         style={{
-          width: '25%',
-          height: 390,
+          width: rightWidth,
+          height: 320,
           float: 'left',
           marginTop: 25,
-          marginLeft: 20,
+          marginLeft: '1rem',
         }}
       >
         <div style={{ color: 'white', fontSize: 20 }}>基本听音特征</div>
@@ -344,7 +362,7 @@ const Index = (props) => {
           style={{
             backgroundColor: 'black',
             width: '100%',
-            height: 340,
+            height: 260,
             float: 'left',
             overflowY: 'auto',
             overflowX: 'hidden',
