@@ -40,4 +40,5 @@ export default defineConfig({
   // routes: [
   //   { path: '/', component: '@/pages/index' },
   // ],
+  title: '水声数据库系统',
 });
