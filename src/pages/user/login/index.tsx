@@ -8,7 +8,7 @@
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
 import React, { useEffect } from 'react';
-import { Input, Space, Form, Button, Checkbox, message } from 'antd';
+import { Input, Space, Form, Button, Checkbox, message, Row, Col } from 'antd';
 import { Link, history, connect } from 'umi';
 import request from 'umi-request';
 import { UserOutlined } from '@ant-design/icons';
@@ -37,8 +37,8 @@ const Index = (props: any) => {
 
   const _tailLayout = {
     wrapperCol: {
-      offset: 12,
-      span: 4,
+      offset: 4,
+      span: 20,
     },
   };
 
@@ -98,7 +98,7 @@ const Index = (props: any) => {
         <Form.Item
           label="密码"
           name="password"
-          style={{ color: 'balck' }}
+          style={{ margin: '0 0' }}
           rules={[
             {
               required: true,
@@ -119,21 +119,34 @@ const Index = (props: any) => {
           />
         </Form.Item>
 
-        <Form.Item {...tailLayout} valuePropName="checked">
-          <Checkbox>记住我</Checkbox>
-          <Link to="/user/register">
-            <span style={{ marginLeft: '32%' }} className={style.linkto}>
-              注册账户
-            </span>
-          </Link>
-          <a style={{ marginLeft: '6%' }} className={style.linkto}>
-            忘记密码
-          </a>
-        </Form.Item>
+        <Row>
+          <Col span={16}>
+            <Form.Item
+              {...tailLayout}
+              valuePropName="checked"
+              name="remember"
+              style={{ margin: '0 0' }}
+            >
+              <Checkbox>记住我</Checkbox>
+            </Form.Item>
+          </Col>
+          <Col span={8} style={{ display: 'flex', alignItems: 'center' }}>
+            <Link to="/user/register">
+              <span className={style.linkto}>注册账户</span>
+            </Link>
+            <a className={style.linkto} style={{ marginLeft: 10 }}>
+              忘记密码
+            </a>
+          </Col>
+        </Row>
 
-        <Form.Item {..._tailLayout}>
-          <Button type="primary" id="loginBtn" htmlType="submit">
-            {/* <Link to="/">登录</Link> */}
+        <Form.Item {..._tailLayout} style={{ marginTop: 10 }}>
+          <Button
+            type="primary"
+            id="loginBtn"
+            htmlType="submit"
+            style={{ width: '100%' }}
+          >
             登录
           </Button>
         </Form.Item>

@@ -27,14 +27,22 @@ const Model = {
 
   effects: {
     *login({ payload }, { call }) {
-      // console.log('logindata', payload);
+      console.log('logindata', payload);
+      // const data = false;
       const data = yield call(Login, payload);
 
       if (data) {
         console.log('token', data);
         const { token, userInfo } = data;
         // token 过期时间24小时
-        const expires = new Date(+new Date() + 24 * 60 * 60 * 1000);
+        let expires;
+        if (payload.remember) {
+          expires = new Date(+new Date() + 7 * 24 * 60 * 60 * 1000);
+          console.log('失效日期：', expires);
+        } else {
+          expires = new Date(+new Date() + 24 * 60 * 60 * 1000);
+          console.log('失效日期：', expires);
+        }
 
         CookieUtil.set('token', token, expires, '/');
         // CookieUtil.set('userInfo', JSON.stringify(userInfo), new Date(+new Date() + 24 * 60 * 60 * 1000))

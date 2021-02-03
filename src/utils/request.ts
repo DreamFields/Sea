@@ -93,7 +93,6 @@ function custom_request(
     prefix = NODE_ENV === 'development' ? '/api' : config[ENV];
   }
 
-  console.log(Cookies.get());
   // 判断cookie是否失效
   if (url !== '/v1/token' && Cookies.get('token') === undefined) {
     console.log(url);

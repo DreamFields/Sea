@@ -1052,7 +1052,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const next_1 = () => {
       if (id === undefined) {
         message.warning('请先上传一个音频文件');
-        setCurrent(current + 1);
+        // setCurrent(current + 1);
       } else {
         console.log('id', id);
         setCurrent(current + 1);

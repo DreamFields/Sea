@@ -34,8 +34,8 @@ const Index = (props: any) => {
 
   const _tailLayout = {
     wrapperCol: {
-      offset: 12,
-      span: 4,
+      offset: 6,
+      span: 20,
     },
   };
 
@@ -149,7 +149,7 @@ const Index = (props: any) => {
         </Form.Item>
 
         <Form.Item {..._tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
             注册
           </Button>
         </Form.Item>
