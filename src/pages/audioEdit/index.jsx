@@ -52,16 +52,16 @@ const Index = (props) => {
           }).then((res) => {
             console.log(
               '经过随机化处理的副本路径',
-              res.url + '?ran=' + randomString(true, 5, 15),
+              res?.url + '?ran=' + randomString(true, 5, 15),
             );
-            setpath(res.url + '?ran=' + randomString(true, 5, 15));
+            setpath(res?.url + '?ran=' + randomString(true, 5, 15));
           });
         } else {
           request(`/v1/file/now_version_url/${Pretreatment.audio_id}`, {
             method: 'GET',
           }).then((res) => {
-            console.log('版本文件路径', res.url);
-            setpath(res.url);
+            console.log('版本文件路径', res?.url);
+            setpath(res?.url);
           });
         }
       }

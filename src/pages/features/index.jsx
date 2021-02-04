@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
 // import '../main.less';
 // import '../audioEdit/edit.less';
-import { Menu, Popover } from 'antd';
+import { Menu, Popover, Statistic } from 'antd';
 import {
   PlayCircleOutlined,
   PauseOutlined,
@@ -20,7 +20,7 @@ import {
 import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
-import PowerApp from '../power/index.js';
+import PowerApp from '../power/index.jsx';
 
 const { SubMenu } = Menu;
 const rightWidth = '22%';
@@ -28,8 +28,15 @@ const rightWidth = '22%';
 let feature_key;
 
 const Index = (props) => {
-  const { FeaturesInfor } = props;
+  const { FeaturesInfor, dispatch } = props;
   const [path, setpath] = useState(undefined);
+  const [f_key, setfkey] = useState(undefined);
+  const [picIfo, setpicIfo] = useState(undefined);
+  const [va, setva] = useState(undefined); // 方差
+  const [mean, setmean] = useState(undefined); // 平均值
+  const [calc, setcalc] = useState(undefined); // 信息熵
+  const [db, setdb] = useState(undefined); //分贝
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -38,8 +45,8 @@ const Index = (props) => {
       request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
         method: 'GET',
       }).then((res) => {
-        console.log('版本文件路径', res.url);
-        setpath(res.url);
+        console.log('版本文件路径', res?.url);
+        setpath(res?.url);
       });
     }
     return () => {};
@@ -49,11 +56,12 @@ const Index = (props) => {
     handleClick = (e) => {
       console.log('click ', e);
       feature_key = e.key;
-      if (e.key == '5') {
-        document.querySelector('#divPara').style.display = 'block';
-      } else {
-        document.querySelector('#divPara').style.display = 'none';
-      }
+      setfkey(e.key);
+
+      setpicIfo(undefined);
+      setva(undefined);
+      setmean(undefined);
+      setcalc(undefined);
     };
 
     render() {
@@ -62,6 +70,7 @@ const Index = (props) => {
           onClick={this.handleClick}
           style={{ width: '100%', backgroundColor: 'black' }}
           defaultSelectedKeys={[]}
+          selectedKeys={[f_key]}
           defaultOpenKeys={['sub1', 'sub2', 'sub3']}
           mode="inline"
         >
@@ -145,18 +154,15 @@ const Index = (props) => {
     }
 
     getFeatures() {
-      let show_0 = document.querySelector('#divshow_0');
-      show_0.style.display = 'block';
-      let show_1 = document.querySelector('#divshow_1');
-      // console.log(sound_name)
-      // console.log(sound_path)
-      let img = document.querySelector('#resImg');
-      img.style.display = 'none';
       let loading = document.querySelector('#divLoading');
-      loading.style.display = 'block';
-      if (feature_key == '4') {
-        show_1.style.display = 'none';
-        show_0.style.display = 'block';
+
+      if (f_key !== '1') {
+        loading.style.display = 'block';
+      }
+
+      if (f_key === '4') {
+        // show_1.style.display = 'none';
+        // show_0.style.display = 'block';
         request(`/v1/feature/MCFF`, {
           method: 'POST',
           data: {
@@ -165,12 +171,13 @@ const Index = (props) => {
         }).then((res) => {
           console.log(res);
           loading.style.display = 'none';
-          img.style.display = 'block';
-          img.setAttribute('src', res.picIfo);
+
+          setpicIfo(res?.picIfo);
+          setva(res?.var);
+          setmean(res?.mean);
+          setcalc(res?.calc);
         });
-      } else if (feature_key == '5') {
-        show_1.style.display = 'none';
-        show_0.style.display = 'block';
+      } else if (f_key == '5') {
         request(`/v1/feature/Zero_Crossing`, {
           method: 'POST',
           data: {
@@ -181,12 +188,12 @@ const Index = (props) => {
         }).then((res) => {
           console.log(res);
           loading.style.display = 'none';
-          img.style.display = 'block';
-          img.setAttribute('src', res.picIfo);
+
+          setpicIfo(res?.picIfo);
+          setva(res?.var);
+          setmean(res?.mean);
+          setcalc(res?.calc);
         });
-      } else if (feature_key == '1') {
-        show_0.style.display = 'none';
-        show_1.style.display = 'block';
       }
     }
 
@@ -219,18 +226,30 @@ const Index = (props) => {
             </div>
           </div>
           <div
-            style={{ width: '100%', height: 200, display: 'block' }}
+            style={{
+              width: '100%',
+              height: 200,
+              display: f_key === '4' || f_key === '5' ? 'block' : 'none',
+            }}
             id="divshow_0"
           >
             <img
-              style={{ width: '100%', height: 200, display: 'none' }}
+              src={picIfo}
+              style={{
+                width: '100%',
+                height: 200,
+                display: picIfo ? 'block' : 'none',
+              }}
               id="resImg"
             />
             <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
               <LoadingOutlined style={{ marginTop: 80, marginLeft: 366 }} />
             </div>
           </div>
-          <div id="divshow_1" style={{ display: 'none' }}>
+          <div
+            id="divshow_1"
+            style={{ display: f_key === '1' ? 'block' : 'none' }}
+          >
             <PowerApp audio_id={FeaturesInfor.audio_id} />
           </div>
         </div>
@@ -282,6 +301,7 @@ const Index = (props) => {
   return (
     <>
       <MainContent />
+
       <div
         style={{
           width: rightWidth,
@@ -310,9 +330,70 @@ const Index = (props) => {
       <div
         style={{
           width: rightWidth,
-          height: 340,
+          height: 360,
           float: 'left',
-          marginTop: 15,
+          marginTop: 10,
+          marginLeft: '1rem',
+        }}
+      >
+        <div style={{ color: 'white', fontSize: 20 }}>基本听音特征</div>
+        <div
+          style={{
+            backgroundColor: 'black',
+            width: '100%',
+            height: 300,
+            float: 'left',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            border: '1px solid grey',
+            padding: '20px 20px',
+          }}
+        >
+          {/* 直接看antd的statistic源码，做一个频率和分贝的数据展示 */}
+          <div
+            className="ant-statistic"
+            style={{ display: f_key === '1' ? 'block' : 'none' }}
+          >
+            <div className="ant-statistic-title">分贝</div>
+            <div className="ant-statistic-content">
+              <span className="ant-statistic-content-value">
+                <span className="ant-statistic-content-value-int" id="db_int">
+                  0
+                </span>
+                <span
+                  className="ant-statistic-content-value-decimal"
+                  id="db_decimal"
+                ></span>
+              </span>
+            </div>
+          </div>
+          <div
+            className="ant-statistic"
+            style={{ display: f_key === '1' ? 'block' : 'none' }}
+          >
+            <div className="ant-statistic-title">频率</div>
+            <div className="ant-statistic-content">
+              <span className="ant-statistic-content-value">
+                <span className="ant-statistic-content-value-int" id="hz_int">
+                  0
+                </span>
+                {/* <span className="ant-statistic-content-value-decimal" id="hz_decimal"></span> */}
+              </span>
+            </div>
+          </div>
+
+          <Statistic title="信息熵" value={calc} />
+          <Statistic title="均值" value={mean} />
+          <Statistic title="方差" value={va} />
+          {/* <Statistic title="分贝" value={FeaturesInfor.db} style={{ display: f_key === '1' ? 'block' : 'none' }} id='db' /> */}
+        </div>
+      </div>
+
+      <div
+        style={{
+          width: rightWidth,
+          height: 300,
+          float: 'left',
           marginLeft: '1rem',
         }}
       >
@@ -320,7 +401,7 @@ const Index = (props) => {
         <div
           style={{
             width: '100%',
-            height: 310,
+            height: 270,
             border: '1px solid grey',
             backgroundColor: 'black',
             overflowY: 'auto',
@@ -333,7 +414,7 @@ const Index = (props) => {
               width: '96%',
               marginTop: 20,
               marginLeft: '2%',
-              display: 'none',
+              display: f_key === '5' ? 'block' : 'none',
             }}
           >
             <Form name="edit_fleet" layout="vertical" form={form}>
@@ -345,38 +426,6 @@ const Index = (props) => {
               </Form.Item>
             </Form>
           </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          width: rightWidth,
-          height: 320,
-          float: 'left',
-          marginTop: 25,
-          marginLeft: '1rem',
-        }}
-      >
-        <div style={{ color: 'white', fontSize: 20 }}>基本听音特征</div>
-        <div
-          style={{
-            backgroundColor: 'black',
-            width: '100%',
-            height: 260,
-            float: 'left',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            border: '1px solid grey',
-            padding: '20px 20px',
-          }}
-        >
-          <span>信息熵：</span>
-          <br />
-          <span>均值：</span>
-          <br />
-          <span>方差：</span>
-          <br />
-          <span>清晰度：</span>
         </div>
       </div>
     </>

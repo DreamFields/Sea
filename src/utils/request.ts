@@ -131,13 +131,15 @@ function custom_request(
         console.log('res', res);
         if (res?.msg === 'token is invalid' && res.code === 10031) {
           document.cookie = '';
-        }
-        if (typeof res === 'string' && res.search('http') !== -1) {
-          resolve({ url: res });
+          message.warning('登陆状态失效，请重新登陆！');
         } else {
-          notification.error({
-            message: res.msg,
-          });
+          if (typeof res === 'string' && res.search('http') !== -1) {
+            resolve({ url: res });
+          } else {
+            notification.error({
+              message: res.msg,
+            });
+          }
         }
         // if(res.msg.nickname){
         //   notification.error({

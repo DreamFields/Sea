@@ -15,6 +15,7 @@ import {} from './service';
 export interface StateType {
   audio_id: any;
   audio_name: any;
+  db: any;
 }
 
 export interface ModelType {
@@ -22,6 +23,7 @@ export interface ModelType {
   state: StateType;
   effects: {
     setAudio: Effect;
+    setInfo: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -34,10 +36,20 @@ const Model: ModelType = {
   state: {
     audio_id: undefined,
     audio_name: undefined,
+    db: undefined,
   },
 
   effects: {
     *setAudio({ payload }, { call, put }) {
+      // console.log(payload);
+      if (payload) {
+        yield put({
+          type: 'save',
+          payload: payload,
+        });
+      }
+    },
+    *setInfo({ payload }, { call, put }) {
       // console.log(payload);
       if (payload) {
         yield put({

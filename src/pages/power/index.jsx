@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
 import { Card, Spin } from 'antd';
+import { connect } from 'umi';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
 //下面是按需加载
@@ -17,7 +18,9 @@ import request from '@/utils/request';
 const sever = 'http://127.0.0.1:5000'; //测试用接口
 
 const TestApp = (props) => {
-  const { audio_id } = props;
+  console.log(props);
+
+  const { audio_id, dispatch } = props;
 
   const [loading, setloading] = useState(false);
 
@@ -120,11 +123,14 @@ const TestApp = (props) => {
     console.log(params);
     console.log('分贝(db):' + params.value);
     console.log('频率(hz)):' + params.dataIndex);
-    // alert('分贝(db):' + params.value);
-    notification.open({
-      message: '信息',
-      description: `分贝(db):${params.value}`,
-    });
+
+    let span_db_int = document.getElementById('db_int');
+    let span_db_decimal = document.getElementById('db_decimal');
+    span_db_int.innerText = (params.value + '').split('.')[0];
+    span_db_decimal.innerText = '.' + (params.value + '').split('.')[1];
+
+    let span_hz_int = document.getElementById('hz_int');
+    span_hz_int.innerText = params.dataIndex + '';
   };
   const changeToLog = () => {
     setmyType('log');
@@ -203,4 +209,8 @@ const TestApp = (props) => {
   );
 };
 
-export default TestApp;
+const mapStateToProps = ({}) => {
+  return {};
+};
+
+export default connect(mapStateToProps)(TestApp);
