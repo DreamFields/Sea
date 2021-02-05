@@ -7,6 +7,7 @@ import {
   GetActive_pulse,
   GetTarget_echo,
   GetRadiated_noise,
+  GetAudio,
   GetPeople,
 } from './service';
 export interface stateType {
@@ -25,6 +26,7 @@ export interface ModelType {
     getActive_pulse: Effect;
     getTarget_echo: Effect;
     getRadiated_noise: Effect;
+    getAudio: Effect;
     getPeople: Effect;
   };
 
@@ -81,6 +83,20 @@ const Model: ModelType = {
         });
       }
     },
+    *getAudio({ payload }, { put, call }) {
+      const data = yield call(GetAudio, payload);
+      console.log(data);
+      if (data) {
+        yield put({
+          type: 'save',
+          payload: {
+            radiated_noiseData: data.radiated_count,
+            target_echoData: data.target_count,
+            active_pulseData: data.active_count,
+          },
+        });
+      }
+    },
     *getPeople({ payload }, { put, call }) {
       const data = yield call(GetPeople, payload);
       if (data) {
@@ -98,13 +114,7 @@ const Model: ModelType = {
       history.listen(({ pathname }) => {
         if (pathname === '/') {
           dispatch({
-            type: 'getActive_pulse',
-          });
-          dispatch({
-            type: 'getTarget_echo',
-          });
-          dispatch({
-            type: 'getRadiated_noise',
+            type: 'getAudio',
           });
           dispatch({
             type: 'getPeople',

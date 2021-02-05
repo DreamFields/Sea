@@ -41,21 +41,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
   let target_echoData = MainPage.target_echoData;
   let radiated_noiseData = MainPage.radiated_noiseData;
   let audioPieData;
-  audioPieData = [
-    {
-      x: 'active_pulse',
-      y: 3,
-    },
-    {
-      x: 'target_echo',
-      y: 3,
-    },
-    {
-      x: 'radiated_noise',
-      y: 7,
-    },
-  ];
-  /*if (
+  if (
     active_pulseData !== undefined &&
     target_echoData !== undefined &&
     radiated_noiseData !== undefined
@@ -89,7 +75,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
         y: 7,
       },
     ];
-  };*/
+  }
   const peopleData = [
     {
       x: '管理人员',

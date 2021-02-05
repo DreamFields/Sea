@@ -20,6 +20,12 @@ export async function GetRadiated_noise(body: any) {
   });
 }
 
+export async function GetAudio(body: any) {
+  return request('/v1/sound/count', {
+    method: 'GET',
+  });
+}
+
 export async function GetPeople(body: any) {
   return request('/v1/user/role_count', {
     method: 'GET',
