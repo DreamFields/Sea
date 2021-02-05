@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
-import { Menu, Popover } from 'antd';
+import { Menu, Popover, Typography } from 'antd';
 import {
   PlayCircleOutlined,
   PauseOutlined,
@@ -10,19 +10,18 @@ import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
 
-const { SubMenu } = Menu;
-
-let feature_key;
+const { Title, Paragraph, Text, Link } = Typography;
+const rightWidth = '22%';
 
 const Index = (props) => {
-  const { FeaturesInfor } = props;
+  const { targetInfor } = props;
   const [path, setpath] = useState(undefined);
-  const [form] = Form.useForm();
+  const [result, setResult] = useState(undefined);
 
   useEffect(() => {
-    console.log('FeaturesInfor', FeaturesInfor);
-    if (FeaturesInfor.audio_id) {
-      request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
+    console.log('targetInfor', targetInfor);
+    if (targetInfor.audio_id) {
+      request(`/v1/file/now_version_url/${targetInfor.audio_id}`, {
         method: 'GET',
       }).then((res) => {
         console.log('版本文件路径', res.url);
@@ -30,46 +29,16 @@ const Index = (props) => {
       });
     }
     return () => {};
-  }, [FeaturesInfor]);
+  }, [targetInfor]);
 
-  class RightSidermenu extends React.Component {
-    handleClick = (e) => {
-      console.log('click ', e);
-      feature_key = e.key;
-      if (e.key == '5') {
-        document.querySelector('#divPara').style.display = 'block';
-      } else {
-        document.querySelector('#divPara').style.display = 'none';
-      }
-    };
-
+  class RightContent extends React.Component {
     render() {
       return (
-        <Menu
-          onClick={this.handleClick}
-          style={{ width: '100%', backgroundColor: 'black' }}
-          defaultSelectedKeys={[]}
-          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
-          mode="inline"
-        >
-          <Menu.Item key="1">功率谱</Menu.Item>
-          <Menu.Item key="2">低频线谱</Menu.Item>
-          <Menu.Item key="3">调制谱</Menu.Item>
-          <SubMenu key="sub1" title="听音特征" disabled>
-            <Menu.Item key="4">梅尔倒谱系数</Menu.Item>
-            <Menu.Item key="5">过零率</Menu.Item>
-            <Menu.Item key="6">信息熵</Menu.Item>
-            <Menu.Item key="7">均值</Menu.Item>
-            <Menu.Item key="8">方差</Menu.Item>
-            <Menu.Item key="9">清晰度</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" title="主动脉冲特征" disabled>
-            <Menu.Item key="10">信号形式</Menu.Item>
-            <Menu.Item key="11">信号基频</Menu.Item>
-            <Menu.Item key="12">带宽</Menu.Item>
-            <Menu.Item key="13">平台属性</Menu.Item>
-          </SubMenu>
-        </Menu>
+        <div>
+          <Typography>
+            <Title level={2}>{result}</Title>
+          </Typography>
+        </div>
       );
     }
   }
@@ -135,50 +104,17 @@ const Index = (props) => {
       })();
     }
 
-    getFeatures() {
-      let show_0 = document.querySelector('#divshow_0');
-      show_0.style.display = 'block';
-      let show_1 = document.querySelector('#divshow_1');
-      // console.log(sound_name)
-      // console.log(sound_path)
-      let img = document.querySelector('#resImg');
-      img.style.display = 'none';
-      let loading = document.querySelector('#divLoading');
-      loading.style.display = 'block';
-      if (feature_key == '4') {
-        show_1.style.display = 'none';
-        show_0.style.display = 'block';
-        request(`/v1/feature/MCFF`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          console.log(res);
-          loading.style.display = 'none';
-          img.style.display = 'block';
-          img.setAttribute('src', res.picIfo);
-        });
-      } else if (feature_key == '5') {
-        show_1.style.display = 'none';
-        show_0.style.display = 'block';
-        request(`/v1/feature/Zero_Crossing`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-            StartTime: form.getFieldsValue().start,
-            EndTime: form.getFieldsValue().end,
-          },
-        }).then((res) => {
-          console.log(res);
-          loading.style.display = 'none';
-          img.style.display = 'block';
-          img.setAttribute('src', res.picIfo);
-        });
-      } else if (feature_key == '1') {
-        show_0.style.display = 'none';
-        show_1.style.display = 'block';
-      }
+    getTargetResult() {
+      request(`/v1/classification/audio_classification`, {
+        method: 'POST',
+        data: {
+          sound_id: targetInfor.audio_id,
+        },
+      }).then((res) => {
+        setResult(res.result);
+        targetInfor.audio_result = res.result;
+        console.log(result);
+      });
     }
 
     render() {
@@ -197,7 +133,7 @@ const Index = (props) => {
               <Button
                 type="primary"
                 style={{ marginLeft: '80%' }}
-                onClick={this.getFeatures}
+                onClick={this.getTargetResult}
               >
                 分类
               </Button>
@@ -229,23 +165,40 @@ const Index = (props) => {
   const MainContent = () => {
     return (
       <div
-        className="rightContent"
-        style={{ width: '71%', float: 'left', height: 750 }}
+        className="centerContent"
+        style={{
+          width: '74%',
+          float: 'left',
+          height: 1060,
+          backgroundColor: '#2F2F2F',
+          marginLeft: '1rem',
+          marginTop: 20,
+          borderRadius: '4px',
+        }}
       >
-        <h3 style={{ width: 550, marginLeft: 20 }}>目标自动识别</h3>
         <div
           style={{
-            backgroundColor: 'white',
-            height: 2,
-            width: '100%',
-            marginTop: -5,
-            marginBottom: 5,
+            height: '96%',
+            width: '96%',
+            marginLeft: '2%',
+            marginTop: '2%',
           }}
-        ></div>
-        <h4 id="fileName" style={{ width: '100%', marginLeft: 20 }}>
-          从左栏选取文件
-        </h4>
-        <Waveform />
+        >
+          <h3 style={{ width: '100%' }}>目标自动识别</h3>
+          <div
+            style={{
+              backgroundColor: 'white',
+              height: 2,
+              width: '100%',
+              marginTop: -5,
+              marginBottom: 5,
+            }}
+          ></div>
+          <h4 id="fileName" style={{ width: '100%' }}>
+            从左栏选取文件
+          </h4>
+          <Waveform />
+        </div>
       </div>
     );
   };
@@ -255,11 +208,11 @@ const Index = (props) => {
       <MainContent />
       <div
         style={{
-          width: '22%',
+          width: rightWidth,
           height: 390,
           float: 'left',
           marginTop: 15,
-          marginLeft: 20,
+          marginLeft: '1rem',
         }}
       >
         <div style={{ color: 'white', fontSize: 20 }}>分类结果</div>
@@ -273,7 +226,9 @@ const Index = (props) => {
             overflowX: 'hidden',
             border: '1px solid grey',
           }}
-        ></div>
+        >
+          <RightContent />
+        </div>
       </div>
     </>
   );
@@ -281,7 +236,7 @@ const Index = (props) => {
 
 const mapStateToProps = ({ target, loading }) => {
   return {
-    FeaturesInfor: target,
+    targetInfor: target,
   };
 };
 
