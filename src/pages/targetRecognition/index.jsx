@@ -24,8 +24,8 @@ const Index = (props) => {
       request(`/v1/file/now_version_url/${targetInfor.audio_id}`, {
         method: 'GET',
       }).then((res) => {
-        console.log('版本文件路径', res.url);
-        setpath(res.url);
+        // console.log('版本文件路径', res.url);
+        setpath(res?.url);
       });
     }
     return () => {};
