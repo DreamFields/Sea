@@ -117,12 +117,12 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
     useEffect(() => {
       // console.log(document.cookie);
-      console.log(item?.pictures);
+      // console.log(item?.pictures)
       if (item?.pictures.length > 0) {
         request(`/v1/file/audio_url/${item?.pictures[0].filename}`, {
           method: 'get',
         }).then((res) => {
-          console.log(res);
+          // console.log(res);
         });
       }
 

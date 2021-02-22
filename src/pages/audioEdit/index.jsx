@@ -199,7 +199,7 @@ const Index = (props) => {
         };
 
         var hideProgress = function () {
-          console.log('over!!');
+          // console.log('over!!');
           progressDiv.style.display = 'none';
         };
 
@@ -307,6 +307,19 @@ const Index = (props) => {
                 重置为当前版本
               </Button>
             </Popover>
+            <Button
+              type="primary"
+              onClick={() => {
+                window.open(path, '_blank');
+              }}
+              style={{
+                float: 'left',
+                marginRight: 20,
+                display: tab === '1' ? 'block' : 'none',
+              }}
+            >
+              导出当前音频
+            </Button>
             <Popover content="将所有设置过的标签保存。" title="保存所有标签">
               <Button
                 type="primary"
@@ -425,6 +438,21 @@ const Index = (props) => {
         type: 'pretreatment/getVersions',
         payload: Pretreatment.audio_id,
       });
+    });
+  };
+
+  const output = (version) => {
+    request('/v1/pretreatment/output', {
+      method: 'post',
+      data: {
+        file_name: Pretreatment.audio_name,
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+      },
+    }).then((res) => {
+      console.log(res);
+      const outputUrl = res + '?ran=' + randomString(true, 5, 15);
+      window.open(outputUrl, '_blank');
     });
   };
 
@@ -626,6 +654,14 @@ const Index = (props) => {
           style={{ display: tab === '1' ? 'block' : 'none' }}
         >
           剪切
+        </button>
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={output}
+          style={{ display: tab === '1' ? 'block' : 'none' }}
+        >
+          导出
         </button>
       </div>
     </div>
