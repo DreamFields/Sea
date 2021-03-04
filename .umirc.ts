@@ -18,7 +18,7 @@ export default defineConfig({
     type: 'none',
   },
   theme: {
-    'primary-color': '#3498db',
+    'primary-color': '#08979c',
   },
   antd: {
     dark: true, // 开启暗色主题

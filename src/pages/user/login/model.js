@@ -33,7 +33,7 @@ const Model = {
 
       if (data) {
         console.log('token', data);
-        const { token, userInfo } = data;
+        const { token, role } = data;
         // token 过期时间24小时
         let expires;
         if (payload.remember) {
@@ -45,6 +45,7 @@ const Model = {
         }
 
         CookieUtil.set('token', token, expires, '/');
+        CookieUtil.set('role', role, expires, '/');
         // CookieUtil.set('userInfo', JSON.stringify(userInfo), new Date(+new Date() + 24 * 60 * 60 * 1000))
         message.success('登录成功！');
         return true;

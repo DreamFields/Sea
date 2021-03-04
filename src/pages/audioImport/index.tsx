@@ -56,33 +56,48 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       if (InforImport.searchInfor) {
         const infor = InforImport.searchInfor;
         console.log(InforImport.searchInfor);
-        if (infor.target_type_str === '辐射噪声') {
+        if (infor.signal_type === 1) {
           settype(1);
           sumForm.setFieldsValue({
             signal_type: 1,
             ...infor,
             name: undefined,
-            collect_time: infor.collect_time_str,
             depth: infor.depth_str,
             shaft_blade_count: `${infor.shaft_count}_${infor.blade_count}`,
+            collect_d: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
+              : undefined,
+            collect_t: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[1], 'HH:mm:ss')
+              : undefined,
           });
-        } else if (infor.target_type_str === '目标回声') {
+        } else if (infor.signal_type === 2) {
           settype(2);
           sumForm.setFieldsValue({
             signal_type: 2,
             ...infor,
-            collect_time: infor.collect_time_str,
             name: undefined,
             depth: infor.depth_str,
+            collect_d: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
+              : undefined,
+            collect_t: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[1], 'HH:mm:ss')
+              : undefined,
           });
-        } else if (infor.target_type_str === '主动脉冲') {
+        } else if (infor.signal_type === 3) {
           settype(3);
           sumForm.setFieldsValue({
             signal_type: 3,
             ...infor,
-            collect_time: infor.collect_time_str,
             name: undefined,
             depth: infor.depth_str,
+            collect_d: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
+              : undefined,
+            collect_t: infor.collect_time
+              ? moment(infor.collect_time?.split(' ')[1], 'HH:mm:ss')
+              : undefined,
           });
         }
         dispatch({
@@ -164,7 +179,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.rnType?.map((item) => {
-                    return <Radio value={item.name}>{item.name}</Radio>;
+                    return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
                 </Radio.Group>
@@ -181,11 +196,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return (
-                      <Option value={item.label} key={item.id}>
-                        {item.label}
-                      </Option>
-                    );
+                    return <Option value={item.country}>{item.country}</Option>;
                   })}
                 </Select>
               </Form.Item>
@@ -201,7 +212,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   },
                 ]}
               >
-                <Input placeholder="名称" id="fleet_name" />
+                <Input placeholder="名称" />
               </Form.Item>
             </Col>
           </Row>
@@ -270,7 +281,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Radio.Group onChange={onChange} value={value}>
                   {InforImport.teType?.map((item) => {
-                    return <Radio value={item.name}>{item.name}</Radio>;
+                    return <Radio value={item.te_type}>{item.te_type}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
                 </Radio.Group>
@@ -287,7 +298,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return <Option value={item.label}>{item.label}</Option>;
+                    return <Option value={item.country}>{item.country}</Option>;
                   })}
                 </Select>
               </Form.Item>
@@ -303,7 +314,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   },
                 ]}
               >
-                <Input placeholder="名称" id="fleet_name" />
+                <Input placeholder="名称" />
               </Form.Item>
             </Col>
           </Row>
@@ -382,7 +393,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.apType?.map((item) => {
-                    return <Radio value={item.name}>{item.name}</Radio>;
+                    return <Radio value={item.ap_type}>{item.ap_type}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
                 </Radio.Group>
@@ -394,7 +405,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               <Form.Item name="as_type" label="主动声纳类型">
                 <Radio.Group onChange={onChange_1} value={value_1}>
                   {InforImport.asType?.map((item) => {
-                    return <Radio value={item.name}>{item.name}</Radio>;
+                    return <Radio value={item.as_type}>{item.as_type}</Radio>;
                   })}
                   <Radio value={'添加新类别'}>添加新类别</Radio>
                 </Radio.Group>
@@ -411,7 +422,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return <Option value={item.label}>{item.label}</Option>;
+                    return <Option value={item.country}>{item.country}</Option>;
                   })}
                 </Select>
               </Form.Item>
@@ -427,7 +438,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   },
                 ]}
               >
-                <Input placeholder="名称" id="fleet_name" />
+                <Input placeholder="名称" />
               </Form.Item>
             </Col>
           </Row>
@@ -1052,7 +1063,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const next_1 = () => {
       if (id === undefined) {
         message.warning('请先上传一个音频文件');
-        // setCurrent(current + 1);
+        setCurrent(current + 1);
       } else {
         console.log('id', id);
         setCurrent(current + 1);

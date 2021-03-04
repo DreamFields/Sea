@@ -8,7 +8,7 @@
  * @FilePath     : \Seadata-front\src\pages\user\register\index.tsx
  */
 import React, { useEffect } from 'react';
-import { Input, Space, Form, Button, Checkbox, message } from 'antd';
+import { Input, Space, Form, Button, Checkbox, message, Radio } from 'antd';
 import { Link, connect, history } from 'umi';
 import { UserOutlined } from '@ant-design/icons';
 import style from './style.less';
@@ -140,6 +140,23 @@ const Index = (props: any) => {
           ]}
         >
           <Input.Password size="large" className={style.password} />
+        </Form.Item>
+
+        <Form.Item
+          label="用户类型"
+          name="role"
+          style={{ marginBottom: 0 }}
+          rules={[
+            {
+              required: true,
+              message: '请选择类型!',
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio value={2}>教员</Radio>
+            <Radio value={3}>学生</Radio>
+          </Radio.Group>
         </Form.Item>
 
         <Form.Item {...tailLayout} name="back">
