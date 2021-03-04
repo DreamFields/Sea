@@ -238,10 +238,6 @@ const Model: ModelType = {
       const data = yield call(ModifyPulse, payload);
       if (data) {
         message.success('录入主动脉冲类型信息成功！');
-        yield put({
-          type: 'addPropeller',
-          payload: {},
-        });
       } else {
         message.error('录入主动脉冲类型失败！');
       }
@@ -301,7 +297,7 @@ const Model: ModelType = {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
-        if (pathname === '/audioImport') {
+        if (pathname) {
           dispatch({
             type: 'getRnType',
           });

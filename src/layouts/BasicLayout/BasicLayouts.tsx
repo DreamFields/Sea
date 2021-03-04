@@ -113,9 +113,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     });
   }, [location]);
 
+  const [sumForm] = Form.useForm();
+  const [loading, setloading] = useState(false);
+
   const AddSound: React.FC<{ sound_data: any }> = (props: any) => {
     const { sound_data } = props;
-    const [sumForm] = Form.useForm();
     const [type, settype] = useState(
       sound_data.signal_type ? sound_data.signal_type : -1,
     );
@@ -152,7 +154,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             labelAlign="left"
             labelCol={{ span: 2 }}
           >
-            <Radio.Group onChange={onChange} value={type}>
+            <Radio.Group
+              onChange={onChange}
+              value={type}
+              disabled={sound_data.signal_type ? true : false}
+            >
               <Radio value={1}>辐射噪声</Radio>
               <Radio value={2}>目标回声</Radio>
               <Radio value={3}>主动脉冲</Radio>
@@ -779,36 +785,36 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     };
 
     const modifyNoise = (values: any) => {
-      // dispatch({
-      //   type: 'inforImport/modifyNoise',
-      //   payload: { id: id, body: values },
-      // }).then(() => {
-      //   dispatch({
-      //     type: 'soundList/fetchSoundList',
-      //   });
-      // });
+      dispatch({
+        type: 'inforImport/modifyNoise',
+        payload: { id: sound_data.id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
     };
 
     const modifyEcho = (values: any) => {
-      // dispatch({
-      //   type: 'inforImport/modifyEcho',
-      //   payload: { id: id, body: values },
-      // }).then(() => {
-      //   dispatch({
-      //     type: 'soundList/fetchSoundList',
-      //   });
-      // });
+      dispatch({
+        type: 'inforImport/modifyEcho',
+        payload: { id: sound_data.id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
     };
 
     const modifyPulse = (values: any) => {
-      // dispatch({
-      //   type: 'inforImport/modifyPulse',
-      //   payload: { id: id, body: values },
-      // }).then(() => {
-      //   dispatch({
-      //     type: 'soundList/fetchSoundList',
-      //   });
-      // });
+      dispatch({
+        type: 'inforImport/modifyPulse',
+        payload: { id: sound_data.id, body: values },
+      }).then(() => {
+        dispatch({
+          type: 'soundList/fetchSoundList',
+        });
+      });
     };
 
     const modify = [modifyNoise, modifyEcho, modifyPulse];
@@ -817,32 +823,57 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       <div style={{ width: '100%' }}>
         <Form
           onFinish={(values: any) => {
-            if (type === -1) {
+            if (!sound_data.signal_type) {
               console.log('目标信息表单值', {
                 ...values,
+                name: values.fleet_name,
+                sid: sound_data.id,
                 collect_time:
                   values.collect_d?.format('YYYY-MM-DD') +
                   ' ' +
                   values.collect_t?.format('hh:mm:ss'),
-                signal_type: undefined,
-              });
-            } else {
-              console.log('目标信息表单值', {
-                ...values,
-                collect_time:
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss'),
+                signal_type: type,
               });
               modify[type - 1]({
                 ...values,
+                name: values.fleet_name,
+                collect_time:
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('HH:mm:ss'),
+                signal_type: type,
+              });
+            } else {
+              const _values = values;
+              delete _values.signal_type;
+              console.log('目标信息表单值', {
+                ..._values,
+                name: values.fleet_name,
+                sid: sound_data.id,
                 collect_time:
                   values.collect_d?.format('YYYY-MM-DD') +
                   ' ' +
                   values.collect_t?.format('HH:mm:ss'),
               });
+              request('/v1/sound/info', {
+                method: 'PUT',
+                data: {
+                  ..._values,
+                  name: values.fleet_name,
+                  sid: sound_data.id,
+                  collect_time:
+                    values.collect_d?.format('YYYY-MM-DD') +
+                    ' ' +
+                    values.collect_t?.format('HH:mm:ss'),
+                },
+              }).then((res) => {
+                if (res) {
+                  message.success('修改成功！');
+                } else {
+                  message.error('修改失败！');
+                }
+              });
             }
-            sumForm.resetFields();
           }}
           form={sumForm}
         >
@@ -968,7 +999,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
   const InforModal = ({ item }) => {
     const [visible, setvisible] = useState(false);
-    const [loading, setloading] = useState(false);
 
     return (
       <>
@@ -985,7 +1015,12 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 textAlign: 'right',
               }}
             >
-              <Button onClick={() => {}} type="primary">
+              <Button
+                onClick={() => {
+                  sumForm.submit();
+                }}
+                type="primary"
+              >
                 修改信息
               </Button>
             </div>
@@ -1122,9 +1157,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               <SnippetsOutlined />
             </Link>
           </Menu.Item>
-          <Menu.Item key="5" disabled>
-            <EditOutlined />
-          </Menu.Item>
           <Menu.Item key="/targetRecognition">
             <Link to="/targetRecognition">
               <RobotOutlined />
@@ -1210,7 +1242,15 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 right: 10,
               }}
             >
-              <span style={{ marginRight: 20 }}>{`您好，${
+              <span
+                style={{
+                  display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
+                }}
+              >
+                <Link to="/staffManage">用户管理 </Link>|
+              </span>
+
+              <span style={{ marginRight: 20 }}>{` 您好，${
                 CookieUtil.get('role')
                   ? roles[CookieUtil.get('role') - 1]
                   : 'null'
