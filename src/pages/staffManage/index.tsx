@@ -87,7 +87,7 @@ const Index = () => {
               <List
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={instructors}
-                renderItem={(item) => (
+                renderItem={(item: any) => (
                   <List.Item>
                     <Card
                       bordered={false}
@@ -147,7 +147,7 @@ const Index = () => {
               <List
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={students}
-                renderItem={(item) => (
+                renderItem={(item: any) => (
                   <List.Item>
                     <Card
                       bordered={false}

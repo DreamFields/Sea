@@ -231,7 +231,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return <Option value={item.country}>{item.country}</Option>;
+                    return (
+                      <Option value={item.country} key={item.country}>
+                        {item.country}
+                      </Option>
+                    );
                   })}
                 </Select>
               </Form.Item>
@@ -333,7 +337,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return <Option value={item.country}>{item.country}</Option>;
+                    return (
+                      <Option value={item.country} key={item.country}>
+                        {item.country}
+                      </Option>
+                    );
                   })}
                 </Select>
               </Form.Item>
@@ -457,7 +465,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Select style={{ width: 120 }}>
                   {InforImport.country?.map((item) => {
-                    return <Option value={item.country}>{item.country}</Option>;
+                    return (
+                      <Option value={item.country} key={item.country}>
+                        {item.country}
+                      </Option>
+                    );
                   })}
                 </Select>
               </Form.Item>
