@@ -297,7 +297,7 @@ const Model: ModelType = {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
-        if (pathname) {
+        if (pathname !== '/user/login' && pathname !== '/user/register') {
           dispatch({
             type: 'getRnType',
           });

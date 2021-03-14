@@ -1,40 +1,23 @@
 .side {
-  height: 1318px;
-  background-color: #343434;
+  background-color: #292929;
+  left: 0;
+  height: calc(100vh - 64px);
+  /* overflow: outo; */
   /* border-right: 1px solid black; */
 }
 
-.sideContainer {
-  height: 97%;
-  width: 91%;
-  margin: 20px 4.5%;
-}
-
-.mainMenu {
-  height: 100%;
-  width: 23.5%;
-  background-color: #2D2D2D;
-  /* border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px; */
-  border-right: 1px solid black;
-  float: left;
-}
-
-.fileMenu {
-  height: 100%;
-  width: 76.5%;
-  margin-left: 23.5%;
-  background-color: #2D2D2D;
-  /* border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px; */
-  /* border: 1px solid black; */
+.main-content {
+  background-color: #343434;
+  height: calc(100vh - 64px);
+  overflow-y: outo;
 }
 
 .fileContainer {
   width: 100%;
-  height: 92%;
+  height: calc(100% - 64px);
   /* background-color: blue; */
-  margin-top: 10px;
+  margin-top: 16px;
+  background-color: #2D2D2D;
 }
 
 
@@ -43,12 +26,27 @@
 }
 
 .logo {
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 50px 250px 1000px 270px;
-  grid-template-rows: 50px;
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: #252525;
+  line-height: 31px;
+  text-align: center;
+  color: #08979c;
 }
+
+.info {
+  float: right;
+  width: 160px;
+  height: 31px;
+  margin: 16px 24px 16px 0px;
+  background: #2d2d2d;
+  line-height: 31px;
+  text-align: center;
+  color: #f56a00;
+}
+
 
 /* 滚动条区域的宽度 */
 ::-webkit-scrollbar {

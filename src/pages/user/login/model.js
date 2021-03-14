@@ -30,7 +30,7 @@ const Model = {
       console.log('logindata', payload);
       // const data = false;
       const data = yield call(Login, payload);
-
+      console.log('back data', data);
       if (data) {
         console.log('token', data);
         const { token, role } = data;

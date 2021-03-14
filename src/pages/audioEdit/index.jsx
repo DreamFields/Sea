@@ -25,7 +25,7 @@ import {
 } from 'antd';
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
-import Cookies from 'js-cookie';
+import CookieUtil from '@/utils/cookie.js';
 
 let region_now;
 let audio_id_dup = undefined;
@@ -315,7 +315,10 @@ const Index = (props) => {
               style={{
                 float: 'left',
                 marginRight: 20,
-                display: tab === '1' ? 'block' : 'none',
+                display:
+                  tab === '1' && CookieUtil.get('role') !== '3'
+                    ? 'block'
+                    : 'none',
               }}
             >
               导出当前音频
@@ -659,7 +662,10 @@ const Index = (props) => {
           type="button"
           className="btn btn-default"
           onClick={output}
-          style={{ display: tab === '1' ? 'block' : 'none' }}
+          style={{
+            display:
+              tab === '1' && CookieUtil.get('role') !== '3' ? 'block' : 'none',
+          }}
         >
           导出
         </button>

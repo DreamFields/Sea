@@ -48,7 +48,7 @@ const Index = (props: any) => {
         type: 'login/login',
         payload: values,
       }).then((res: any) => {
-        // console.log(res);
+        console.log(res);
         if (res) {
           history.push('/');
         } else {

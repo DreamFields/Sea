@@ -152,7 +152,7 @@ function custom_request(
         //   });
         // }
       }
-      resolve({}); // 错误不能reject 会导致generator call函数出错
+      resolve(); // 错误不能reject 会导致generator call函数出错
     });
   });
 }

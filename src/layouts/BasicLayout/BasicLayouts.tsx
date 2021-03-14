@@ -16,8 +16,9 @@ import {
   DatePicker,
   Radio,
   Select,
+  Dropdown,
 } from 'antd';
-import { Link, connect, Dispatch } from 'umi';
+import { Link, connect, Dispatch, history } from 'umi';
 import {
   UserOutlined,
   HomeOutlined,
@@ -73,6 +74,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     searchListLoading,
     location,
   } = props;
+
+  // console.log("role", CookieUtil.get('role'));
 
   useEffect(() => {
     dispatch({
@@ -216,7 +219,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   {InforImport.rnType?.map((item) => {
                     return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -322,7 +335,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   {InforImport.teType?.map((item) => {
                     return <Radio value={item.te_type}>{item.te_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -438,7 +461,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   {InforImport.apType?.map((item) => {
                     return <Radio value={item.ap_type}>{item.ap_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -450,7 +483,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   {InforImport.asType?.map((item) => {
                     return <Radio value={item.as_type}>{item.as_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -588,7 +631,15 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               {InforImport.powerEngine?.map((item) => {
                 return <Radio value={item.name}>{item.name}</Radio>;
               })}
-              <Radio value={'添加新类别'}>添加新类别</Radio>
+              <Radio
+                value={'添加新类别'}
+                style={{
+                  display:
+                    CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
+                }}
+              >
+                添加新类别
+              </Radio>
             </Radio.Group>
           </Form.Item>
           <Modal
@@ -672,7 +723,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                       </Radio>
                     );
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -1032,6 +1093,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   sumForm.submit();
                 }}
                 type="primary"
+                disabled={CookieUtil.get('role') === '3' ? true : false}
               >
                 修改信息
               </Button>
@@ -1140,39 +1202,24 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       return (
         <Menu
           onClick={this.handleClick}
-          style={{
-            width: 80,
-            backgroundColor: '#2D2D2D',
-            borderBottomLeftRadius: 5,
-            borderTopLeftRadius: 5,
-          }}
           defaultSelectedKeys={[props.location.pathname]}
-          mode="inline"
+          mode="horizontal"
+          style={{ backgroundColor: '#2D2D2D', float: 'left' }}
         >
-          <Menu.Item key="/">
-            <Link to="/">
-              <HomeOutlined />
-            </Link>
+          <Menu.Item key="/" icon={<HomeOutlined />}>
+            <Link to="/">主页</Link>
           </Menu.Item>
-          <Menu.Item key="/audioImport">
-            <Link to="/audioImport">
-              <MenuUnfoldOutlined />
-            </Link>
+          <Menu.Item key="/audioImport" icon={<MenuUnfoldOutlined />}>
+            <Link to="/audioImport">音频上传</Link>
           </Menu.Item>
-          <Menu.Item key="/audioEdit">
-            <Link to="/audioEdit">
-              <ScissorOutlined />
-            </Link>
+          <Menu.Item key="/audioEdit" icon={<ScissorOutlined />}>
+            <Link to="/audioEdit">音频编辑</Link>
           </Menu.Item>
-          <Menu.Item key="/features">
-            <Link to="/features">
-              <SnippetsOutlined />
-            </Link>
+          <Menu.Item key="/features" icon={<SnippetsOutlined />}>
+            <Link to="/features">特征提取</Link>
           </Menu.Item>
-          <Menu.Item key="/targetRecognition">
-            <Link to="/targetRecognition">
-              <RobotOutlined />
-            </Link>
+          <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
+            <Link to="/targetRecognition">二分类</Link>
           </Menu.Item>
         </Menu>
       );
@@ -1217,106 +1264,75 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     }
   };
 
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a
+          onClick={() => {
+            CookieUtil.unsetAll();
+            history.push('/user/login');
+          }}
+        >
+          退出登录
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div>
       <Layout>
-        <Header
-          style={{
-            height: 50,
-            backgroundColor: '#464646',
-            color: 'white',
-            borderBottom: '1px solid black',
-          }}
-        >
+        <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999 }}>
           <div className="logo">
-            {/* <TwitterOutlined style={{fontSize:22}} /> */}
-            <div
-              style={{ height: 45, width: 45, marginTop: -10, marginLeft: -35 }}
-            >
-              <img src={logo} style={{ height: 45, width: 45 }} />
-            </div>
+            <b>水声数据库系统</b>
+          </div>
+
+          <Sidermenu />
+
+          <div style={{ float: 'right' }}>
+            <Dropdown overlay={menu} placement="bottomRight">
+              <Avatar
+                size={48}
+                style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+                icon={<UserOutlined />}
+              />
+            </Dropdown>
+          </div>
+
+          <div className="info">
             <span
               style={{
-                width: 250,
-                fontSize: 22,
-                marginTop: -8,
-                marginLeft: -30,
+                display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
               }}
             >
-              {' '}
-              | 水声数据库系统
+              <Link to="/staffManage">用户管理 </Link>|
             </span>
-            <div
-              style={{
-                fontSize: 22,
-                marginTop: -7,
-                position: 'absolute',
-                right: 10,
-              }}
-            >
-              <span
-                style={{
-                  display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
-                }}
-              >
-                <Link to="/staffManage">用户管理 </Link>|
-              </span>
 
-              <span style={{ marginRight: 20 }}>{` 您好，${
-                CookieUtil.get('role')
-                  ? roles[CookieUtil.get('role') - 1]
-                  : 'null'
-              }`}</span>
-              <span style={{ marginLeft: -15, fontSize: 25 }}>
-                <Link to="/user/login">
-                  <UserOutlined />
-                </Link>
-              </span>
-            </div>
+            <span>{` 您好，${
+              CookieUtil.get('role')
+                ? roles[CookieUtil.get('role') - 1]
+                : 'null'
+            }`}</span>
           </div>
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
-          <Sider
-            className="side"
-            width={'25%'}
-            style={{ height: pagesHeight[location.pathname] }}
-          >
-            <div className="sideContainer">
-              <div className="mainMenu">
-                <Sidermenu />
-              </div>
-              <div className="fileMenu">
-                <div
-                  className="topMenu"
-                  style={{ width: 220, height: 60, marginLeft: 30 }}
-                >
-                  <TopMenu />
-                </div>
-                <div
-                  style={{
-                    width: '100%',
-                    height: 1,
-                    backgroundColor: '#2D2D2D',
-                  }}
-                ></div>
-                <Search
-                  placeholder="输入关键字"
-                  onSearch={handleSearch}
-                  enterButton
-                />
-                <div
-                  className="fileContainer"
-                  style={{ height: listHeight[location.pathname] }}
-                >
-                  <SideCardList />
-                </div>
-              </div>
+          <Sider className="side" width={350}>
+            <Search
+              placeholder="输入关键字搜索文件"
+              onSearch={handleSearch}
+              enterButton
+              style={{ marginTop: 16 }}
+            />
+            <div className="fileContainer">
+              <SideCardList />
             </div>
           </Sider>
-          <Content>{props.children}</Content>
+          <Content className="main-content">{props.children}</Content>
         </Layout>
 
-        <Footer style={{ backgroundColor: '#2f2f2f' }}>海工小分队</Footer>
+        <Footer style={{ backgroundColor: '#292929', textAlign: 'center' }}>
+          水声数据库系统 Created by 海工小分队
+        </Footer>
       </Layout>
     </div>
   );

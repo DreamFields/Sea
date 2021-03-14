@@ -18,6 +18,7 @@ import { Radio, Steps } from 'antd';
 import { InboxOutlined, AudioOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import style from './style.less';
+import CookieUtil from '@/utils/cookie.js';
 
 const { TextArea, Search } = Input;
 const { Dragger } = Upload;
@@ -181,7 +182,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   {InforImport.rnType?.map((item) => {
                     return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -283,7 +294,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   {InforImport.teType?.map((item) => {
                     return <Radio value={item.te_type}>{item.te_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -395,7 +416,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   {InforImport.apType?.map((item) => {
                     return <Radio value={item.ap_type}>{item.ap_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -407,7 +438,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   {InforImport.asType?.map((item) => {
                     return <Radio value={item.as_type}>{item.as_type}</Radio>;
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -541,7 +582,15 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               {InforImport.powerEngine?.map((item) => {
                 return <Radio value={item.name}>{item.name}</Radio>;
               })}
-              <Radio value={'添加新类别'}>添加新类别</Radio>
+              <Radio
+                value={'添加新类别'}
+                style={{
+                  display:
+                    CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
+                }}
+              >
+                添加新类别
+              </Radio>
             </Radio.Group>
           </Form.Item>
           <Modal
@@ -625,7 +674,17 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                       </Radio>
                     );
                   })}
-                  <Radio value={'添加新类别'}>添加新类别</Radio>
+                  <Radio
+                    value={'添加新类别'}
+                    style={{
+                      display:
+                        CookieUtil.get('role') === '3'
+                          ? 'none'
+                          : 'inline-block',
+                    }}
+                  >
+                    添加新类别
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
