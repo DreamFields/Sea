@@ -7,7 +7,7 @@
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import style from './edit.less';
 import { connect, Dispatch } from 'umi';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
@@ -199,7 +199,7 @@ const Index = (props) => {
         };
 
         var hideProgress = function () {
-          // console.log('over!!');
+          console.log('over!!');
           progressDiv.style.display = 'none';
         };
 
@@ -209,7 +209,8 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
 
-      return () => {};
+      // setTimeout(()=>{alert("aaa")}, 5000)
+      // return () => {};
     }, [path]);
 
     const handle_save_audio = () => {
@@ -427,23 +428,6 @@ const Index = (props) => {
     });
   };
 
-  const handle_rollBack = (version) => {
-    dispatch({
-      type: 'pretreatment/rollBack',
-      payload: {
-        target_version: version,
-        file_name: Pretreatment.audio_name,
-      },
-    }).then(() => {
-      const _path = path + '?ran=' + randomString(true, 5, 15);
-      setpath(_path);
-      dispatch({
-        type: 'pretreatment/getVersions',
-        payload: Pretreatment.audio_id,
-      });
-    });
-  };
-
   const output = (version) => {
     request('/v1/pretreatment/output', {
       method: 'post',
@@ -461,31 +445,60 @@ const Index = (props) => {
 
   const RollBackLine = (props) => {
     const [title, settitle] = useState('初始版本');
+    const [versions, setversions] = useState(undefined);
+    const [loading, setloading] = useState(false);
 
     useEffect(() => {
-      // console.log('pretreatment', Pretreatment);
-      if (Pretreatment.audio_id && !Pretreatment.audio_versions) {
-        dispatch({
-          type: 'pretreatment/getVersions',
-          payload: Pretreatment.audio_id,
+      if (Pretreatment.audio_id && !versions) {
+        // dispatch({
+        //   type: 'pretreatment/getVersions',
+        //   payload: Pretreatment.audio_id,
+        // });
+        setloading(true);
+        request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
+          method: 'GET',
+        }).then((res) => {
+          // console.log("versions", res);
+          if (res) {
+            setversions(res);
+            setloading(false);
+            if (res[0]) {
+              settitle(res[0].now_version);
+            }
+          }
         });
       }
-      if (Pretreatment?.audio_versions) {
-        if (Pretreatment.audio_versions[0]) {
-          settitle(Pretreatment.audio_versions[0].now_version);
-        }
-      }
     }, [Pretreatment]);
+
+    const handle_rollBack = (version) => {
+      setloading(true);
+      dispatch({
+        type: 'pretreatment/rollBack',
+        payload: {
+          target_version: version,
+          file_name: Pretreatment.audio_name,
+        },
+      }).then(() => {
+        const _path = path + '?ran=' + randomString(true, 5, 15);
+        setpath(_path);
+        request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
+          method: 'GET',
+        }).then((res) => {
+          setversions(res);
+          setloading(false);
+        });
+      });
+    };
 
     return (
       <div
         style={{
           overflowY: 'scroll',
           height: 350,
-          display: Pretreatment.audio_versions ? 'block' : 'none',
+          display: versions ? 'block' : 'none',
         }}
       >
-        <Spin spinning={versionsLoading}>
+        <Spin spinning={loading}>
           <h4>
             <b>
               音频版本信息(当前版本：
@@ -494,8 +507,8 @@ const Index = (props) => {
             </b>
           </h4>
           <Timeline style={{ marginTop: 20 }} className={style.timeLine}>
-            {Pretreatment.audio_versions?.map((item) => {
-              return (
+            {versions?.map((item, index) => {
+              return index === 0 ? null : (
                 <Timeline.Item>
                   <p style={{ color: '#08979c' }}>
                     {item.generate_time}&nbsp;&nbsp;&nbsp;&nbsp;

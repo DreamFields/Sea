@@ -1015,8 +1015,6 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           console.log(info.file.response);
           if (info.file.response.code === 200) {
             message.success(`${info.file.name} 文件上传成功.`);
-            setId(undefined);
-            message.success('录入完成！');
           } else {
             message.error(`${info.file.name} 文件上传失败.`);
             message.error(`${info.file.response.msg}`);
@@ -1180,6 +1178,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   type="primary"
                   onClick={() => {
                     setCurrent(0);
+                    setId(undefined);
                   }}
                 >
                   完成

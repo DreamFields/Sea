@@ -17,6 +17,7 @@ import {
   Radio,
   Select,
   Dropdown,
+  Image,
 } from 'antd';
 import { Link, connect, Dispatch, history } from 'umi';
 import {
@@ -1063,6 +1064,19 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 重置
               </Button>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col>
+              <b style={{ color: '#08979c', marginBottom: 16 }}>图片信息</b>
+              {sound_data.pictures?.map((item: any) => {
+                return (
+                  <Image
+                    src={item.picture_url}
+                    style={{ marginBottom: 16 }}
+                  ></Image>
+                );
+              })}
             </Col>
           </Row>
         </Form>
