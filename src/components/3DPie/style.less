@@ -8,7 +8,7 @@
   :global {
     .ant-tabs-bar,
     .ant-tabs-nav-wrap {
-      padding-left: 16px;
+      padding-left: 0px;
       .ant-tabs-nav .ant-tabs-tab {
         padding-top: 16px;
         line-height: 24px;
@@ -27,14 +27,15 @@
   }
   .legend {
     //右边文字
-    position: absolute;
-    top: 50%;
-    right: 0;
+    position: relative;
+    top: +25px;
+    /*top: 50%;
+    right: 30%;
     min-width: 200px;
     margin: 0 50px;
     padding: 0;
     list-style: none;
-    transform: translateY(+30%);
+    transform: translateY(+30%);*/
 
     li {
       height: 22px;
@@ -46,28 +47,24 @@
         margin-bottom: 0;
       }
     }
+    .dot {
+      //文字左边的点
+      position: relative;
+      top: -1px;
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 8px;
+      border-radius: 8px;
+    }
+    .legendTitle {
+      color: @text-color;
+    }
+
+    .percent {
+      color: @text-color-secondary;
+    }
   }
 
-  .dot {
-    //文字左边的点
-    position: relative;
-    top: -1px;
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 8px;
-  }
-  .legendTitle {
-    color: @text-color;
-  }
-
-  .percent {
-    color: @text-color-secondary;
-  }
-  .value {
-    position: absolute;
-    right: 0;
-  }
   background-color: #292929;
 }

@@ -111,7 +111,7 @@ const Index = (props) => {
           sound_id: targetInfor.audio_id,
         },
       }).then((res) => {
-        setResult(res.result);
+        setResult(res.result === 'FishingBoat' ? '渔船' : '未知来源');
         targetInfor.audio_result = res.result;
         console.log(result);
       });
