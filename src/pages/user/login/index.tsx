@@ -105,9 +105,8 @@ const Index = (props: any) => {
               message: '请输入密码!',
             },
             {
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,16}$/,
-              message:
-                '密码需要包含至少8个字符至多16个字符，至少1个大写字母，1个小写字母，1个数字和1个特殊字符!',
+              pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+              message: '密码只能包含数字和英文，长度6-20!',
             },
           ]}
         >
@@ -127,16 +126,18 @@ const Index = (props: any) => {
               name="remember"
               style={{ margin: '0 0' }}
             >
-              <Checkbox>记住我</Checkbox>
+              {/* <Checkbox>记住我</Checkbox> */}
             </Form.Item>
           </Col>
           <Col span={8} style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/user/register">
-              <span className={style.linkto}>注册账户</span>
+              <span className={style.linkto} style={{ marginLeft: 48 }}>
+                注册账户
+              </span>
             </Link>
-            <a className={style.linkto} style={{ marginLeft: 10 }}>
+            {/* <a className={style.linkto} style={{ marginLeft: 10 }}>
               忘记密码
-            </a>
+            </a> */}
           </Col>
         </Row>
 

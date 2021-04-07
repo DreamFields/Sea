@@ -98,7 +98,7 @@ const Index = () => {
                       actions={[
                         // <SettingOutlined key="setting" />,
                         <Popconfirm
-                          title="确认修改该用户权限吗?"
+                          title="确认修改该用户权限为学生吗?"
                           placement="bottom"
                           onConfirm={() => {
                             request('/v1/admin/scope', {
@@ -122,8 +122,6 @@ const Index = () => {
                               }
                             });
                           }}
-                          okText="Yes"
-                          cancelText="No"
                         >
                           <EditOutlined key="edit" />
                         </Popconfirm>,
@@ -157,7 +155,7 @@ const Index = () => {
                       }}
                       actions={[
                         <Popconfirm
-                          title="确认修改该用户权限吗?"
+                          title="确认修改该用户权限为教员吗?"
                           placement="bottom"
                           onConfirm={() => {
                             request('/v1/admin/scope', {
@@ -181,8 +179,6 @@ const Index = () => {
                               }
                             });
                           }}
-                          okText="Yes"
-                          cancelText="No"
                         >
                           <EditOutlined key="edit" />
                         </Popconfirm>,

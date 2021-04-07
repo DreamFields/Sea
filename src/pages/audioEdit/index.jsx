@@ -103,6 +103,7 @@ const Index = (props) => {
         _regions = JSON.parse(regions);
       }
       if (tab === '2' && _regions) {
+        console.log(_regions);
         _regions.forEach(function (region) {
           region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
@@ -496,6 +497,7 @@ const Index = (props) => {
           overflowY: 'scroll',
           height: 350,
           display: versions ? 'block' : 'none',
+          marginTop: 32,
         }}
       >
         <Spin spinning={loading}>

@@ -94,7 +94,11 @@ function custom_request(
   }
 
   // 判断cookie是否失效
-  if (url !== '/v1/token' && Cookies.get('token') === undefined) {
+  if (
+    url !== '/v1/token' &&
+    url !== '/v1/client/register' &&
+    Cookies.get('token') === undefined
+  ) {
     console.log(url);
     console.log(Cookies.get('token'));
     // 防止同时多次请求
@@ -141,18 +145,8 @@ function custom_request(
             });
           }
         }
-        // if(res.msg.nickname){
-        //   notification.error({
-        //     message: res.msg.nickname,
-        //   });
-        // };
-        // if(res.msg.password){
-        //   notification.error({
-        //     message: res.msg.password,
-        //   });
-        // }
       }
-      resolve(); // 错误不能reject 会导致generator call函数出错
+      resolve(null); // 错误不能reject 会导致generator call函数出错
     });
   });
 }
