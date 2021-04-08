@@ -75,18 +75,26 @@ const Index = (props) => {
           mode="inline"
         >
           <Menu.Item key="1">功率谱</Menu.Item>
-          <Menu.Item key="2">低频线谱</Menu.Item>
-          <Menu.Item key="3">调制谱</Menu.Item>
-          <SubMenu key="sub1" title="听音特征" disabled>
-            <Menu.Item key="4">梅尔倒谱系数</Menu.Item>
-            <Menu.Item key="5">过零率</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" title="主动脉冲特征" disabled>
-            <Menu.Item key="10">信号形式</Menu.Item>
-            <Menu.Item key="11">信号基频</Menu.Item>
-            <Menu.Item key="12">带宽</Menu.Item>
-            <Menu.Item key="13">平台属性</Menu.Item>
-          </SubMenu>
+          <Menu.Item key="2" disabled>
+            低频线谱
+          </Menu.Item>
+          <Menu.Item key="3" disabled>
+            调制谱
+          </Menu.Item>
+          <Menu.Item key="4">梅尔倒谱系数</Menu.Item>
+          <Menu.Item key="5">过零率</Menu.Item>
+          <Menu.Item key="10" disabled>
+            信号形式
+          </Menu.Item>
+          <Menu.Item key="11" disabled>
+            信号基频
+          </Menu.Item>
+          <Menu.Item key="12" disabled>
+            带宽
+          </Menu.Item>
+          <Menu.Item key="13" disabled>
+            平台属性
+          </Menu.Item>
         </Menu>
       );
     }

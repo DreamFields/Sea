@@ -898,48 +898,38 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         <Form
           onFinish={(values: any) => {
             if (!sound_data.signal_type) {
-              console.log('目标信息表单值', {
+              const putval = {
                 ...values,
                 name: values.fleet_name,
-                sid: sound_data.id,
-                collect_time:
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('hh:mm:ss'),
+                // collect_time:
+                //   values.collect_d?.format('YYYY-MM-DD') +
+                //   ' ' +
+                //   values.collect_t?.format('HH:mm:ss'),
                 signal_type: type,
-              });
-              modify[type - 1]({
-                ...values,
-                name: values.fleet_name,
-                collect_time:
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss'),
-                signal_type: type,
-              });
+              };
+              console.log('目标信息表单值', putval);
+              modify[type - 1](putval);
             } else {
               const _values = values;
               delete _values.signal_type;
-              console.log('目标信息表单值', {
+              const putval = {
                 ..._values,
                 name: values.fleet_name,
+                fleet_name: null,
+                shaft_blade_count: null,
                 sid: sound_data.id,
                 collect_time:
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss'),
-              });
+                  values.collect_d === undefined &&
+                  values.collect_t === undefined
+                    ? undefined
+                    : values.collect_d.format('YYYY-MM-DD') +
+                      ' ' +
+                      values.collect_t.format('HH:mm:ss'),
+              };
+              console.log('目标信息表单值', putval);
               request('/v1/sound/info', {
                 method: 'PUT',
-                data: {
-                  ..._values,
-                  name: values.fleet_name,
-                  sid: sound_data.id,
-                  collect_time:
-                    values.collect_d?.format('YYYY-MM-DD') +
-                    ' ' +
-                    values.collect_t?.format('HH:mm:ss'),
-                },
+                data: putval,
               }).then((res) => {
                 if (res) {
                   message.success('修改成功！');
@@ -1068,7 +1058,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </Row>
           <Row gutter={16}>
             <Col>
-              <b style={{ color: '#08979c', marginBottom: 16 }}>图片信息</b>
+              <div style={{ color: '#08979c', marginBottom: 16 }}>
+                <b>图片信息</b>
+              </div>
               {sound_data.pictures?.map((item: any) => {
                 return (
                   <Image

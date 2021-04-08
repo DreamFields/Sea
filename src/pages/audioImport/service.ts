@@ -108,6 +108,7 @@ export async function ModifyPulse({ id, body }: { id: number; body: any }) {
 
 //录入辐射噪声类型信息
 export async function ModifyNoise({ id, body }: { id: number; body: any }) {
+  console.log('辐射噪声信息', body);
   return request(`/v1/sound/radiated_noise/${id}`, {
     method: 'POST',
     data: body,
