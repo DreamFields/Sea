@@ -92,15 +92,96 @@ const ProportionAudio = ({
         height: '100%',
       }}
     >
-      <div>
-        <Row gutter={20} style={{ height: '100%' }}>
-          <Col span={16} style={{ height: '100%' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#292929',
+          float: 'left',
+          position: 'relative',
+        }}
+      >
+        <div
+          style={{
+            width: '25%',
+            height: '100%',
+            backgroundColor: '#292929',
+            float: 'left',
+            position: 'relative',
+            left: '25%',
+          }}
+        >
+          <Pie3D config={CONFIG} data={Data} />
+        </div>
+        <div
+          style={{
+            width: '30%',
+            height: '100%',
+            backgroundColor: '#292929',
+            float: 'left',
+            position: 'relative',
+            left: '30%',
+          }}
+        >
+          <ul className={styles.legend}>
+            {audioPieData.map((item, i) => (
+              <li key={item.x}>
+                <span
+                  className={styles.dot}
+                  style={{
+                    backgroundColor:
+                      item.x === 'active_pulse'
+                        ? '#faebd7'
+                        : item.x === 'target_echo'
+                        ? '#ff7f50'
+                        : '#cd5c5c',
+                  }}
+                />
+                <span className={styles.legendTitle}>
+                  {item.x === 'active_pulse'
+                    ? '主动脉冲'
+                    : item.x === 'target_echo'
+                    ? '目标回声'
+                    : '辐射噪声'}
+                </span>
+                <Divider type="vertical" />
+                <span className={styles.percent}>
+                  {`${(Number.isNaN(item.y)
+                    ? 0
+                    : (item.y /
+                        audioPieData.reduce(
+                          (total, item) => total + item.y,
+                          0,
+                        )) *
+                      100
+                  ).toFixed(2)}%`}
+                </span>
+
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.y}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/*<Row gutter={20} style={{ height: '100%' }}>
+        <Col span={6} style={{ height: '100%' }}>
             <div
               style={{
                 width: '100%',
                 height: '100%',
                 backgroundColor: '#292929',
-                float: 'left',
+                float: 'right',
+              }}
+            >
+              
+            </div>
+          </Col>
+          <Col span={6} style={{ height: '100%' }}>
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#292929',
+                float: 'right',
               }}
             >
               <Pie3D config={CONFIG} data={Data} />
@@ -129,7 +210,7 @@ const ProportionAudio = ({
                             : '#cd5c5c',
                       }}
                     />
-                    <span className={styles.legendTitle}>{item.x}</span>
+                    <span className={styles.legendTitle}>{item.x === 'active_pulse' ? '主动脉冲' : item.x === 'target_echo' ? '目标回声' : '辐射噪声'}</span>
                     <Divider type="vertical" />
                     <span className={styles.percent}>
                       {`${(Number.isNaN(item.y)
@@ -142,13 +223,14 @@ const ProportionAudio = ({
                           100
                       ).toFixed(2)}%`}
                     </span>
-                    <span className={styles.value}>{item.y}</span>
+                    
+                    <span className={styles.value}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.y}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </Col>
-        </Row>
+                            </Row>*/}
       </div>
     </Card>
   );
