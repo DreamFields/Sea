@@ -78,7 +78,7 @@ const TestApp = (props) => {
             yAxisIndex: 'none',
           },
           restore: {},
-          saveAsImage: {},
+          // saveAsImage: {},
         },
       },
       // visualMap: {
@@ -114,6 +114,7 @@ const TestApp = (props) => {
           //type: 'bar',
           type: Type2,
           //smooth: true
+          color: 'skyblue',
         },
       ],
     };

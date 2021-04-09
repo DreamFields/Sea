@@ -1328,6 +1328,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               onSearch={handleSearch}
               enterButton
               style={{ marginTop: 16 }}
+              disabled
             />
             <div className="fileContainer">
               <SideCardList />
