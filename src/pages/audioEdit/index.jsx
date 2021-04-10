@@ -7,7 +7,7 @@
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import style from './edit.less';
 import { connect, Dispatch } from 'umi';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
@@ -22,6 +22,9 @@ import {
   Spin,
   Popover,
   message,
+  Slider,
+  Alert,
+  List,
 } from 'antd';
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
@@ -29,6 +32,10 @@ import CookieUtil from '@/utils/cookie.js';
 
 let region_now;
 let audio_id_dup = undefined;
+const alert_message_1 =
+  '您可以通过点击一个标签后，在上方的开始时间和结束时间输入栏修改当前选择标签的起始时间和结束时间，修改后记得右键单击标签点击设置标签！';
+const alert_message_2 =
+  '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
 
 //定义音频可视化组件
 let wavesurfer;
@@ -37,7 +44,7 @@ const { TabPane } = Tabs;
 
 const Index = (props) => {
   // console.log(props);
-  const { dispatch, Pretreatment, versionsLoading, location } = props;
+  const { dispatch, Pretreatment, location } = props;
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
@@ -50,17 +57,17 @@ const Index = (props) => {
           request(`/v1/file/duplicate_url/${Pretreatment.audio_id}`, {
             method: 'GET',
           }).then((res) => {
-            console.log(
-              '经过随机化处理的副本路径',
-              res?.url + '?ran=' + randomString(true, 5, 15),
-            );
+            // console.log(
+            //   '经过随机化处理的副本路径',
+            //   res?.url + '?ran=' + randomString(true, 5, 15),
+            // );
             setpath(res?.url + '?ran=' + randomString(true, 5, 15));
           });
         } else {
           request(`/v1/file/now_version_url/${Pretreatment.audio_id}`, {
             method: 'GET',
           }).then((res) => {
-            console.log('版本文件路径', res?.url);
+            // console.log('版本文件路径', res?.url);
             setpath(res?.url);
           });
         }
@@ -80,11 +87,9 @@ const Index = (props) => {
         });
       }
     }
-  }, [tab]);
+  }, [tab, Pretreatment.audio_id]);
 
   const Waveform = () => {
-    const [loading, setloading] = useState(undefined);
-
     function editAnnotation(region) {
       form.setFieldsValue({
         start: region.start.toFixed(3),
@@ -103,7 +108,7 @@ const Index = (props) => {
         _regions = JSON.parse(regions);
       }
       if (tab === '2' && _regions) {
-        console.log(_regions);
+        // console.log(_regions);
         _regions.forEach(function (region) {
           region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
@@ -118,16 +123,15 @@ const Index = (props) => {
       };
 
       wavesurfer = WaveSurfer.create({
-        backgroundColor: 'black',
+        // backgroundColor: 'black',
         container: '#waveform',
         waveColor: 'skyblue',
         progressColor: '#1e90ff',
         splitChannels: true,
         cursorColor: '#bdc3c7',
         cursorWidth: 1,
-        // barWidth: 2,
+        // barWidth: 1,
         // barHeight: 1, // the height of the wave
-        // barGap: 2, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
         barRadius: 3,
         plugins: [
           WaveSurfer.cursor.create({
@@ -141,11 +145,11 @@ const Index = (props) => {
               'font-size': '10px',
             },
           }),
-          WaveSurfer.spectrogram.create({
-            wavesurfer: wavesurfer,
-            container: '#wave-spectrogram',
-            labels: true,
-          }),
+          // WaveSurfer.spectrogram.create({
+          //   wavesurfer: wavesurfer,
+          //   container: '#wave-spectrogram',
+          //   labels: true,
+          // }),
           WaveSurfer.regions.create(),
           WaveSurfer.timeline.create({
             height: 20,
@@ -156,7 +160,7 @@ const Index = (props) => {
       });
 
       if (path) {
-        console.log('path', path);
+        // console.log('path', path);
         wavesurfer.load(path);
       }
 
@@ -210,8 +214,9 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
 
-      // setTimeout(()=>{alert("aaa")}, 5000)
-      // return () => {};
+      return () => {
+        wavesurfer = null;
+      };
     }, [path]);
 
     const handle_save_audio = () => {
@@ -263,7 +268,7 @@ const Index = (props) => {
             &nbsp;
           </p>
           <div id="wave-timeline"></div>
-          <div id="waveform" style={{ backgroundColor: 'black' }}>
+          <div id="waveform">
             <div
               className="progress progress-striped active"
               id="progress-bar"
@@ -350,6 +355,16 @@ const Index = (props) => {
             </Button>
           </div>
         </div>
+        <Slider
+          defaultValue={20}
+          max={5000}
+          min={20}
+          style={{ marginTop: 80 }}
+          onChange={(value) => {
+            console.log('wavesufer', wavesurfer.params);
+            if (wavesurfer) wavesurfer.zoom(value);
+          }}
+        />
       </>
     );
   };
@@ -451,16 +466,13 @@ const Index = (props) => {
 
     useEffect(() => {
       if (Pretreatment.audio_id && !versions) {
-        // dispatch({
-        //   type: 'pretreatment/getVersions',
-        //   payload: Pretreatment.audio_id,
-        // });
         setloading(true);
         request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
           method: 'GET',
         }).then((res) => {
           // console.log("versions", res);
           if (res) {
+            // console.log(res);
             setversions(res);
             setloading(false);
             if (res[0]) {
@@ -496,7 +508,7 @@ const Index = (props) => {
         style={{
           overflowY: 'scroll',
           height: 350,
-          display: versions ? 'block' : 'none',
+          display: versions && tab === '1' ? 'block' : 'none',
           marginTop: 32,
         }}
       >
@@ -516,12 +528,12 @@ const Index = (props) => {
                     {item.generate_time}&nbsp;&nbsp;&nbsp;&nbsp;
                   </p>
                   <p>
-                    id为
-                    <span style={{ color: '#08979c' }}> {item.user_id} </span>
-                    的用户保存了版本
+                    <span style={{ color: '#08979c' }}>
+                      {' '}
+                      {`${item.user?.role_str}${item.user?.nickname}`}{' '}
+                    </span>
+                    保存了版本
                     <span style={{ color: '#08979c' }}> {item.version} </span>。
-                    {/* 保存文件名为：
-                    <span style={{ color: '#08979c' }}> {item.filename} </span> */}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </p>
                   <a
@@ -574,6 +586,20 @@ const Index = (props) => {
             <TabPane tab="音频编辑" key="1"></TabPane>
             <TabPane tab="标签处理" key="2"></TabPane>
           </Tabs>
+
+          <Alert
+            message={alert_message_1}
+            type="warning"
+            showIcon
+            style={{ display: tab == '2' ? 'none' : 'block' }}
+          />
+          <Alert
+            message={alert_message_2}
+            type="warning"
+            showIcon
+            style={{ display: tab == '1' ? 'none' : 'block' }}
+          />
+
           <Form
             name="edit"
             form={form}
@@ -594,19 +620,45 @@ const Index = (props) => {
                 span={12}
                 style={{ display: tab === '2' ? 'block' : 'none' }}
               >
-                <Form.Item name="note" label="标签">
+                <Form.Item name="note" label="备注">
                   <Input id="regionNote" name="note" autoComplete="off" />
                 </Form.Item>
               </Col>
             </Row>
           </Form>
+
           <div
             className={style.showWave}
             style={{ height: tab === '2' ? 388 : 608 }}
           >
             <Waveform />
           </div>
+
           <RollBackLine />
+
+          <List
+            size="large"
+            header={<div>所有标签</div>}
+            bordered
+            dataSource={
+              Pretreatment.tips === undefined
+                ? undefined
+                : JSON.parse(Pretreatment.tips)
+            }
+            renderItem={(item, index) => (
+              <List.Item style={{ borderColor: '#fff' }}>{`${
+                index + 1
+              }  起始时间：${item?.start} 结束时间：${item?.end} 备注：${
+                item?.data.note
+              }`}</List.Item>
+            )}
+            style={{
+              marginTop: 64,
+              overflowY: 'scroll',
+              display: tab === '2' ? 'block' : 'none',
+              height: 480,
+            }}
+          />
         </div>
       </div>
 
@@ -631,7 +683,7 @@ const Index = (props) => {
           id="saveRegion"
           onClick={handle_save_region}
         >
-          设置标记
+          设置标签
         </button>
         <button
           type="button"
@@ -639,7 +691,7 @@ const Index = (props) => {
           id="deleteRegion"
           onClick={handle_remove_region}
         >
-          删除标记
+          删除标签
         </button>
         <button
           type="button"

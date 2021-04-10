@@ -857,20 +857,29 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                 signal_type: undefined,
               });
             } else {
-              console.log('目标信息表单值', {
-                ...values,
-                collect_time:
+              let copy_vals = values;
+              // 处理掉多余的键值对
+              if (copy_vals['collect_d'] && copy_vals['collect_t']) {
+                copy_vals['collect_time'] =
                   values.collect_d?.format('YYYY-MM-DD') +
                   ' ' +
-                  values.collect_t?.format('HH:mm:ss'),
-              });
-              modify[type - 1]({
-                ...values,
-                collect_time:
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss'),
-              });
+                  values.collect_t?.format('HH:mm:ss');
+                delete copy_vals['collect_d'];
+                delete copy_vals['collect_t'];
+              }
+              for (let key in copy_vals) {
+                if (
+                  copy_vals[key] === undefined ||
+                  copy_vals[key] === null ||
+                  copy_vals[key] === 'undefined undefined' ||
+                  copy_vals[key] === 'null_null'
+                ) {
+                  delete copy_vals[key];
+                }
+              }
+              delete copy_vals['shaft_blade_count'];
+              console.log('目标信息表单值', copy_vals);
+              modify[type - 1](copy_vals);
             }
             sumForm.resetFields();
             setCurrent(current + 1);

@@ -40,7 +40,7 @@ const Model: ModelType = {
   effects: {
     *fetchSoundList({ payload }, { call, put }) {
       const data = yield call(FetchSoundList, payload);
-      console.log(data);
+      // console.log(data);
       if (data) {
         yield put({
           type: 'save',

@@ -898,38 +898,65 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         <Form
           onFinish={(values: any) => {
             if (!sound_data.signal_type) {
-              const putval = {
-                ...values,
-                name: values.fleet_name,
-                // collect_time:
-                //   values.collect_d?.format('YYYY-MM-DD') +
-                //   ' ' +
-                //   values.collect_t?.format('HH:mm:ss'),
-                signal_type: type,
-              };
-              console.log('目标信息表单值', putval);
-              modify[type - 1](putval);
+              let copy_vals = values;
+              // 处理掉多余的键值对
+              if (copy_vals['collect_d'] && copy_vals['collect_t']) {
+                copy_vals['collect_time'] =
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('HH:mm:ss');
+                delete copy_vals['collect_d'];
+                delete copy_vals['collect_t'];
+              }
+              for (let key in copy_vals) {
+                if (
+                  copy_vals[key] === undefined ||
+                  copy_vals[key] === null ||
+                  copy_vals[key] === 'undefined undefined' ||
+                  copy_vals[key] === 'null_null'
+                ) {
+                  delete copy_vals[key];
+                }
+              }
+              copy_vals['name'] = copy_vals['fleet_name'];
+              delete copy_vals['fleet_name'];
+              delete copy_vals['shaft_blade_count'];
+
+              console.log('目标信息表单值', copy_vals);
+              modify[type - 1](copy_vals);
             } else {
-              const _values = values;
-              delete _values.signal_type;
-              const putval = {
-                ..._values,
-                name: values.fleet_name,
-                fleet_name: null,
-                shaft_blade_count: null,
-                sid: sound_data.id,
-                collect_time:
-                  values.collect_d === undefined &&
-                  values.collect_t === undefined
-                    ? undefined
-                    : values.collect_d.format('YYYY-MM-DD') +
-                      ' ' +
-                      values.collect_t.format('HH:mm:ss'),
-              };
-              console.log('目标信息表单值', putval);
+              let copy_vals = values;
+              // 处理掉多余的键值对
+              for (let key in copy_vals) {
+                if (
+                  copy_vals[key] === undefined ||
+                  copy_vals[key] === null ||
+                  copy_vals[key] === 'undefined undefined' ||
+                  copy_vals[key] === 'null_null'
+                ) {
+                  delete copy_vals[key];
+                }
+              }
+              copy_vals['sid'] = sound_data.id;
+              copy_vals['name'] = copy_vals['fleet_name'];
+              delete copy_vals['signal_type'];
+              delete copy_vals['fleet_name'];
+              delete copy_vals['shaft_blade_count'];
+
+              if (copy_vals['collect_d'] && copy_vals['collect_t']) {
+                console.log(copy_vals['collect_d'], copy_vals['collect_t']);
+                copy_vals['collect_time'] =
+                  values.collect_d?.format('YYYY-MM-DD') +
+                  ' ' +
+                  values.collect_t?.format('HH:mm:ss');
+                delete copy_vals['collect_d'];
+                delete copy_vals['collect_t'];
+              }
+
+              console.log('目标信息表单值', copy_vals);
               request('/v1/sound/info', {
                 method: 'PUT',
-                data: putval,
+                data: copy_vals,
               }).then((res) => {
                 if (res) {
                   message.success('修改成功！');
@@ -1288,7 +1315,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   return (
     <div>
       <Layout>
-        <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999 }}>
+        <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999, height: 66 }}>
           <div className="logo">
             <b>水声数据库系统</b>
           </div>
@@ -1328,7 +1355,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               onSearch={handleSearch}
               enterButton
               style={{ marginTop: 16 }}
-              disabled
             />
             <div className="fileContainer">
               <SideCardList />
