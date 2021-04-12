@@ -158,11 +158,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             labelAlign="left"
             labelCol={{ span: 2 }}
           >
-            <Radio.Group
-              onChange={onChange}
-              value={type}
-              disabled={sound_data.signal_type ? true : false}
-            >
+            <Radio.Group onChange={onChange} value={type}>
               <Radio value={1}>辐射噪声</Radio>
               <Radio value={2}>目标回声</Radio>
               <Radio value={3}>主动脉冲</Radio>
@@ -608,7 +604,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     };
 
     const Powerplant = () => {
-      const [value, setValue] = useState(1);
+      const [value, setValue] = useState(-1);
       const [visible, setVisible] = useState(false);
       const [form] = Form.useForm();
 
@@ -897,6 +893,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       <div style={{ width: '100%' }}>
         <Form
           onFinish={(values: any) => {
+            console.log(sound_data);
             if (!sound_data.signal_type) {
               let copy_vals = values;
               // 处理掉多余的键值对
@@ -939,7 +936,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               }
               copy_vals['sid'] = sound_data.id;
               copy_vals['name'] = copy_vals['fleet_name'];
-              delete copy_vals['signal_type'];
               delete copy_vals['fleet_name'];
               delete copy_vals['shaft_blade_count'];
 
@@ -1253,30 +1249,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </Menu.Item>
           <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
             <Link to="/targetRecognition">二分类</Link>
-          </Menu.Item>
-        </Menu>
-      );
-    }
-  }
-
-  class TopMenu extends React.Component {
-    handleClick = (e) => {
-      // console.log('click ', e);
-    };
-
-    render() {
-      return (
-        <Menu
-          onClick={this.handleClick}
-          defaultSelectedKeys={['file']}
-          mode="horizontal"
-          style={{ backgroundColor: '#2D2D2D' }}
-        >
-          <Menu.Item key="file" icon={<FileOutlined />}>
-            文件
-          </Menu.Item>
-          <Menu.Item key="history" icon={<HistoryOutlined />}>
-            历史记录
           </Menu.Item>
         </Menu>
       );

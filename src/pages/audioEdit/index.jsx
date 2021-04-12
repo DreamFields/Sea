@@ -361,7 +361,6 @@ const Index = (props) => {
           min={20}
           style={{ marginTop: 80 }}
           onChange={(value) => {
-            console.log('wavesufer', wavesurfer.params);
             if (wavesurfer) wavesurfer.zoom(value);
           }}
         />
@@ -465,6 +464,7 @@ const Index = (props) => {
     const [loading, setloading] = useState(false);
 
     useEffect(() => {
+      // console.log(Pretreatment.tips === undefined)
       if (Pretreatment.audio_id && !versions) {
         setloading(true);
         request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
@@ -636,14 +636,13 @@ const Index = (props) => {
 
           <RollBackLine />
 
-          <List
+          {/* <List
             size="large"
             header={<div>所有标签</div>}
             bordered
             dataSource={
               Pretreatment.tips === undefined
-                ? undefined
-                : JSON.parse(Pretreatment.tips)
+                ? undefined : JSON.parse(Pretreatment.tips)
             }
             renderItem={(item, index) => (
               <List.Item style={{ borderColor: '#fff' }}>{`${
@@ -658,7 +657,7 @@ const Index = (props) => {
               display: tab === '2' ? 'block' : 'none',
               height: 480,
             }}
-          />
+          /> */}
         </div>
       </div>
 
