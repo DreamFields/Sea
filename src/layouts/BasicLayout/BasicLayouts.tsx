@@ -87,7 +87,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
   useEffect(() => {
     if (sound_list) {
-      // console.log('sound_list', sound_list);
+      console.log('sound_list', sound_list);
     }
   }, [sound_list]);
 
@@ -128,7 +128,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
     useEffect(() => {
       if (sound_data) {
-        // console.log("sound_data", sound_data);
+        console.log('sound_data', sound_data);
+        sumForm.resetFields();
         sumForm.setFieldsValue({
           ...sound_data,
           collect_d: sound_data.collect_time
@@ -887,80 +888,55 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       });
     };
 
-    const modify = [modifyNoise, modifyEcho, modifyPulse];
+    // const modify = [modifyNoise, modifyEcho, modifyPulse];
 
     return (
       <div style={{ width: '100%' }}>
         <Form
           onFinish={(values: any) => {
             console.log(sound_data);
-            if (!sound_data.signal_type) {
-              let copy_vals = values;
-              // 处理掉多余的键值对
-              if (copy_vals['collect_d'] && copy_vals['collect_t']) {
-                copy_vals['collect_time'] =
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss');
-                delete copy_vals['collect_d'];
-                delete copy_vals['collect_t'];
-              }
-              for (let key in copy_vals) {
-                if (
-                  copy_vals[key] === undefined ||
-                  copy_vals[key] === null ||
-                  copy_vals[key] === 'undefined undefined' ||
-                  copy_vals[key] === 'null_null'
-                ) {
-                  delete copy_vals[key];
-                }
-              }
-              copy_vals['name'] = copy_vals['fleet_name'];
-              delete copy_vals['fleet_name'];
-              delete copy_vals['shaft_blade_count'];
 
-              console.log('目标信息表单值', copy_vals);
-              modify[type - 1](copy_vals);
-            } else {
-              let copy_vals = values;
-              // 处理掉多余的键值对
-              for (let key in copy_vals) {
-                if (
-                  copy_vals[key] === undefined ||
-                  copy_vals[key] === null ||
-                  copy_vals[key] === 'undefined undefined' ||
-                  copy_vals[key] === 'null_null'
-                ) {
-                  delete copy_vals[key];
-                }
+            let copy_vals = values;
+            // 处理掉多余的键值对
+            for (let key in copy_vals) {
+              if (
+                copy_vals[key] === undefined ||
+                copy_vals[key] === null ||
+                copy_vals[key] === 'undefined undefined' ||
+                copy_vals[key] === 'null_null'
+              ) {
+                delete copy_vals[key];
               }
-              copy_vals['sid'] = sound_data.id;
-              copy_vals['name'] = copy_vals['fleet_name'];
-              delete copy_vals['fleet_name'];
-              delete copy_vals['shaft_blade_count'];
-
-              if (copy_vals['collect_d'] && copy_vals['collect_t']) {
-                console.log(copy_vals['collect_d'], copy_vals['collect_t']);
-                copy_vals['collect_time'] =
-                  values.collect_d?.format('YYYY-MM-DD') +
-                  ' ' +
-                  values.collect_t?.format('HH:mm:ss');
-                delete copy_vals['collect_d'];
-                delete copy_vals['collect_t'];
-              }
-
-              console.log('目标信息表单值', copy_vals);
-              request('/v1/sound/info', {
-                method: 'PUT',
-                data: copy_vals,
-              }).then((res) => {
-                if (res) {
-                  message.success('修改成功！');
-                } else {
-                  message.error('修改失败！');
-                }
-              });
             }
+            copy_vals['sid'] = sound_data.id;
+            copy_vals['name'] = copy_vals['fleet_name'];
+            delete copy_vals['fleet_name'];
+            delete copy_vals['shaft_blade_count'];
+
+            if (copy_vals['collect_d'] && copy_vals['collect_t']) {
+              console.log(copy_vals['collect_d'], copy_vals['collect_t']);
+              copy_vals['collect_time'] =
+                values.collect_d?.format('YYYY-MM-DD') +
+                ' ' +
+                values.collect_t?.format('HH:mm:ss');
+              delete copy_vals['collect_d'];
+              delete copy_vals['collect_t'];
+            }
+
+            console.log('这是修改目标信息表单值', copy_vals);
+            request('/v1/sound/info', {
+              method: 'PUT',
+              data: copy_vals,
+            }).then((res) => {
+              if (res) {
+                message.success('修改成功！');
+              } else {
+                message.error('修改失败！');
+                dispatch({
+                  type: 'soundList/fetchSoundList',
+                });
+              }
+            });
           }}
           form={sumForm}
         >
