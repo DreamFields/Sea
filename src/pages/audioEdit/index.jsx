@@ -24,7 +24,7 @@ import {
   message,
   Slider,
   Alert,
-  List,
+  Card,
 } from 'antd';
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
@@ -39,6 +39,11 @@ const alert_message_2 =
 
 //定义音频可视化组件
 let wavesurfer;
+
+const gridStyle = {
+  width: '100%',
+  textAlign: 'left',
+};
 
 const { TabPane } = Tabs;
 
@@ -636,28 +641,44 @@ const Index = (props) => {
 
           <RollBackLine />
 
-          {/* <List
-            size="large"
-            header={<div>所有标签</div>}
-            bordered
-            dataSource={
-              Pretreatment.tips === undefined
-                ? undefined : JSON.parse(Pretreatment.tips)
-            }
-            renderItem={(item, index) => (
-              <List.Item style={{ borderColor: '#fff' }}>{`${
-                index + 1
-              }  起始时间：${item?.start} 结束时间：${item?.end} 备注：${
-                item?.data.note
-              }`}</List.Item>
-            )}
-            style={{
-              marginTop: 64,
-              overflowY: 'scroll',
-              display: tab === '2' ? 'block' : 'none',
-              height: 480,
-            }}
-          /> */}
+          <div style={{ height: 500, overflowY: 'auto', marginTop: 48 }}>
+            <Card
+              title="标签列表"
+              style={{
+                display: tab === '2' ? 'block' : 'none',
+                backgroundColor: '#272727',
+              }}
+            >
+              {typeof Pretreatment.tips !== 'string'
+                ? null
+                : JSON.parse(Pretreatment.tips).map((item, index) => {
+                    console.log(item);
+                    return (
+                      <Card.Grid style={gridStyle}>
+                        <Row gutter={16}>
+                          <Col span={2}>{index + 1}</Col>
+                          <Col span={3}>{`开始时间：${item.start}s`}</Col>
+                          <Col span={3}>{`结束时间：${item.end}s`}</Col>
+                          <Col span={12}>{`备注：${item.data.note}`}</Col>
+                          <Col span={4}>
+                            <Button
+                              type="primary"
+                              onClick={() => {
+                                console.log(wavesurfer.getCurrentTime());
+                                wavesurfer.skip(
+                                  item.start - wavesurfer.getCurrentTime(),
+                                );
+                              }}
+                            >
+                              定位到标签
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Card.Grid>
+                    );
+                  })}
+            </Card>
+          </div>
         </div>
       </div>
 

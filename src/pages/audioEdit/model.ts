@@ -138,6 +138,11 @@ const Model: ModelType = {
       const data = yield call(SaveTips, payload);
       if (data) {
         message.success('保存标签成功！');
+        console.log(payload);
+        yield put({
+          type: 'getTips',
+          payload: payload.audio_id,
+        });
       }
     },
   },

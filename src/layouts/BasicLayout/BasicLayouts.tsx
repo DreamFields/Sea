@@ -1199,8 +1199,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 
     useEffect(() => {
       if (item) {
-        // console.log('sound_data', item);
         if (visible) {
+          console.log('sound_data', item);
           sumForm.resetFields();
           sumForm.setFieldsValue({
             ...item,
