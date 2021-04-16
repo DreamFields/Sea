@@ -9,6 +9,10 @@ import {
   List,
   Popconfirm,
   message,
+  Modal,
+  Tooltip,
+  Form,
+  Input,
 } from 'antd';
 import request from '@/utils/request';
 import {
@@ -43,20 +47,99 @@ const Index = () => {
     });
   }, []);
 
-  const data = [
-    {
-      title: 'Title 1',
-    },
-    {
-      title: 'Title 2',
-    },
-    {
-      title: 'Title 3',
-    },
-    {
-      title: 'Title 4',
-    },
-  ];
+  const ChangePasswordModal = (props) => {
+    const [visible, setvisible] = useState(false);
+    const [form] = Form.useForm();
+    const { id } = props;
+    useEffect(() => {
+      if (visible) {
+        form.resetFields();
+      }
+    }, [visible]);
+
+    const handleSubmit = (values: any) => {
+      // console.log({...values, id: id});
+      request('/v1/admin/pwadmin', {
+        method: 'PUT',
+        data: { ...values, id: id },
+      }).then((res) => {
+        if (res) {
+          message.success('修改成功！');
+        } else {
+          message.error('修改失败！');
+        }
+        setvisible(false);
+      });
+    };
+
+    return (
+      <>
+        <Tooltip title="修改密码">
+          <SettingOutlined
+            key="setting"
+            onClick={() => {
+              setvisible(true);
+            }}
+          />
+        </Tooltip>
+
+        <Modal
+          title="修改用户密码"
+          visible={visible}
+          onCancel={() => {
+            setvisible(false);
+          }}
+          onOk={() => {
+            form.submit();
+          }}
+        >
+          <Form form={form} onFinish={handleSubmit}>
+            <Form.Item
+              label="新密码"
+              name="newpassword"
+              labelAlign="right"
+              labelCol={{ span: 4 }}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码!',
+                },
+                {
+                  pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+                  message: '密码必须包含数字和英文，长度6-20!',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+            <Form.Item
+              label="确认密码"
+              name="renewpassword"
+              labelAlign="right"
+              labelCol={{ span: 4 }}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('newpassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('两次输入的密码不一致！');
+                  },
+                }),
+              ]}
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </>
+    );
+  };
 
   return (
     <>
@@ -70,9 +153,7 @@ const Index = () => {
             }}
           >
             <Meta
-              avatar={
-                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-              }
+              avatar={<Avatar>U</Avatar>}
               title={info?.nickname}
               description={`email: ${info?.email}`}
             />
@@ -96,7 +177,7 @@ const Index = () => {
                         backgroundColor: '#141414',
                       }}
                       actions={[
-                        // <SettingOutlined key="setting" />,
+                        <ChangePasswordModal />,
                         <Popconfirm
                           title="确认修改该用户权限为学生吗?"
                           placement="bottom"
@@ -125,14 +206,10 @@ const Index = () => {
                         >
                           <EditOutlined key="edit" />
                         </Popconfirm>,
-
-                        // <EllipsisOutlined key="ellipsis" />,
                       ]}
                     >
                       <Meta
-                        avatar={
-                          <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                        }
+                        avatar={<Avatar>T</Avatar>}
                         title={item.nickname}
                         description={`email: ${item.email}`}
                       />
@@ -141,6 +218,7 @@ const Index = () => {
                 )}
               />
             </TabPane>
+
             <TabPane tab="学生" key="2">
               <List
                 grid={{ gutter: 16, column: 4 }}
@@ -154,6 +232,7 @@ const Index = () => {
                         backgroundColor: '#141414',
                       }}
                       actions={[
+                        <ChangePasswordModal id={item.id} />,
                         <Popconfirm
                           title="确认修改该用户权限为教员吗?"
                           placement="bottom"
@@ -185,9 +264,7 @@ const Index = () => {
                       ]}
                     >
                       <Meta
-                        avatar={
-                          <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                        }
+                        avatar={<Avatar>S</Avatar>}
                         title={item.nickname}
                         description={`email: ${item.email}`}
                       />

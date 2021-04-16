@@ -111,7 +111,7 @@ const Index = (props: any) => {
             },
             {
               pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
-              message: '密码只能包含数字和英文，长度6-20!',
+              message: '密码必须包含数字和英文，长度6-20!',
             },
           ]}
           hasFeedback

@@ -8,45 +8,43 @@
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
-import { Cascader, Carousel, DatePicker, TimePicker, Card, Result } from 'antd';
-import { Row, Col } from 'antd';
 import { connect, Dispatch, history } from 'umi';
+import {
+  DatePicker,
+  TimePicker,
+  Result,
+  Row,
+  Col,
+  Input,
+  Button,
+  Select,
+  InputNumber,
+  Upload,
+  message,
+  Modal,
+  Form,
+  Radio,
+  Steps,
+} from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { Input, Button, Select, InputNumber } from 'antd';
-import { Upload, message, Modal, Form } from 'antd';
-import { Radio, Steps } from 'antd';
-import { InboxOutlined, AudioOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import style from './style.less';
 import CookieUtil from '@/utils/cookie.js';
 
-const { TextArea, Search } = Input;
 const { Dragger } = Upload;
 const { Option } = Select;
 const { Step } = Steps;
 
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1890ff',
-    }}
-  />
-);
-
 interface AudioImportContentProps {
   dispatch: Dispatch;
   InforImport: any;
-  // powerEngine: any;
-  // loading: boolean;
 }
 
 const AudioImport: React.FC<AudioImportContentProps> = (props) => {
   const { dispatch, InforImport } = props;
   const [id, setId] = useState(undefined);
   const [current, setCurrent] = useState(0);
-  // setId(5);
-  // console.log(dispatch);
 
   const [sumForm] = Form.useForm();
 
@@ -108,6 +106,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       }
     }, [InforImport.searchInfor]);
 
+    // 音频类型单选框
     const TypeRadio = () => {
       const onChange = (e) => {
         // type = e.target.value;
@@ -134,6 +133,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 辐射噪声特有信息表单
     const RadiationTarget = () => {
       const [value_1, setValue_1] = useState(-1);
       const [value_2, setValue_2] = useState(-1);
@@ -227,6 +227,28 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               </Form.Item>
             </Col>
           </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="principal_machine"
+                label="主机"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="auxiliary_machine"
+                label="辅机"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Modal
             visible={visible}
@@ -266,6 +288,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 目标回声特有信息表单
     const EchoTarget = () => {
       const [value, setValue] = useState(-1);
       const [visible, setVisible] = useState(false);
@@ -378,6 +401,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 主动脉冲特有信息表单
     const PulseTarget = () => {
       const [value_1, setValue_1] = useState(1);
       const [value_2, setValue_2] = useState(1);
@@ -557,6 +581,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 动力装置栏
     const Powerplant = () => {
       const [value, setValue] = useState(1);
       const [visible, setVisible] = useState(false);
@@ -631,6 +656,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 轴数叶数栏
     const Propeller = () => {
       const [value_2, setValue_2] = useState(-1);
       const [visible, setVisible] = useState(false);
@@ -735,9 +761,32 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
+    // 通用基础信息表单
     const SignalInfor = () => {
       return (
         <>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="speed"
+                label="航速"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <InputNumber style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="distance"
+                label="距离"
+                labelAlign="left"
+                labelCol={{ span: 4 }}
+              >
+                <InputNumber style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+          </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -1006,6 +1055,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     );
   };
 
+  // 上传图片信息
   const OtherFiles: React.FC<{}> = () => {
     const props = {
       name: 'picture',
@@ -1047,6 +1097,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     );
   };
 
+  // 上传本地音频
   const SoundFiles: React.FC<{}> = () => {
     const uploadprops = {
       name: 'audio',
@@ -1096,6 +1147,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     );
   };
 
+  // 流程完成页面
   const SuccessResult: React.FC<{}> = () => {
     return (
       <Result
@@ -1106,6 +1158,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     );
   };
 
+  // 主界面
   const MainContent = () => {
     const steps = [
       {

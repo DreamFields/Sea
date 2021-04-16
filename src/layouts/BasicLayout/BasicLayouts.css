@@ -47,6 +47,9 @@
   color: #f56a00;
 }
 
+.ant-card-bordered {
+  border: 3px solid #303030;
+}
 
 /* 滚动条区域的宽度 */
 ::-webkit-scrollbar {
