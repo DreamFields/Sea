@@ -87,12 +87,7 @@ const Index = (props: any) => {
             },
           ]}
         >
-          <Input
-            size="large"
-            placeholder="hlgdbzds"
-            className={style.user}
-            id="user"
-          />
+          <Input size="large" className={style.user} id="user" />
         </Form.Item>
 
         <Form.Item
@@ -112,7 +107,6 @@ const Index = (props: any) => {
         >
           <Input.Password
             size="large"
-            placeholder="Hrb123456@"
             className={style.password}
             id="password"
           />
