@@ -3,17 +3,18 @@ import Recorder from 'recorder-core';
 import 'recorder-core/src/engine/mp3';
 import 'recorder-core/src/engine/mp3-engine';
 import 'recorder-core/src/engine/wav';
-import { Button } from 'antd';
+import { Spin } from 'antd';
 import './index.less';
 import PLAY from './play.png';
 import PAUSE from './pause.png';
 import END from './end.png';
-import LOADING from './loading.png';
+import { LoadingOutlined } from '@ant-design/icons';
+// import LOADING from './loading.png';
 //import ajax from '../../api'
 
 let record;
 let Blob;
-const App = () => {
+const RecorderCn = () => {
   const [play, setPlay] = useState(false);
   const [visible, setVisible] = useState(false);
   let audio1 = useRef(null);
@@ -161,30 +162,33 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div className="recorder">
-        {play ? (
-          <img src={PAUSE} alt="" className="play" onClick={controlPlay} />
-        ) : (
-          <img src={PLAY} className="play" onClick={controlPlay} />
-        )}
-        <img src={END} className="play" onClick={controlEnd} />
+    <>
+      <h3>
+        {play ? '正在录音...' : '录音机：'}{' '}
+        <LoadingOutlined style={{ visibility: play ? 'visible' : 'hidden' }} />
+      </h3>
+      <div style={{ display: 'flex', marginBottom: 32 }}>
+        <div className="recorder">
+          {play ? (
+            <img src={PAUSE} alt="" className="play" onClick={controlPlay} />
+          ) : (
+            <img src={PLAY} className="play" onClick={controlPlay} />
+          )}
+          <img src={END} className="play" onClick={controlEnd} />
+        </div>
+
+        <audio
+          ref={(c) => (audio1 = c)}
+          controls={true}
+          style={{ display: visible ? 'block' : 'none' }}
+        ></audio>
+        {/*<button onClick={recordOpen}>创建录音机并请求权限</button>
+        <button onClick={recordPause}>暂停录音</button>
+        <button onClick={recordResume}>继续录音</button>
+        <button onClick={recordStop}>结束录音</button>*/}
       </div>
-      {/*visible? <Button type="primary" onClick={controlUpload} >上传</Button> : <div></div>*/}
-      <br />
-      {/*<button onClick={getRecorder}>获取后端数据</button>*/}
-      <br />
-      {visible ? (
-        <audio ref={(c) => (audio1 = c)} controls={true}></audio>
-      ) : (
-        <div></div>
-      )}
-      {/*<button onClick={recordOpen}>创建录音机并请求权限</button>
-      <button onClick={recordPause}>暂停录音</button>
-      <button onClick={recordResume}>继续录音</button>
-      <button onClick={recordStop}>结束录音</button>*/}
-    </div>
+    </>
   );
 };
 
-export default App;
+export default RecorderCn;

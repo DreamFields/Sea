@@ -31,6 +31,7 @@ import moment from 'moment';
 import Cookies from 'js-cookie';
 import style from './style.less';
 import CookieUtil from '@/utils/cookie.js';
+import RecorderCn from '@/components/recorder/index.jsx';
 
 const { Dragger } = Upload;
 const { Option } = Select;
@@ -1176,7 +1177,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const steps = [
       {
         title: '上传音频',
-        content: <SoundFiles />,
+        content: (
+          <>
+            <SoundFiles />
+            <RecorderCn />
+          </>
+        ),
       },
       {
         title: '完善音频信息',
