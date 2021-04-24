@@ -120,7 +120,7 @@ const Index = (props) => {
           wavesurfer.addRegion(region);
         });
       } else if (tab === '1' && tip_region) {
-        console.log(tip_region);
+        // console.log(tip_region);
         tip_region.forEach(function (region) {
           region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
@@ -413,9 +413,11 @@ const Index = (props) => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
+      callback: (res) => {},
     });
   };
 
+  // 正确的在dispatch中拿到回调  其实就是一个收集-发布的过程！
   const handle_paste = () => {
     // console.log(Pretreatment);
     dispatch({
@@ -426,20 +428,22 @@ const Index = (props) => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
-    }).then((res) => {
-      console.log(res);
-      const _path = path + '?ran=' + randomString(true, 5, 15);
-      tip_region = [
-        {
-          start: form.getFieldsValue().start,
-          end: form.getFieldsValue().end,
-          data: {
-            note: '',
+      callback: (res) => {
+        // console.log(res);
+        const _path = path + '?ran=' + randomString(true, 5, 15);
+        tip_region = [
+          {
+            start: parseFloat(form.getFieldsValue().start),
+            end:
+              parseFloat(form.getFieldsValue().start) + res?.audio_lenth / 1000,
+            data: {
+              note: '',
+            },
           },
-        },
-      ];
-      form.resetFields();
-      setpath(_path);
+        ];
+        form.resetFields();
+        setpath(_path);
+      },
     });
   };
 
@@ -453,19 +457,21 @@ const Index = (props) => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
-    }).then(() => {
-      const _path = path + '?ran=' + randomString(true, 5, 15);
-      tip_region = [
-        {
-          start: parseFloat(form.getFieldsValue().start),
-          end: parseFloat(form.getFieldsValue().start) + 0.05,
-          data: {
-            note: '',
+      callback: (res) => {
+        console.log(res);
+        const _path = path + '?ran=' + randomString(true, 5, 15);
+        tip_region = [
+          {
+            start: parseFloat(form.getFieldsValue().start),
+            end: parseFloat(form.getFieldsValue().start) + 0.05,
+            data: {
+              note: '',
+            },
           },
-        },
-      ];
-      form.resetFields();
-      setpath(_path);
+        ];
+        form.resetFields();
+        setpath(_path);
+      },
     });
   };
 
@@ -479,19 +485,20 @@ const Index = (props) => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
-    }).then(() => {
-      const _path = path + '?ran=' + randomString(true, 5, 15);
-      tip_region = [
-        {
-          start: parseFloat(form.getFieldsValue().start),
-          end: parseFloat(form.getFieldsValue().start) + 0.05,
-          data: {
-            note: '',
+      callback: (res) => {
+        const _path = path + '?ran=' + randomString(true, 5, 15);
+        tip_region = [
+          {
+            start: parseFloat(form.getFieldsValue().start),
+            end: parseFloat(form.getFieldsValue().start) + 0.05,
+            data: {
+              note: '',
+            },
           },
-        },
-      ];
-      form.resetFields();
-      setpath(_path);
+        ];
+        form.resetFields();
+        setpath(_path);
+      },
     });
   };
 

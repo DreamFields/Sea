@@ -126,9 +126,11 @@ function custom_request(
     }).then((res) => {
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
+
         if (res.total !== undefined) {
           resolve({ data: res.data, total: res.total });
         } else {
+          // console.log(res);
           resolve(res.data !== undefined ? res.data : true);
         }
       } else if (res) {

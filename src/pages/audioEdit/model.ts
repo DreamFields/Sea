@@ -66,9 +66,10 @@ const Model: ModelType = {
         });
       }
     },
-    *editAudio({ payload }, { call, put }) {
+    *editAudio({ payload, callback }, { call, put }) {
       const data = yield call(EditAudio, payload);
       if (data) {
+        callback(data);
         message.success('编辑音频成功');
       }
     },
@@ -88,17 +89,17 @@ const Model: ModelType = {
       const data = yield call(GetVersions, payload);
       if (data) {
         // console.log("版本记录", data);
-        let versions = [];
-        if (data) {
-          for (let i = data.length - 1; i >= 0; i--) {
-            if (data[i].version !== -1) {
-              versions.push(data[i]);
-            }
-          }
-        }
+        // let versions = [];
+        // if (data) {
+        //   for (let i = data.length - 1; i >= 0; i--) {
+        //     if (data[i].version !== -1) {
+        //       versions.push(data[i]);
+        //     }
+        //   }
+        // }
         yield put({
           type: 'save',
-          payload: { audio_versions: versions },
+          payload: { audio_versions: data },
         });
       }
     },

@@ -104,6 +104,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   useEffect(() => {
     dispatch({
       type: 'soundList/fetchSoundList',
+    }).then((res) => {
+      console.log(res);
     });
     return () => {};
   }, [1]);

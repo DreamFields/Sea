@@ -54,7 +54,9 @@ export async function SearchBypower_engine({ info }: { info: any }) {
 // 螺旋桨信息搜索
 export async function SearchBypropeller({ info }: { info: any }) {
   return request(
-    `/v1/sound/propeller/${info.split('_')[0]}/${info.split('_')[1]}`,
+    `/v1/sound/propeller/${info.split('_')[0]}/${info.split('_')[1]}/${
+      info.split('_')[2]
+    }`,
     {
       method: 'GET',
     },
