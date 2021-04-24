@@ -242,7 +242,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                   <div style={{ fontSize: 80, margin: '0 auto' }}>
                     <RobotOutlined />
                   </div>
-                  <div style={{ fontSize: 25 }}>目标自动识别</div>
+                  <div style={{ fontSize: 25 }}>目标分类识别</div>
                 </Space>
               </div>
             </Link>

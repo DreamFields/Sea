@@ -1355,7 +1355,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <Link to="/features">特征提取</Link>
           </Menu.Item>
           <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
-            <Link to="/targetRecognition">二分类</Link>
+            <Link to="/targetRecognition">分类识别</Link>
           </Menu.Item>
         </Menu>
       );

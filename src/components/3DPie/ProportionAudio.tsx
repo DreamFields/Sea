@@ -33,38 +33,6 @@ const ProportionAudio = ({
 }: {
   audioPieData: VisitDataType[];
 }) => {
-  /*Data=[
-      {
-        value: audioPieData.reduce(function (total, item) {
-          if (item.x === 'active_pulse') {
-            total = total + item.y;
-          }
-          return total;
-        }, 0),
-        label: 'active_pulse',
-        color: '#faebd7',
-      },
-      {
-        value: audioPieData.reduce(function (total, item) {
-          if (item.x === 'target_echo') {
-            total = total + item.y;
-          }
-          return total;
-        }, 0),
-        label: 'target_echo',
-        color: '#ff7f50',
-      },
-      {
-        value: audioPieData.reduce(function (total, item) {
-          if (item.x === 'radiated_noise') {
-            total = total + item.y;
-          }
-          return total;
-        }, 0),
-        label: 'radiated_noise',
-        color: '#cd5c5c',
-      },
-    ]*/
   let Data = [
     {
       value: audioPieData[0].y,
@@ -92,37 +60,11 @@ const ProportionAudio = ({
         height: '100%',
       }}
     >
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#292929',
-          float: 'left',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            width: '25%',
-            height: '100%',
-            backgroundColor: '#292929',
-            float: 'left',
-            position: 'relative',
-            left: '25%',
-          }}
-        >
+      <div className={styles.content}>
+        <div className={styles.pie3d}>
           <Pie3D config={CONFIG} data={Data} />
         </div>
-        <div
-          style={{
-            width: '30%',
-            height: '100%',
-            backgroundColor: '#292929',
-            float: 'left',
-            position: 'relative',
-            left: '30%',
-          }}
-        >
+        <div className={styles.text}>
           <ul className={styles.legend}>
             {audioPieData.map((item, i) => (
               <li key={item.x}>
@@ -162,75 +104,6 @@ const ProportionAudio = ({
             ))}
           </ul>
         </div>
-        {/*<Row gutter={20} style={{ height: '100%' }}>
-        <Col span={6} style={{ height: '100%' }}>
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#292929',
-                float: 'right',
-              }}
-            >
-              
-            </div>
-          </Col>
-          <Col span={6} style={{ height: '100%' }}>
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#292929',
-                float: 'right',
-              }}
-            >
-              <Pie3D config={CONFIG} data={Data} />
-            </div>
-          </Col>
-          <Col span={8} style={{ height: '100%' }}>
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#292929',
-                float: 'left',
-              }}
-            >
-              <ul className={styles.legend}>
-                {audioPieData.map((item, i) => (
-                  <li key={item.x}>
-                    <span
-                      className={styles.dot}
-                      style={{
-                        backgroundColor:
-                          item.x === 'active_pulse'
-                            ? '#faebd7'
-                            : item.x === 'target_echo'
-                            ? '#ff7f50'
-                            : '#cd5c5c',
-                      }}
-                    />
-                    <span className={styles.legendTitle}>{item.x === 'active_pulse' ? '主动脉冲' : item.x === 'target_echo' ? '目标回声' : '辐射噪声'}</span>
-                    <Divider type="vertical" />
-                    <span className={styles.percent}>
-                      {`${(Number.isNaN(item.y)
-                        ? 0
-                        : (item.y /
-                            audioPieData.reduce(
-                              (total, item) => total + item.y,
-                              0,
-                            )) *
-                          100
-                      ).toFixed(2)}%`}
-                    </span>
-                    
-                    <span className={styles.value}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.y}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Col>
-                            </Row>*/}
       </div>
     </Card>
   );
