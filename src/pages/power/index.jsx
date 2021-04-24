@@ -20,7 +20,7 @@ const sever = 'http://127.0.0.1:5000'; //测试用接口
 const TestApp = (props) => {
   console.log(props);
 
-  const { audio_id, dispatch } = props;
+  const { audio_id, audio_name } = props;
 
   const [loading, setloading] = useState(false);
 
@@ -136,17 +136,15 @@ const TestApp = (props) => {
   const changeToLog = () => {
     setmyType('log');
   };
-
   const getData = () => {
     setloading(true);
-    console.log('send requir');
-    request('/v1/feature/Power', {
+    request(`/v1/feature/Power`, {
       method: 'POST',
-      data: { file_id: audio_id },
+      data:{file_id:audio_id},
       // data: { file_id: '6152.wav' },
     }).then((res) => {
       //setPowerdata(res);
-      console.log(res);
+      console.log('res: '+res);
       for (var i in res) {
         data_Power.push(res[i] * 10);
         x_data.push(i);

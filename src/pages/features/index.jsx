@@ -21,12 +21,10 @@ import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
 import PowerApp from '../power/index.jsx';
-
+import DemonApp from '../demon_analysis/index'
 const { SubMenu } = Menu;
 const rightWidth = '22%';
-
 let feature_key;
-
 const Index = (props) => {
   const { FeaturesInfor, dispatch } = props;
   const [path, setpath] = useState(undefined);
@@ -36,9 +34,7 @@ const Index = (props) => {
   const [mean, setmean] = useState(undefined); // 平均值
   const [calc, setcalc] = useState(undefined); // 信息熵
   const [db, setdb] = useState(undefined); //分贝
-
   const [form] = Form.useForm();
-
   useEffect(() => {
     console.log('FeaturesInfor', FeaturesInfor);
     if (FeaturesInfor.audio_id) {
@@ -51,19 +47,16 @@ const Index = (props) => {
     }
     return () => {};
   }, [FeaturesInfor]);
-
   class RightSidermenu extends React.Component {
     handleClick = (e) => {
       console.log('click ', e);
       feature_key = e.key;
       setfkey(e.key);
-
       setpicIfo(undefined);
       setva(undefined);
       setmean(undefined);
       setcalc(undefined);
     };
-
     render() {
       return (
         <Menu
@@ -78,31 +71,18 @@ const Index = (props) => {
           <Menu.Item key="2" disabled>
             低频线谱
           </Menu.Item>
-          <Menu.Item key="3" disabled>
+          <Menu.Item key="3" >
             调制谱
           </Menu.Item>
-          <Menu.Item key="4">梅尔倒谱系数</Menu.Item>
+          <Menu.Item key="4">梅尔倒谱</Menu.Item>
           <Menu.Item key="5">过零率</Menu.Item>
-          <Menu.Item key="10" disabled>
-            信号形式
-          </Menu.Item>
-          <Menu.Item key="11" disabled>
-            信号基频
-          </Menu.Item>
-          <Menu.Item key="12" disabled>
-            带宽
-          </Menu.Item>
-          <Menu.Item key="13" disabled>
-            平台属性
-          </Menu.Item>
         </Menu>
       );
     }
   }
-
   class Waveform extends React.Component {
     componentDidMount() {
-      var wavesurfer = WaveSurfer.create({
+      let wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: 'skyblue',
         progressColor: '#1e90ff',
@@ -131,26 +111,23 @@ const Index = (props) => {
           }),
         ],
       });
-
       if (path) {
         wavesurfer.load(path);
       }
-
       btnPlay.addEventListener('click', function () {
         wavesurfer.playPause();
       });
-
       // Progress bar
       (function () {
-        var progressDiv = document.querySelector('#progress-bar');
-        var progressBar = progressDiv.querySelector('.progress-bar');
+        let progressDiv = document.querySelector('#progress-bar');
+        let progressBar = progressDiv.querySelector('.progress-bar');
 
-        var showProgress = function (percent) {
+        let showProgress = function (percent) {
           progressDiv.style.display = 'block';
           progressBar.style.width = percent + '%';
         };
 
-        var hideProgress = function () {
+       let hideProgress = function () {
           progressDiv.style.display = 'none';
         };
 
@@ -163,7 +140,6 @@ const Index = (props) => {
 
     getFeatures() {
       let loading = document.querySelector('#divLoading');
-
       if (f_key !== '1') {
         loading.style.display = 'block';
       }
@@ -179,7 +155,6 @@ const Index = (props) => {
         }).then((res) => {
           console.log(res);
           loading.style.display = 'none';
-
           setpicIfo(res?.picIfo);
           setva(res?.var);
           setmean(res?.mean);
@@ -196,7 +171,6 @@ const Index = (props) => {
         }).then((res) => {
           console.log(res);
           loading.style.display = 'none';
-
           setpicIfo(res?.picIfo);
           setva(res?.var);
           setmean(res?.mean);
@@ -204,7 +178,6 @@ const Index = (props) => {
         });
       }
     }
-
     render() {
       return (
         <div style={{ backgroundColor: '#2F2F2F' }}>
@@ -258,7 +231,13 @@ const Index = (props) => {
             id="divshow_1"
             style={{ display: f_key === '1' ? 'block' : 'none' }}
           >
-            <PowerApp audio_id={FeaturesInfor.audio_id} />
+            <PowerApp audio_id={FeaturesInfor.audio_id} audio_name = {FeaturesInfor.audio_name} />
+          </div>
+          <div
+            id="divshow_2"
+            style={{ display: f_key === '3' ? 'block' : 'none' }}
+          >
+            <DemonApp audio_id={FeaturesInfor.audio_id} audio_name = {FeaturesInfor.audio_name} />
           </div>
         </div>
       );
@@ -305,11 +284,9 @@ const Index = (props) => {
       </div>
     );
   };
-
   return (
     <>
       <MainContent />
-
       <div
         style={{
           width: rightWidth,
@@ -334,7 +311,6 @@ const Index = (props) => {
           <RightSidermenu />
         </div>
       </div>
-
       <div
         style={{
           width: rightWidth,
@@ -360,7 +336,7 @@ const Index = (props) => {
           {/* 直接看antd的statistic源码，做一个频率和分贝的数据展示 */}
           <div
             className="ant-statistic"
-            style={{ display: f_key === '1' ? 'block' : 'none' }}
+            style={{ display: f_key === '1'||f_key === '3' ? 'block' : 'none' }}
           >
             <div className="ant-statistic-title">分贝</div>
             <div className="ant-statistic-content">
@@ -389,7 +365,6 @@ const Index = (props) => {
               </span>
             </div>
           </div>
-
           <Statistic title="信息熵" value={calc} />
           <Statistic title="均值" value={mean} />
           <Statistic title="方差" value={va} />
