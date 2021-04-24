@@ -39,6 +39,7 @@ const alert_message_2 =
 
 //定义音频可视化组件
 let wavesurfer;
+let tip_region = null;
 
 const gridStyle = {
   width: '100%',
@@ -115,6 +116,12 @@ const Index = (props) => {
       if (tab === '2' && _regions) {
         // console.log(_regions);
         _regions.forEach(function (region) {
+          region.color = 'rgba(100,149,237,0.3)';
+          wavesurfer.addRegion(region);
+        });
+      } else if (tab === '1' && tip_region) {
+        console.log(tip_region);
+        tip_region.forEach(function (region) {
           region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
         });
@@ -388,7 +395,16 @@ const Index = (props) => {
   };
 
   const handle_copy = () => {
-    console.log(Pretreatment);
+    // console.log(Pretreatment);
+    var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
+      var region = wavesurfer.regions.list[id];
+      return {
+        start: region.start,
+        end: region.end,
+        data: region.data,
+      };
+    });
+    console.log(regions);
     dispatch({
       type: 'pretreatment/editAudio',
       payload: {
@@ -401,7 +417,7 @@ const Index = (props) => {
   };
 
   const handle_paste = () => {
-    console.log(Pretreatment);
+    // console.log(Pretreatment);
     dispatch({
       type: 'pretreatment/editAudio',
       payload: {
@@ -410,14 +426,25 @@ const Index = (props) => {
         end: form.getFieldsValue().end,
         file_name: Pretreatment.audio_name,
       },
-    }).then(() => {
+    }).then((res) => {
+      console.log(res);
       const _path = path + '?ran=' + randomString(true, 5, 15);
+      tip_region = [
+        {
+          start: form.getFieldsValue().start,
+          end: form.getFieldsValue().end,
+          data: {
+            note: '',
+          },
+        },
+      ];
+      form.resetFields();
       setpath(_path);
     });
   };
 
   const handle_delete = () => {
-    console.log(Pretreatment);
+    // console.log(Pretreatment);
     dispatch({
       type: 'pretreatment/editAudio',
       payload: {
@@ -428,12 +455,22 @@ const Index = (props) => {
       },
     }).then(() => {
       const _path = path + '?ran=' + randomString(true, 5, 15);
+      tip_region = [
+        {
+          start: parseFloat(form.getFieldsValue().start),
+          end: parseFloat(form.getFieldsValue().start) + 0.05,
+          data: {
+            note: '',
+          },
+        },
+      ];
+      form.resetFields();
       setpath(_path);
     });
   };
 
   const handle_cut = () => {
-    console.log(Pretreatment);
+    // console.log(Pretreatment);
     dispatch({
       type: 'pretreatment/editAudio',
       payload: {
@@ -444,6 +481,16 @@ const Index = (props) => {
       },
     }).then(() => {
       const _path = path + '?ran=' + randomString(true, 5, 15);
+      tip_region = [
+        {
+          start: parseFloat(form.getFieldsValue().start),
+          end: parseFloat(form.getFieldsValue().start) + 0.05,
+          data: {
+            note: '',
+          },
+        },
+      ];
+      form.resetFields();
       setpath(_path);
     });
   };
@@ -459,6 +506,7 @@ const Index = (props) => {
     }).then((res) => {
       console.log(res);
       const outputUrl = res + '?ran=' + randomString(true, 5, 15);
+      form.resetFields();
       window.open(outputUrl, '_blank');
     });
   };
@@ -703,7 +751,7 @@ const Index = (props) => {
           id="saveRegion"
           onClick={handle_save_region}
         >
-          设置标签
+          {tab === '1' ? '设置区域' : '设置标签'}
         </button>
         <button
           type="button"
@@ -711,7 +759,7 @@ const Index = (props) => {
           id="deleteRegion"
           onClick={handle_remove_region}
         >
-          删除标签
+          {tab === '1' ? '删除区域' : '删除标签'}
         </button>
         <button
           type="button"
@@ -735,7 +783,7 @@ const Index = (props) => {
           onClick={handle_delete}
           style={{ display: tab === '1' ? 'block' : 'none' }}
         >
-          删除区域
+          删除音频区域
         </button>
         <button
           type="button"

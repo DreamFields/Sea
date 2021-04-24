@@ -78,7 +78,7 @@ const searchTip = (
     <br />
     声音类型(辐射噪声1，目标回声2，主动脉冲3)：1
     <br />
-    螺旋桨(轴数加下划线加叶数)：2_4
+    螺旋桨(轴数_叶数_转速)：2_4
     <br />
     日期(年-月-日)：2020-01-01
   </div>
@@ -148,23 +148,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     const [type, settype] = useState(
       sound_data.signal_type ? sound_data.signal_type : -1,
     );
-
-    // useEffect(() => {
-    //   if (sound_data) {
-    //     console.log('sound_data', sound_data);
-    //     sumForm.resetFields();
-    //     sumForm.setFieldsValue({
-    //       ...sound_data,
-    //       collect_d: sound_data.collect_time
-    //         ? moment(sound_data.collect_time?.split(' ')[0], 'YYYY/MM/DD')
-    //         : undefined,
-    //       collect_t: sound_data.collect_time
-    //         ? moment(sound_data.collect_time?.split(' ')[1], 'HH:mm:ss')
-    //         : undefined,
-    //       shaft_blade_count: `${sound_data.shaft_count}_${sound_data.blade_count}`,
-    //     });
-    //   }
-    // }, []);
 
     // 音频类型单选框
     const TypeRadio = () => {
@@ -747,6 +730,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           sumForm.setFieldsValue({
             blade_count: Number(e.target.value.split('_')[1]),
           });
+          sumForm.setFieldsValue({
+            rotationl_speed: Number(e.target.value.split('_')[2]),
+          });
         }
       };
 
@@ -756,19 +742,23 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <Col span={10} style={{ display: 'none' }}>
               <Form.Item name="shaft_count" label="轴数"></Form.Item>
               <Form.Item name="blade_count" label="叶数"></Form.Item>
+              <Form.Item name="rotationl_speed" label="转速"></Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                name="shaft_blade_count"
-                label="轴叶数"
+                name="shaft_blade_rotationl"
+                label="螺旋桨"
                 labelAlign="left"
                 labelCol={{ span: 2 }}
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.propeller?.map((item) => {
                     return (
-                      <Radio value={`${item.shaft_count}_${item.blade_count}`}>
+                      <Radio
+                        value={`${item.shaft_count}_${item.blade_count}_${item.rotationl_speed}`}
+                      >
                         {item.shaft_count}轴{item.blade_count}叶
+                        {item.rotationl_speed}转速
                       </Radio>
                     );
                   })}
@@ -823,6 +813,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               <Form.Item
                 name="blade_count"
                 label="叶数"
+                style={{ marginTop: 20 }}
+              >
+                <InputNumber style={{ width: '80%' }} />
+              </Form.Item>
+              <Form.Item
+                name="rotationl_speed"
+                label="转速"
                 style={{ marginTop: 20 }}
               >
                 <InputNumber style={{ width: '80%' }} />
@@ -1010,7 +1007,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 copy_vals[key] === undefined ||
                 copy_vals[key] === null ||
                 copy_vals[key] === 'undefined undefined' ||
-                copy_vals[key] === 'null_null'
+                copy_vals[key] === 'null_null_null'
               ) {
                 delete copy_vals[key];
               }
@@ -1018,7 +1015,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             copy_vals['sid'] = sound_data.id;
             copy_vals['name'] = copy_vals['fleet_name'];
             delete copy_vals['fleet_name'];
-            delete copy_vals['shaft_blade_count'];
+            delete copy_vals['shaft_blade_rotationl'];
 
             if (copy_vals['collect_d'] && copy_vals['collect_t']) {
               console.log(copy_vals['collect_d'], copy_vals['collect_t']);
@@ -1210,7 +1207,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             collect_t: item.collect_time
               ? moment(item.collect_time?.split(' ')[1], 'HH:mm:ss')
               : undefined,
-            shaft_blade_count: `${item.shaft_count}_${item.blade_count}`,
+            shaft_blade_rotationl: `${item.shaft_count}_${item.blade_count}_${item.rotationl_speed}`,
           });
         }
       }

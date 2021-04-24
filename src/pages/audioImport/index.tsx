@@ -656,7 +656,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       );
     };
 
-    // 轴数叶数栏
+    // 螺旋桨
     const Propeller = () => {
       const [value_2, setValue_2] = useState(-1);
       const [visible, setVisible] = useState(false);
@@ -674,7 +674,9 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           sumForm.setFieldsValue({
             blade_count: Number(e.target.value.split('_')[1]),
           });
-          // console.log("目标信息表单值", sumForm.getFieldsValue());
+          sumForm.setFieldsValue({
+            rotationl_speed: Number(e.target.value.split('_')[2]),
+          });
         }
       };
 
@@ -684,19 +686,23 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             <Col span={10} style={{ display: 'none' }}>
               <Form.Item name="shaft_count" label="轴数"></Form.Item>
               <Form.Item name="blade_count" label="叶数"></Form.Item>
+              <Form.Item name="rotationl_speed" label="转速"></Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
                 name="shaft_blade_count"
-                label="轴叶数"
+                label="螺旋桨"
                 labelAlign="left"
                 labelCol={{ span: 2 }}
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.propeller?.map((item) => {
                     return (
-                      <Radio value={`${item.shaft_count}_${item.blade_count}`}>
+                      <Radio
+                        value={`${item.shaft_count}_${item.blade_count}_${item.rotationl_speed}`}
+                      >
                         {item.shaft_count}轴{item.blade_count}叶
+                        {item.rotationl_speed}转速
                       </Radio>
                     );
                   })}
@@ -751,6 +757,13 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               <Form.Item
                 name="blade_count"
                 label="叶数"
+                style={{ marginTop: 20 }}
+              >
+                <InputNumber style={{ width: '80%' }} />
+              </Form.Item>
+              <Form.Item
+                name="rotationl_speed"
+                label="转速"
                 style={{ marginTop: 20 }}
               >
                 <InputNumber style={{ width: '80%' }} />
