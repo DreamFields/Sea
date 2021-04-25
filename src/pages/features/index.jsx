@@ -21,7 +21,7 @@ import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
 import PowerApp from '../power/index.jsx';
-import DemonApp from '../demon_analysis/index'
+import DemonApp from '../demon_analysis/index';
 const { SubMenu } = Menu;
 const rightWidth = '22%';
 let feature_key;
@@ -71,18 +71,17 @@ const Index = (props) => {
           <Menu.Item key="2" disabled>
             低频线谱
           </Menu.Item>
-          <Menu.Item key="3" >
-            调制谱
-          </Menu.Item>
+          <Menu.Item key="3">调制谱</Menu.Item>
           <Menu.Item key="4">梅尔倒谱</Menu.Item>
           <Menu.Item key="5">过零率</Menu.Item>
+          <Menu.Item key="6">语谱图</Menu.Item>
         </Menu>
       );
     }
   }
   class Waveform extends React.Component {
     componentDidMount() {
-      let wavesurfer = WaveSurfer.create({
+      var wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: 'skyblue',
         progressColor: '#1e90ff',
@@ -119,15 +118,14 @@ const Index = (props) => {
       });
       // Progress bar
       (function () {
-        let progressDiv = document.querySelector('#progress-bar');
-        let progressBar = progressDiv.querySelector('.progress-bar');
-
-        let showProgress = function (percent) {
+        var progressDiv = document.querySelector('#progress-bar');
+        var progressBar = progressDiv.querySelector('.progress-bar');
+        var showProgress = function (percent) {
           progressDiv.style.display = 'block';
           progressBar.style.width = percent + '%';
         };
 
-       let hideProgress = function () {
+        var hideProgress = function () {
           progressDiv.style.display = 'none';
         };
 
@@ -137,13 +135,11 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
     }
-
     getFeatures() {
       let loading = document.querySelector('#divLoading');
       if (f_key !== '1') {
         loading.style.display = 'block';
       }
-
       if (f_key === '4') {
         // show_1.style.display = 'none';
         // show_0.style.display = 'block';
@@ -165,13 +161,26 @@ const Index = (props) => {
           method: 'POST',
           data: {
             file_id: FeaturesInfor.audio_id,
-            StartTime: form.getFieldsValue().start,
             EndTime: form.getFieldsValue().end,
+            StartTime: form.getFieldsValue().start,
           },
         }).then((res) => {
           console.log(res);
           loading.style.display = 'none';
           setpicIfo(res?.picIfo);
+          setva(res?.var);
+          setmean(res?.mean);
+          setcalc(res?.calc);
+        });
+      } else if (f_key === '6') {
+        request(`/v1/feature/Mel_Spectrogram`, {
+          method: 'POST',
+          data: {
+            file_id: FeaturesInfor.audio_id,
+          },
+        }).then((res) => {
+          loading.style.display = 'none';
+          setpicIfo(res);
           setva(res?.var);
           setmean(res?.mean);
           setcalc(res?.calc);
@@ -209,16 +218,20 @@ const Index = (props) => {
           <div
             style={{
               width: '100%',
-              height: 200,
-              display: f_key === '4' || f_key === '5' ? 'block' : 'none',
+              height: 320,
+              display:
+                f_key === '4' || f_key === '5' || f_key === '6'
+                  ? 'block'
+                  : 'none',
             }}
             id="divshow_0"
           >
             <img
               src={picIfo}
               style={{
+                marginTop: 20,
                 width: '100%',
-                height: 200,
+                height: 300,
                 display: picIfo ? 'block' : 'none',
               }}
               id="resImg"
@@ -231,19 +244,24 @@ const Index = (props) => {
             id="divshow_1"
             style={{ display: f_key === '1' ? 'block' : 'none' }}
           >
-            <PowerApp audio_id={FeaturesInfor.audio_id} audio_name = {FeaturesInfor.audio_name} />
+            <PowerApp
+              audio_id={FeaturesInfor.audio_id}
+              audio_name={FeaturesInfor.audio_name}
+            />
           </div>
           <div
             id="divshow_2"
             style={{ display: f_key === '3' ? 'block' : 'none' }}
           >
-            <DemonApp audio_id={FeaturesInfor.audio_id} audio_name = {FeaturesInfor.audio_name} />
+            <DemonApp
+              audio_id={FeaturesInfor.audio_id}
+              audio_name={FeaturesInfor.audio_name}
+            />
           </div>
         </div>
       );
     }
   }
-
   const MainContent = () => {
     return (
       <div
@@ -336,7 +354,9 @@ const Index = (props) => {
           {/* 直接看antd的statistic源码，做一个频率和分贝的数据展示 */}
           <div
             className="ant-statistic"
-            style={{ display: f_key === '1'||f_key === '3' ? 'block' : 'none' }}
+            style={{
+              display: f_key === '1' || f_key === '3' ? 'block' : 'none',
+            }}
           >
             <div className="ant-statistic-title">分贝</div>
             <div className="ant-statistic-content">

@@ -14,27 +14,18 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
-
-const sever = 'http://127.0.0.1:5000'; //测试用接口
-
 const TestApp = (props) => {
   console.log(props);
-
-  const { audio_id, audio_name } = props;
-
+  const { audio_id, audio_name, dispatch } = props;
   const [loading, setloading] = useState(false);
-
   var dataTest = [];
   var data_Power = [];
   var data_L = 0;
   var x_data = [];
   for (var i = 0; i < 500; i++) {
-    // data1.push([random(15), random(10), random(1)]);
     dataTest.push(i + 3);
   }
-  // const [myType, setmyType] = useState('value');
   const [myType, setmyType] = useState('log'); //对数还是线性
-  //const [myType, setmyType] = useState('bar');
   const [StartTime, setStartTime] = useState('');
   const [EndTime, setEndTime] = useState('');
   const [data1, setdata1] = useState(dataTest);
@@ -42,13 +33,6 @@ const TestApp = (props) => {
   const [dataL, setdataL] = useState(data_L);
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
-
-  useEffect(() => {
-    //自定义的配置 后续根据需求进行设计 默认使用dark主题
-    // $.getJSON('wonderland.json', function (themeJSON) {
-    //   echarts.registerTheme('wonderland', themeJSON)
-    // });
-  });
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -76,6 +60,9 @@ const TestApp = (props) => {
         feature: {
           dataZoom: {
             yAxisIndex: 'none',
+          },
+          saveAsImage: {
+            pixelRatio: 5,
           },
           restore: {},
           // saveAsImage: {},
@@ -140,11 +127,11 @@ const TestApp = (props) => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
-      data:{file_id:audio_id},
+      data: { file_id: audio_id },
       // data: { file_id: '6152.wav' },
     }).then((res) => {
       //setPowerdata(res);
-      console.log('res: '+res);
+      console.log('res: ' + res);
       for (var i in res) {
         data_Power.push(res[i] * 10);
         x_data.push(i);

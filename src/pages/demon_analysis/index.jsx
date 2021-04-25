@@ -55,6 +55,9 @@ const TestApp = (props) => {
           dataZoom: {
             yAxisIndex: 'none',
           },
+          saveAsImage: {
+            pixelRatio: 5,
+          },
           restore: {},
         },
       },
@@ -83,20 +86,20 @@ const TestApp = (props) => {
     setloading(true);
     request(`/v1/feature/demon_amalysis`, {
       method: 'POST',
-      data:{sid:audio_id},
+      data: { sid: audio_id },
     }).then((res) => {
-      for(let i of res.fftf){
+      for (let i of res.fftf) {
         Xdata.push(i);
       }
-      for(let i of res.Y_demon){
+      for (let i of res.Y_demon) {
         data.push(i);
       }
       setPicType('line');
       setdata(data_Demon);
       setdataL(data_Demon.length);
       setXdata(x_data);
-      console.log('data:'+data);
-      console.log('Xdata:'+Xdata);
+      console.log('data:' + data);
+      console.log('Xdata:' + Xdata);
       setloading(false);
     });
   };
