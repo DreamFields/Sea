@@ -68,9 +68,7 @@ const Index = (props) => {
           mode="inline"
         >
           <Menu.Item key="1">功率谱</Menu.Item>
-          <Menu.Item key="2" disabled>
-            低频线谱
-          </Menu.Item>
+          <Menu.Item key="2">低频线谱</Menu.Item>
           <Menu.Item key="3">调制谱</Menu.Item>
           <Menu.Item key="4">梅尔倒谱</Menu.Item>
           <Menu.Item key="5">过零率</Menu.Item>
@@ -128,7 +126,6 @@ const Index = (props) => {
         var hideProgress = function () {
           progressDiv.style.display = 'none';
         };
-
         wavesurfer.on('loading', showProgress);
         wavesurfer.on('ready', hideProgress);
         wavesurfer.on('destroy', hideProgress);
@@ -140,21 +137,28 @@ const Index = (props) => {
       if (f_key !== '1') {
         loading.style.display = 'block';
       }
-      if (f_key === '4') {
-        // show_1.style.display = 'none';
-        // show_0.style.display = 'block';
+      if (f_key === '2') {
+        request(`/v1/feature/lofar_v1`, {
+          method: 'POST',
+          data: {
+            sid: FeaturesInfor.audio_id,
+          },
+        }).then((res) => {
+          loading.style.display = 'none';
+          setpicIfo(res?.url);
+        });
+      } else if (f_key === '4') {
         request(`/v1/feature/MCFF`, {
           method: 'POST',
           data: {
             file_id: FeaturesInfor.audio_id,
           },
         }).then((res) => {
-          console.log(res);
           loading.style.display = 'none';
-          setpicIfo(res?.picIfo);
-          setva(res?.var);
-          setmean(res?.mean);
-          setcalc(res?.calc);
+          setpicIfo(res?.picIfo.picIfo);
+          setva(res?.picIfo.var);
+          setmean(res?.picIfo.mean);
+          setcalc(res?.picIfo.calc);
         });
       } else if (f_key == '5') {
         request(`/v1/feature/Zero_Crossing`, {
@@ -165,12 +169,11 @@ const Index = (props) => {
             StartTime: form.getFieldsValue().start,
           },
         }).then((res) => {
-          console.log(res);
           loading.style.display = 'none';
-          setpicIfo(res?.picIfo);
-          setva(res?.var);
-          setmean(res?.mean);
-          setcalc(res?.calc);
+          setpicIfo(res?.picIfo.picIfo);
+          setva(res?.picIfo.var);
+          setmean(res?.picIfo.mean);
+          setcalc(res?.picIfo.calc);
         });
       } else if (f_key === '6') {
         request(`/v1/feature/Mel_Spectrogram`, {
@@ -180,7 +183,7 @@ const Index = (props) => {
           },
         }).then((res) => {
           loading.style.display = 'none';
-          setpicIfo(res);
+          setpicIfo(res.picIfo);
           setva(res?.var);
           setmean(res?.mean);
           setcalc(res?.calc);
@@ -220,7 +223,7 @@ const Index = (props) => {
               width: '100%',
               height: 320,
               display:
-                f_key === '4' || f_key === '5' || f_key === '6'
+                f_key === '2' || f_key === '4' || f_key === '5' || f_key === '6'
                   ? 'block'
                   : 'none',
             }}
@@ -267,6 +270,7 @@ const Index = (props) => {
       <div
         className="centerContent"
         style={{
+          overflowY: 'scroll',
           width: '74%',
           float: 'left',
           height: 1060,
@@ -314,7 +318,9 @@ const Index = (props) => {
           marginLeft: '1rem',
         }}
       >
-        <div style={{ color: 'white', fontSize: 20 }}>特征选择</div>
+        <div style={{ color: 'white', fontSize: 20, overflowY: 'scroll' }}>
+          特征选择
+        </div>
         <div
           style={{
             backgroundColor: 'black',

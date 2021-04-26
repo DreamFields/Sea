@@ -65,58 +65,42 @@ const TestApp = (props) => {
             pixelRatio: 5,
           },
           restore: {},
-          // saveAsImage: {},
         },
       },
-      // visualMap: {
-      //   top: 10,
-      //   right: 10,
-      //   pieces: [{
-      //     gt: 0.0001,
-      //     lte: 0.001,
-      //     color: '#096'
-      //   }, {
-      //     gt: 0.001,
-      //     lte: 0.01,
-      //     color: '#ffde33'
-      //   }, {
-      //     gt: 0.01,
-      //     lte: 0.1,
-      //     color: '#ff9933'
-      //   }, {
-      //     gt: 0.1,
-      //     lte: 1,
-      //     color: '#cc0033'
-      //   }, {
-      //     gt: 1,
-      //     color: '#7e0023'
-      //   }],
-      //   outOfRange: {
-      //     color: '#999'
-      //   }
-      // },
       series: [
         {
           data: data1,
-          //type: 'bar',
           type: Type2,
-          //smooth: true
           color: 'skyblue',
         },
       ],
     };
     return option;
   };
+  const handlebrush = (params) => {
+    console.log(params);
+    let brushComponent = params.batch[0];
+    let sum1 = 0; // 统计选中项的数据值的和
+    let sum2 = 0;
+    for (let sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
+      // 对于每个 series：
+      let dataIndices = brushComponent.selected[sIdx].dataIndex;
+      for (let i = 0; i < dataIndices.length; i++) {
+        let dataIndex = dataIndices[i];
+        sum1 += data1[dataIndex];
+        sum2 += Xdata[dataIndex];
+      }
+    }
+    console.log(sum); // 用某种方式输出统计值。
+  };
   const handleChartClick = (params) => {
     console.log(params);
     console.log('分贝(db):' + params.value);
     console.log('频率(hz)):' + params.dataIndex);
-
     let span_db_int = document.getElementById('db_int');
     let span_db_decimal = document.getElementById('db_decimal');
     span_db_int.innerText = (params.value + '').split('.')[0];
     span_db_decimal.innerText = '.' + (params.value + '').split('.')[1];
-
     let span_hz_int = document.getElementById('hz_int');
     span_hz_int.innerText = params.dataIndex + '';
   };
@@ -128,12 +112,10 @@ const TestApp = (props) => {
     request(`/v1/feature/Power`, {
       method: 'POST',
       data: { file_id: audio_id },
-      // data: { file_id: '6152.wav' },
     }).then((res) => {
-      //setPowerdata(res);
       console.log('res: ' + res);
-      for (var i in res) {
-        data_Power.push(res[i] * 10);
+      for (var i in res.dataIfo) {
+        data_Power.push(res.dataIfo[i] * 10);
         x_data.push(i);
       }
       setmyType('log');
@@ -147,19 +129,16 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
-
   const getData2 = () => {
     setloading(true);
     console.log('send requir');
     request('/v1/feature/onethree', {
       method: 'POST',
       data: { file_id: audio_id },
-      // data: { file_id: '6152.wav' },
     }).then((res) => {
-      //setPowerdata(res);
-      console.log(res);
-      for (var i in res) {
-        data_Power.push(res[i] * 10);
+      console.log(res.dataIfo);
+      for (var i in res.dataIfo) {
+        data_Power.push(res.dataIfo[i] * 10);
         x_data.push(i);
       }
       setdata(data_Power);
@@ -173,7 +152,6 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
-
   return (
     <div>
       <Card title="折线图表之一">
@@ -184,17 +162,16 @@ const TestApp = (props) => {
             style={{ height: '400px' }}
             onEvents={{
               click: handleChartClick,
+              //brushselected:handlebrush,
             }}
           />
         </Spin>
-        {/* <Button onClick={changeToLog}>ada</Button> */}
         <Button onClick={getData}>功率谱分析</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
       </Card>
     </div>
   );
 };
-
 const mapStateToProps = ({}) => {
   return {};
 };
