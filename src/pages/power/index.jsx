@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin } from 'antd';
+import { Card, Spin, Table } from 'antd';
 import { connect } from 'umi';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
@@ -14,9 +14,22 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
+import PowerTable from './table';
+
 const TestApp = (props) => {
-  console.log(props);
   const { audio_id, audio_name, dispatch } = props;
+
+  useEffect(() => {
+    dispatch({
+      type: 'power/setdata',
+      payload: {},
+      callback: (state) => {
+        return { tabledata: [] };
+      },
+    });
+    return () => {};
+  }, [audio_id]);
+
   const [loading, setloading] = useState(false);
   var dataTest = [];
   var data_Power = [];
@@ -26,13 +39,12 @@ const TestApp = (props) => {
     dataTest.push(i + 3);
   }
   const [myType, setmyType] = useState('log'); //对数还是线性
-  const [StartTime, setStartTime] = useState('');
-  const [EndTime, setEndTime] = useState('');
-  const [data1, setdata1] = useState(dataTest);
+  // const [data1, setdata1] = useState(dataTest);
   const [data, setdata] = useState(data_Power);
   const [dataL, setdataL] = useState(data_L);
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
+
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -77,36 +89,56 @@ const TestApp = (props) => {
     };
     return option;
   };
-  const handlebrush = (params) => {
-    console.log(params);
-    let brushComponent = params.batch[0];
-    let sum1 = 0; // 统计选中项的数据值的和
-    let sum2 = 0;
-    for (let sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
-      // 对于每个 series：
-      let dataIndices = brushComponent.selected[sIdx].dataIndex;
-      for (let i = 0; i < dataIndices.length; i++) {
-        let dataIndex = dataIndices[i];
-        sum1 += data1[dataIndex];
-        sum2 += Xdata[dataIndex];
-      }
-    }
-    console.log(sum); // 用某种方式输出统计值。
-  };
+
+  // const handlebrush = (params) => {
+  //   console.log(params);
+  //   let brushComponent = params.batch[0];
+  //   let sum1 = 0; // 统计选中项的数据值的和
+  //   let sum2 = 0;
+  //   for (let sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
+  //     // 对于每个 series：
+  //     let dataIndices = brushComponent.selected[sIdx].dataIndex;
+  //     for (let i = 0; i < dataIndices.length; i++) {
+  //       let dataIndex = dataIndices[i];
+  //       sum1 += data1[dataIndex];
+  //       sum2 += Xdata[dataIndex];
+  //     }
+  //   }
+  //   console.log(sum); // 用某种方式输出统计值。
+  // };
+
   const handleChartClick = (params) => {
     console.log(params);
-    console.log('分贝(db):' + params.value);
+    console.log('分贝(db):' + params.value.toPrecision(3));
     console.log('频率(hz)):' + params.dataIndex);
     let span_db_int = document.getElementById('db_int');
     let span_db_decimal = document.getElementById('db_decimal');
-    span_db_int.innerText = (params.value + '').split('.')[0];
-    span_db_decimal.innerText = '.' + (params.value + '').split('.')[1];
     let span_hz_int = document.getElementById('hz_int');
+
+    span_db_int.innerText = (params.value.toPrecision(3) + '').split('.')[0];
+    span_db_decimal.innerText =
+      '.' + (params.value.toPrecision(3) + '').split('.')[1];
     span_hz_int.innerText = params.dataIndex + '';
+
+    let copy_data;
+    dispatch({
+      type: 'power/setdata',
+      payload: {},
+      callback: (state) => {
+        copy_data = state.tabledata.slice();
+        copy_data.push({
+          hz: params.value.toPrecision(3),
+          db: params.dataIndex,
+        });
+        return { tabledata: copy_data };
+      },
+    });
   };
-  const changeToLog = () => {
-    setmyType('log');
-  };
+
+  // const changeToLog = () => {
+  //   setmyType('log');
+  // };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
@@ -129,6 +161,7 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
   const getData2 = () => {
     setloading(true);
     console.log('send requir');
@@ -152,9 +185,10 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
   return (
     <div>
-      <Card title="折线图表之一">
+      <Card title="功率谱">
         <Spin spinning={loading}>
           <ReactEcharts
             option={getOption(myType, data, Xdata, PicType)}
@@ -169,10 +203,13 @@ const TestApp = (props) => {
         <Button onClick={getData}>功率谱分析</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
       </Card>
+      <PowerTable />
     </div>
   );
 };
+
 const mapStateToProps = ({}) => {
+  // console.log(power);
   return {};
 };
 

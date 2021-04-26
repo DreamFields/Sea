@@ -631,7 +631,7 @@ const Index = (props) => {
     <div>
       <div className={style.rightContent}>
         <div className={style.rightCenter}>
-          <h3>数据预处理</h3>
+          <h3>数据整编</h3>
           <div
             style={{
               backgroundColor: 'white',

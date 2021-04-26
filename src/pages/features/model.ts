@@ -15,6 +15,7 @@ import {} from './service';
 export interface StateType {
   audio_id: any;
   audio_name: any;
+  signal_type: any;
   db: any;
 }
 
@@ -36,6 +37,7 @@ const Model: ModelType = {
   state: {
     audio_id: undefined,
     audio_name: undefined,
+    signal_type: undefined,
     db: undefined,
   },
 

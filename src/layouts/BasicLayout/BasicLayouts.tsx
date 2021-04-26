@@ -1260,11 +1260,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 },
               });
             } else if (location.pathname === '/features') {
+              // console.log(item);
               dispatch({
                 type: 'features/setAudio',
                 payload: {
                   audio_id: item.id,
                   audio_name: item.name,
+                  signal_type: item.signal_type,
                 },
               });
             } else if (location.pathname === '/audioImport') {
@@ -1351,7 +1353,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <Link to="/audioImport">音频上传</Link>
           </Menu.Item>
           <Menu.Item key="/audioEdit" icon={<ScissorOutlined />}>
-            <Link to="/audioEdit">音频编辑</Link>
+            <Link to="/audioEdit">音频整编</Link>
           </Menu.Item>
           <Menu.Item key="/features" icon={<SnippetsOutlined />}>
             <Link to="/features">特征提取</Link>
