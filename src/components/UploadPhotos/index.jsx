@@ -18,7 +18,7 @@ const UploadPhotos = (props) => {
         // console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        console.log(info.file.response);
+        // console.log(info.file.response);
         if (info.file.response.code === 200) {
           message.success(`${info.file.name} 图片上传成功.`);
         } else {
