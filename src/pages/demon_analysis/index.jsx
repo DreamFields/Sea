@@ -88,10 +88,10 @@ const TestApp = (props) => {
       method: 'POST',
       data: { sid: audio_id },
     }).then((res) => {
-      for (let i of res.fftf) {
+      for (let i of res.picIfo.fftf) {
         Xdata.push(i);
       }
-      for (let i of res.Y_demon) {
+      for (let i of res.picIfo.Y_demon) {
         data.push(i);
       }
       setPicType('line');
