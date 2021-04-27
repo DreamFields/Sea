@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin, Table } from 'antd';
+import { Card, Spin, Table, Popover } from 'antd';
 import { connect } from 'umi';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
@@ -15,6 +15,7 @@ import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import PowerTable from './table';
+import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
   const { audio_id, audio_name, dispatch } = props;
@@ -44,7 +45,7 @@ const TestApp = (props) => {
   const [dataL, setdataL] = useState(data_L);
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
-
+  const [id, setid] = useState('');
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -89,24 +90,6 @@ const TestApp = (props) => {
     };
     return option;
   };
-
-  // const handlebrush = (params) => {
-  //   console.log(params);
-  //   let brushComponent = params.batch[0];
-  //   let sum1 = 0; // 统计选中项的数据值的和
-  //   let sum2 = 0;
-  //   for (let sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
-  //     // 对于每个 series：
-  //     let dataIndices = brushComponent.selected[sIdx].dataIndex;
-  //     for (let i = 0; i < dataIndices.length; i++) {
-  //       let dataIndex = dataIndices[i];
-  //       sum1 += data1[dataIndex];
-  //       sum2 += Xdata[dataIndex];
-  //     }
-  //   }
-  //   console.log(sum); // 用某种方式输出统计值。
-  // };
-
   const handleChartClick = (params) => {
     console.log(params);
     console.log('分贝(db):' + params.value.toPrecision(3));
@@ -146,6 +129,9 @@ const TestApp = (props) => {
       data: { file_id: audio_id },
     }).then((res) => {
       console.log('res: ' + res);
+      let id = res?.id;
+      setid(id);
+      console.log(id);
       for (var i in res.dataIfo) {
         data_Power.push(res.dataIfo[i] * 10);
         x_data.push(i);
@@ -202,6 +188,7 @@ const TestApp = (props) => {
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
+        <UploadPhotos url={`/v1/ffile/power/${id}`} />
       </Card>
       <PowerTable />
     </div>

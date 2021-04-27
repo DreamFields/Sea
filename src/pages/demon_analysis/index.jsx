@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin } from 'antd';
+import { Card, Spin, Popover } from 'antd';
 import { connect } from 'umi';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/tooltip';
@@ -9,6 +9,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
+import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name } = props;
@@ -20,13 +21,8 @@ const TestApp = (props) => {
   const [data, setdata] = useState(data_Demon);
   const [dataL, setdataL] = useState(data_L);
   const [Xdata, setXdata] = useState(x_data);
+  const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
-  useEffect(() => {
-    //自定义的配置 后续根据需求进行设计 默认使用dark主题
-    // $.getJSON('wonderland.json', function (themeJSON) {
-    //   echarts.registerTheme('wonderland', themeJSON)
-    // });
-  });
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -88,6 +84,8 @@ const TestApp = (props) => {
       method: 'POST',
       data: { sid: audio_id },
     }).then((res) => {
+      let id = res?.id;
+      setid(id);
       for (let i of res.picIfo.fftf) {
         Xdata.push(i);
       }
@@ -117,6 +115,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>调制谱分析</Button>
+        <UploadPhotos url={`/v1/ffile/demon/${id}`} />
       </Card>
     </div>
   );

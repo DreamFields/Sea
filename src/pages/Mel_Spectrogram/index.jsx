@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin } from 'antd';
+import { Card, Spin, Popover } from 'antd';
 import { connect } from 'umi';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/tooltip';
@@ -9,6 +9,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
+import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name } = props;
@@ -17,7 +18,7 @@ const TestApp = (props) => {
   let Y_data = [];
   let X_data = [];
   const [data, setdata] = useState(data_Mel);
-  const [dataL, setdataL] = useState(data_Mel.length);
+  const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
   const [Ydata, setYdata] = useState(Y_data);
   const getOption = (data, Xdata, Ydata) => {
@@ -103,6 +104,8 @@ const TestApp = (props) => {
       let cur = [];
       let obj = JSON.parse(res?.picIfo.picIfo);
       let time = res?.picIfo.time;
+      let id = res?.id;
+      setid(id);
       console.log('obj: ' + obj[0]);
       for (let i = 0; i < 128; i++) {
         cur.push(obj[i]);
@@ -163,6 +166,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>语谱谱分析</Button>
+        <UploadPhotos url={`/v1/ffile/frequency/${id}`} />
       </Card>
     </div>
   );
