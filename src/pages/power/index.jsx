@@ -169,9 +169,9 @@ const TestApp = (props) => {
       method: 'POST',
       data: { file_id: audio_id },
     }).then((res) => {
-      console.log(res.dataIfo);
-      for (var i in res.dataIfo) {
-        data_Power.push(res.dataIfo[i] * 10);
+      console.log(res?.dataIfo);
+      for (var i in res?.dataIfo) {
+        data_Power.push(res?.dataIfo[i] * 10);
         x_data.push(i);
       }
       setdata(data_Power);

@@ -22,6 +22,7 @@ import axios from 'axios';
 import request from '@/utils/request';
 import PowerApp from '../power/index.jsx';
 import DemonApp from '../demon_analysis/index';
+import MelApp from '../Mel_Spectrogram/index';
 const { SubMenu } = Menu;
 const rightWidth = '22%';
 let feature_key;
@@ -175,19 +176,6 @@ const Index = (props) => {
           setmean(res?.picIfo.mean);
           setcalc(res?.picIfo.calc);
         });
-      } else if (f_key === '6') {
-        request(`/v1/feature/Mel_Spectrogram`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          setpicIfo(res.picIfo);
-          setva(res?.var);
-          setmean(res?.mean);
-          setcalc(res?.calc);
-        });
       }
     }
     render() {
@@ -223,7 +211,7 @@ const Index = (props) => {
               width: '100%',
               height: 320,
               display:
-                f_key === '2' || f_key === '4' || f_key === '5' || f_key === '6'
+                f_key === '2' || f_key === '4' || f_key === '5'
                   ? 'block'
                   : 'none',
             }}
@@ -257,6 +245,15 @@ const Index = (props) => {
             style={{ display: f_key === '3' ? 'block' : 'none' }}
           >
             <DemonApp
+              audio_id={FeaturesInfor.audio_id}
+              audio_name={FeaturesInfor.audio_name}
+            />
+          </div>
+          <div
+            id="divshow_3"
+            style={{ display: f_key === '6' ? 'block' : 'none' }}
+          >
+            <MelApp
               audio_id={FeaturesInfor.audio_id}
               audio_name={FeaturesInfor.audio_name}
             />
