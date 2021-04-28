@@ -9,7 +9,7 @@
 .main-content {
   background-color: #343434;
   height: calc(100vh - 64px);
-  overflow-y: outo;
+  overflow-y: auto;
 }
 
 .fileContainer {

@@ -1,7 +1,20 @@
 import React from 'react';
-import { Upload, Button } from 'antd';
+import { Upload, Button, message, Popover } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-
+import Cookies from '../../utils/cookie';
+const uploadTip = (
+  <div>
+    上传图片之前要先下载当前图片
+    <br />
+    <b style={{ color: 'cyan' }}>额外提示</b>
+    <br />
+    如果进行过图片缩放，下载的将是缩放后的区域图片
+    <br />
+    如果想上传整个图片，可以点击下载按钮右侧的还原按钮
+    <br />
+    一次只能上传一张图片，批量上传只会上传最后一张上传的图片
+  </div>
+);
 const UploadPhotos = (props) => {
   const { url } = props;
 
@@ -33,7 +46,9 @@ const UploadPhotos = (props) => {
 
   return (
     <Upload {...upload_props}>
-      <Button icon={<UploadOutlined />}>更新照片信息</Button>
+      <Popover title="提示" content={uploadTip}>
+        <Button icon={<UploadOutlined />}>更新照片信息</Button>
+      </Popover>
     </Upload>
   );
 };
