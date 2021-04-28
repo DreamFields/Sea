@@ -186,7 +186,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>语谱谱分析</Button>
-        <UploadPhotos url={`/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
       </Card>
     </div>
   );

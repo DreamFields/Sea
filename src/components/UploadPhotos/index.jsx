@@ -35,11 +35,11 @@ const UploadPhotos = (props) => {
         if (info.file.response.code === 200) {
           message.success(`${info.file.name} 图片上传成功.`);
         } else {
-          message.error(`${info.file.name} 图片上传失败.`);
+          message.error(`${info.file.name} 图片上传失败,请检查是否已下载图片`);
           message.error(`${info.file.response.msg}`);
         }
       } else if (status === 'error') {
-        message.error(`${info.file.name} 图片上传失败.`);
+        message.error(`${info.file.name} 图片上传失败,请检查是否已下载图片`);
       }
     },
   };
