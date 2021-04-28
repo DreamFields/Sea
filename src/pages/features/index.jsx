@@ -334,7 +334,7 @@ const Index = (props) => {
                 marginTop: 20,
                 width: '100%',
                 height: 200,
-                display: picIfo ? 'block' : 'none',
+                display: f_key === '4' && picIfo ? 'block' : 'none',
               }}
             />
             <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
@@ -366,6 +366,7 @@ const Index = (props) => {
             <MelApp
               audio_id={FeaturesInfor.audio_id}
               audio_name={FeaturesInfor.audio_name}
+              signal_type={FeaturesInfor.signal_type}
             />
           </div>
         </div>
