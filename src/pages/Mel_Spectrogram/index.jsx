@@ -53,6 +53,19 @@ const TestApp = (props) => {
       其他信息在图中框选即可自动计算
     </div>
   );
+  const InputTip = (
+    <div>
+      中心频率需要手动输入
+      <br />
+      <b style={{ color: 'cyan' }}>额外提示</b>
+      <br />
+      点击提交即可将输入框中内容提交
+      <br />
+      中心频率要求输入纯数字,例如:1000
+      <br />
+      如果输入其他字符就会提交失败,错误示例:1000Hz
+    </div>
+  );
   const getOption = (data, Xdata, Ydata) => {
     let option = {
       darkMode: true,
@@ -137,12 +150,14 @@ const TestApp = (props) => {
       dataIndex: 'frequency',
       key: 'frequency',
       render: (text) => (
-        <Input
-          placeholder="frequency"
-          onChange={(e) => {
-            setcenter_frequency(e.target.value);
-          }}
-        />
+        <Popover title="提示" content={InputTip}>
+          <Input
+            placeholder="frequency"
+            onChange={(e) => {
+              setcenter_frequency(e.target.value);
+            }}
+          />
+        </Popover>
       ),
     },
     {
@@ -184,12 +199,14 @@ const TestApp = (props) => {
       dataIndex: 'frequency',
       key: 'frequency',
       render: (text) => (
-        <Input
-          placeholder="frequency"
-          onChange={(e) => {
-            setcenter_frequency(e.target.value);
-          }}
-        />
+        <Popover title="提示" content={InputTip}>
+          <Input
+            placeholder="frequency"
+            onChange={(e) => {
+              setcenter_frequency(e.target.value);
+            }}
+          />
+        </Popover>
       ),
     },
     {
