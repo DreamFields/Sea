@@ -21,7 +21,7 @@ const UploadPhotos = (props) => {
   const upload_props = {
     name: 'picture',
     accept: '.jpg, .png',
-    action: { url },
+    action: url,
     headers: {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
@@ -47,7 +47,7 @@ const UploadPhotos = (props) => {
   return (
     <Upload {...upload_props}>
       <Popover title="提示" content={uploadTip}>
-        <Button icon={<UploadOutlined />}>更新照片信息</Button>
+        <Button icon={<UploadOutlined />}>上传图片</Button>
       </Popover>
     </Upload>
   );
