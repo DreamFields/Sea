@@ -128,7 +128,7 @@ const TestApp = (props) => {
       method: 'POST',
       data: { file_id: audio_id },
     }).then((res) => {
-      console.log('res: ' + res);
+      console.log('res: ', res);
       let id = res?.id;
       setid(id);
       console.log(id);
@@ -141,9 +141,9 @@ const TestApp = (props) => {
       setdata(data_Power);
       setdataL(data_Power.length);
       setXdata(x_data);
-      console.log(data);
-      console.log(Xdata);
-      console.log('200');
+      // console.log(data);
+      // console.log(Xdata);
+      // console.log('200');
       setloading(false);
     });
   };
@@ -188,7 +188,7 @@ const TestApp = (props) => {
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
-        <UploadPhotos url={`/v1/ffile/power/${id}`} />
+        <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>
       <PowerTable />
     </div>

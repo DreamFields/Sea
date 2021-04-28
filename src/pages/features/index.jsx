@@ -281,19 +281,19 @@ const Index = (props) => {
     render() {
       return (
         <div style={{ backgroundColor: '#2F2F2F' }}>
-          <div style={{ marginTop: 20, marginLeft: 10 }}>
+          <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
             <Button
               type="primary"
               onClick={this.start}
               id="btnPlay"
-              style={{ fontSize: 15 }}
+              style={{ fontSize: 15, float: 'left' }}
             >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
             <Popover content="先在右侧特征栏选择特征，再点击计算" title="计算">
               <Button
                 type="primary"
-                style={{ marginLeft: '80%' }}
+                style={{ float: 'right' }}
                 onClick={this.getFeatures}
               >
                 计算
