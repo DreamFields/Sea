@@ -31,15 +31,14 @@ const TestApp = (props) => {
   const [Ydata, setYdata] = useState(Y_data);
   const [echo_length, setecho_length] = useState(undefined); //回波长度
   const [echo_width, setecho_width] = useState(undefined); //回波宽度
-  const [person_coefficient, setperson_coefficient] = useState(
-    '相关算法缺失，暂时无法显示',
-  ); //Person帧相关系数
+  const [person_coefficient, setperson_coefficient] = useState([]); //Person帧相关系数
   const [signal_type2, setsignal_type2] = useState('CW'); //信号形式
   const [center_frequency, setcenter_frequency] = useState(undefined); //中心频率
   const [pulse_cycle, setpulse_cycle] = useState(undefined); //脉冲周期
   const [pulse_width, setpulse_width] = useState(undefined); //脉冲宽度
   const [time1, settime1] = useState(undefined);
   let xleft, xright, yleft, yright;
+  let person = [];
   const uploadTip = (
     <div>
       点击提交按钮即可提交表格中的信息
@@ -171,11 +170,6 @@ const TestApp = (props) => {
       key: 'echo_length',
     },
     {
-      title: 'Person帧间相关系数',
-      dataIndex: 'person_coefficient',
-      key: 'person_coefficient',
-    },
-    {
       render: () => (
         <Popover title="提示" content={uploadTip}>
           <Button onClick={dispatchEcho}>提交</Button>
@@ -189,7 +183,6 @@ const TestApp = (props) => {
       frequency: center_frequency,
       echo_width: echo_width,
       echo_length: echo_length,
-      person_coefficient: person_coefficient,
     },
   ];
   //主动脉冲展示
@@ -258,6 +251,20 @@ const TestApp = (props) => {
       pulse_width: pulse_width,
     },
   ];
+  //相关系数的展示
+  const columns3 = [
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
+    },
+    {
+      title: 'Person_coefficient',
+      dataIndex: 'person_coefficient',
+      key: 'person_coefficient',
+    },
+  ];
+  let data3 = [];
   //信号选择框变化
   const onChange = (e) => {
     console.log('radio checked', e.target.value);
@@ -332,15 +339,57 @@ const TestApp = (props) => {
       let xgap = Math.floor((time * 100) / xdataL) / 100;
       let ygap = Math.floor((8000 * 100) / ydataL) / 100;
       let arr = [];
+      let res2 = [];
       for (let i = 0; i < ydataL; i++) {
         for (let j = 0; j < xdataL; j++) {
           arr.push(j);
           arr.push(i);
           arr.push(cur[i][j]);
+          res2.push(cur[i][j]);
           data_Mel.push(arr);
           arr = [];
         }
       }
+      let XAverage = 4000;
+      let YAverage = [];
+      let anticur = [];
+      let arr2 = [];
+      for (let i = 0; i < xdataL; i++) {
+        for (let j = 0; j < ydataL; j++) {
+          arr2.push(res2[j * xdataL + i]);
+        }
+        anticur.push(arr2);
+        arr2 = [];
+      }
+      let curx = 0,
+        cury = 0,
+        curz = 0,
+        sum = 0;
+      for (let i = 0; i < anticur.length; i++) {
+        for (let j = 0; j < anticur[i].length; j++) {
+          sum += anticur[i][j];
+        }
+        YAverage.push(sum / anticur[i].length);
+        sum = 0;
+      }
+      console.log('YAverage' + YAverage);
+      for (let i = 0; i < anticur.length; i++) {
+        for (let j = 0; j < anticur[i].length; j++) {
+          curx += (j * ygap - 4000) * (anticur[i][j] - YAverage[i]);
+          cury += (j * ygap - 4000) ** 2;
+          curz += (anticur[i][j] - YAverage[i]) ** 2;
+        }
+        console.log('curx' + curx);
+        console.log('cury' + cury);
+        console.log('curz' + curz);
+        person.push(Math.floor((curx / Math.sqrt(cury * curz)) * 100) / 100);
+        curx = 0;
+        cury = 0;
+        curz = 0;
+      }
+      console.log('person' + person);
+      console.log('cur' + cur.length);
+      console.log('anticur' + anticur.length);
       console.log(data_Mel);
       data_Mel = data_Mel.map(function (item) {
         return [
@@ -359,12 +408,18 @@ const TestApp = (props) => {
         Y_data.push(y);
         y += ygap;
       }
+      let curobj = {};
+      for (let i = 1; i <= person.length; i++) {
+        curobj.key = `${i}`;
+        curobj.time = Xdata[i - 1];
+        curobj.person_coefficient = person[i - 1];
+        data3.push(curobj);
+        curobj = {};
+      }
+      setperson_coefficient(data3);
       setdata(data_Mel);
       setXdata(X_data);
       setYdata(Y_data);
-      console.log('data:' + data);
-      console.log('Xdata:' + Xdata);
-      console.log('Ydata:' + Ydata);
       setloading(false);
     });
   };
@@ -395,6 +450,14 @@ const TestApp = (props) => {
           dataSource={data1}
           style={{
             marginTop: 20,
+            width: '100%',
+            height: 200,
+          }}
+        />
+        <Table
+          columns={columns3}
+          dataSource={person_coefficient}
+          style={{
             width: '100%',
             height: 200,
           }}
