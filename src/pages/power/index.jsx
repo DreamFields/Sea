@@ -182,7 +182,6 @@ const TestApp = (props) => {
             style={{ height: '400px' }}
             onEvents={{
               click: handleChartClick,
-              //brushselected:handlebrush,
             }}
           />
         </Spin>

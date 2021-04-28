@@ -66,6 +66,10 @@ const TestApp = (props) => {
       tooltip: {
         trigger: 'axis',
       },
+      brush: {
+        toolbox: ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear'],
+        xAxisIndex: 0,
+      },
       toolbox: {
         left: 'center',
         feature: {
@@ -93,6 +97,20 @@ const TestApp = (props) => {
       ],
     };
     return option;
+  };
+  const handleBrushSelected = (params) => {
+    console.log(params);
+    var brushComponent = params.batch[0];
+    var sum = 0; // 统计选中项的数据值的和
+    for (var sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
+      // 对于每个 series：
+      var dataIndices = brushComponent.selected[sIdx].dataIndex;
+      for (var i = 0; i < dataIndices.length; i++) {
+        var dataIndex = dataIndices[i];
+        sum += data[sIdx][dataIndex];
+      }
+    }
+    console.log(sum); // 用某种方式输出统计值。
   };
   const getData = () => {
     setloading(true);
@@ -162,7 +180,9 @@ const TestApp = (props) => {
             option={getOption(data, Xdata, Ydata)}
             theme="dark"
             style={{ height: '400px' }}
-            onEvents={{}}
+            onEvents={{
+              brushselected: handleBrushSelected,
+            }}
           />
         </Spin>
         <Button onClick={getData}>语谱谱分析</Button>
