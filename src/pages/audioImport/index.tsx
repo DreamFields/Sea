@@ -31,7 +31,7 @@ import moment from 'moment';
 import Cookies from 'js-cookie';
 import style from './style.less';
 import CookieUtil from '@/utils/cookie.js';
-import RecorderCn from '@/components/recorder/index.jsx';
+import RecorderCn from '@/components/recorder_v2/index.jsx';
 
 const { Dragger } = Upload;
 const { Option } = Select;
