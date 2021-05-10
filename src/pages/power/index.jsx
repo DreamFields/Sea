@@ -118,9 +118,12 @@ const TestApp = (props) => {
     });
   };
 
-  // const changeToLog = () => {
-  //   setmyType('log');
-  // };
+  const change = () => {
+    if (myType === 'value') setmyType('log');
+    else {
+      setmyType('value');
+    }
+  };
 
   const getData = () => {
     setloading(true);
@@ -186,6 +189,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
+        <Button onClick={change}>功率谱y轴切换</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>

@@ -12,9 +12,10 @@ import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   console.log(props);
-  const { audio_id, audio_name } = props;
+  const { audio_id, audio_name, animation } = props;
   const [loading, setloading] = useState(false);
   let data_Demon = [];
+  let data_demon = [];
   let data_L = 0;
   let x_data = [];
   const [myType, setmyType] = useState('value'); //对数还是线性
@@ -23,6 +24,21 @@ const TestApp = (props) => {
   const [Xdata, setXdata] = useState(x_data);
   const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
+  useEffect(() => {
+    animationController();
+  }, [animation]);
+  const animationController = function () {
+    console.log('Demon_animation: ' + animation);
+    if (animation === true) {
+      while (data.length < dataL) {
+        console.log('while(data):' + data);
+        setTimeout(() => {
+          data_demon.push(data_Demon.reverse().pop());
+          setdata(data_demon);
+        }, Math.floor(4850 / dataL));
+      }
+    }
+  };
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -78,6 +94,7 @@ const TestApp = (props) => {
     let span_hz_int = document.getElementById('hz_int');
     span_hz_int.innerText = params.dataIndex + '';
   };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/demon_amalysis`, {
@@ -90,12 +107,13 @@ const TestApp = (props) => {
         Xdata.push(i);
       }
       for (let i of res.picIfo.Y_demon) {
-        data.push(i);
+        data_Demon.push(i);
       }
       setPicType('line');
-      setdata(data_Demon);
+      //setdata(data_Demon);
       setdataL(data_Demon.length);
       setXdata(x_data);
+      console.log('data_Demon' + data_Demon);
       console.log('data:' + data);
       console.log('Xdata:' + Xdata);
       setloading(false);
