@@ -134,7 +134,7 @@ function custom_request(
           resolve(res.data !== undefined ? res.data : true);
         }
       } else if (res) {
-        console.log('res', res);
+        console.log('res', typeof res);
         if (res?.msg === 'token is invalid' && res.code === 10031) {
           document.cookie = '';
           message.warning('登陆状态失效，请重新登陆！');

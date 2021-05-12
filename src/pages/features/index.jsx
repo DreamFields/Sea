@@ -23,6 +23,7 @@ import request from '@/utils/request';
 import PowerApp from '../power/index.jsx';
 import DemonApp from '../demon_analysis/index';
 import MelApp from '../Mel_Spectrogram/index';
+import LofarApp from '../lofar_v1/index';
 const { SubMenu } = Menu;
 const rightWidth = '22%';
 let feature_key;
@@ -129,21 +130,10 @@ const Index = (props) => {
   class RightSidermenu extends React.Component {
     getFeatures() {
       let loading = document.querySelector('#divLoading');
-      if (f_key !== '1') {
+      if (feature_key !== '1') {
         loading.style.display = 'block';
       }
-      if (f_key === '2') {
-        request(`/v1/feature/lofar_v1`, {
-          method: 'POST',
-          data: {
-            sid: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          setpicIfo(res?.url);
-          console.log('低频线谱： ' + JSON.stringify(res));
-        });
-      } else if (f_key === '4') {
+      if (feature_key === '4') {
         request(`/v1/feature/MCFF`, {
           method: 'POST',
           data: {
@@ -179,7 +169,7 @@ const Index = (props) => {
           setmean(res?.picIfo.mean);
           setcalc(res?.picIfo.calc);
         });
-      } else if (f_key == '5') {
+      } else if (feature_key == '5') {
         request(`/v1/feature/Zero_Crossing`, {
           method: 'POST',
           data: {
@@ -204,6 +194,7 @@ const Index = (props) => {
       setva(undefined);
       setmean(undefined);
       setcalc(undefined);
+      this.getFeatures();
     };
     render() {
       return (
@@ -216,16 +207,10 @@ const Index = (props) => {
           mode="inline"
         >
           <Menu.Item key="1">功率谱</Menu.Item>
-          <Menu.Item key="2" onClick={this.getFeatures}>
-            低频线谱
-          </Menu.Item>
+          <Menu.Item key="2">低频线谱</Menu.Item>
           <Menu.Item key="3">调制谱</Menu.Item>
-          <Menu.Item key="4" onClick={this.getFeatures}>
-            梅尔倒谱
-          </Menu.Item>
-          <Menu.Item key="5" onClick={this.getFeatures}>
-            过零率
-          </Menu.Item>
+          <Menu.Item key="4">梅尔倒谱</Menu.Item>
+          <Menu.Item key="5">过零率</Menu.Item>
           <Menu.Item key="6">语谱图</Menu.Item>
         </Menu>
       );
@@ -286,101 +271,17 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
     }
-
-    getFeatures() {
-      let loading = document.querySelector('#divLoading');
-      if (f_key !== '1') {
-        loading.style.display = 'block';
-      }
-      if (f_key === '2') {
-        request(`/v1/feature/lofar_v1`, {
-          method: 'POST',
-          data: {
-            sid: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          setpicIfo(res?.url);
-          console.log('低频线谱： ' + JSON.stringify(res));
-        });
-      } else if (f_key === '4') {
-        request(`/v1/feature/MCFF`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          console.log(res);
-          let spectral_centroid =
-            Math.floor(res?.picIfo.spectral_centroid * 1000) / 1000;
-          let spectral_centroid_width =
-            Math.floor(res?.picIfo.spectral_centroid_width * 1000) / 1000;
-          let spectral_area =
-            Math.floor(res?.picIfo.spectral_area * 1000) / 1000;
-          let spectral_decline =
-            Math.floor(res?.picIfo.spectral_decline * 1000) / 1000;
-          let spectral_Irregularity =
-            Math.floor(res?.picIfo.spectral_Irregularity * 1000) / 1000;
-          let spectral_Uneven =
-            Math.floor(res?.picIfo.spectral_Uneven * 1000) / 1000;
-          let spectral_entropy =
-            Math.floor(res?.picIfo.spectral_entropy * 1000) / 1000;
-          setSpectral_centroid(spectral_centroid);
-          setSpectral_centroid_width(spectral_centroid_width);
-          setSpectral_area(spectral_area);
-          setSpectral_slope(res?.picIfo.spectral_slope);
-          setSpectral_decline(spectral_decline);
-          setSpectral_Irregularity(spectral_Irregularity);
-          setSpectral_Uneven(spectral_Uneven);
-          setSpectral_entropy(spectral_entropy);
-          setpicIfo(res?.picIfo.picIfo);
-          setva(res?.picIfo.var);
-          setmean(res?.picIfo.mean);
-          setcalc(res?.picIfo.calc);
-        });
-      } else if (f_key == '5') {
-        request(`/v1/feature/Zero_Crossing`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-            EndTime: form.getFieldsValue().end,
-            StartTime: form.getFieldsValue().start,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          setpicIfo(res?.picIfo.picIfo);
-          setva(res?.picIfo.var);
-          setmean(res?.picIfo.mean);
-          setcalc(res?.picIfo.calc);
-        });
-      }
-    }
     render() {
       return (
         <div style={{ backgroundColor: '#2F2F2F' }}>
           <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
             <Button
               type="primary"
-              onClick={() => {
-                dispatch({
-                  type: 'features/change',
-                });
-              }}
               id="btnPlay"
               style={{ fontSize: 15, float: 'left' }}
             >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
-            <Popover content="先在右侧特征栏选择特征，再点击计算" title="计算">
-              <Button
-                type="primary"
-                style={{ float: 'right' }}
-                onClick={this.getFeatures}
-              >
-                计算
-              </Button>
-            </Popover>
           </div>
           <div id="wave-timeline" style={{ marginTop: 20 }}></div>
           <div id="waveform" style={{ backgroundColor: 'black' }}>
@@ -392,10 +293,7 @@ const Index = (props) => {
             style={{
               width: '100%',
               height: 320,
-              display:
-                f_key === '2' || f_key === '4' || f_key === '5'
-                  ? 'block'
-                  : 'none',
+              display: f_key === '4' || f_key === '5' ? 'block' : 'none',
             }}
             id="divshow_0"
           >
@@ -434,12 +332,20 @@ const Index = (props) => {
           </div>
           <div
             id="divshow_2"
+            style={{ display: f_key === '2' ? 'block' : 'none' }}
+          >
+            <LofarApp
+              audio_id={FeaturesInfor.audio_id}
+              audio_name={FeaturesInfor.audio_name}
+            />
+          </div>
+          <div
+            id="divshow_3"
             style={{ display: f_key === '3' ? 'block' : 'none' }}
           >
             <DemonApp
               audio_id={FeaturesInfor.audio_id}
               audio_name={FeaturesInfor.audio_name}
-              animation={FeaturesInfor.animation}
             />
           </div>
           <div

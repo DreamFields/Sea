@@ -12,30 +12,60 @@ import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   console.log(props);
-  const { audio_id, audio_name, animation } = props;
+  const { audio_id, audio_name, animation, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
   let data_Demon = [];
   let data_demon = [];
   let data_L = 0;
   let x_data = [];
+  let animationValue = false;
   const [myType, setmyType] = useState('value'); //对数还是线性
   const [data, setdata] = useState(data_Demon);
-  const [dataL, setdataL] = useState(data_L);
+  const [dataL, setdataL] = useState(0);
   const [Xdata, setXdata] = useState(x_data);
   const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   useEffect(() => {
-    animationController();
-  }, [animation]);
+    let dom = document.getElementById('btnPlay');
+    dom.addEventListener('click', () => {
+      if (animationValue) {
+        animationValue = false;
+      } else {
+        animationValue = true;
+      }
+      animationController();
+    });
+  }, []);
   const animationController = function () {
-    console.log('Demon_animation: ' + animation);
-    if (animation === true) {
-      while (data.length < dataL) {
-        console.log('while(data):' + data);
-        setTimeout(() => {
-          data_demon.push(data_Demon.reverse().pop());
-          setdata(data_demon);
-        }, Math.floor(4850 / dataL));
+    console.log('Demon_animation: ' + animationValue);
+    console.log('data_L: ' + Data.dataL);
+    let data_demon = Data.dynamicData ? Data.dynamicData : [];
+    let data_Demon = Data.data ? Data.data : [];
+    console.log('Data: ' + Data);
+    console.log('data_demon: ' + data_demon);
+    console.log('data_Demon: ' + Data.data);
+    let gap = Math.floor(4850 / Data.dataL);
+    console.log('gap: ' + gap);
+    if (animationValue === true) {
+      if (data_Demon && data_demon) {
+        while (data_demon.length < Data.dataL) {
+          console.log('while');
+          setTimeout(() => {
+            data_demon.push(data_Demon.reverse().pop());
+            dispatch({
+              type: 'data_demon/savedata',
+              payload: {
+                data: data_demon,
+              },
+            });
+            dispatch({
+              type: 'data_demon/savedynamicData',
+              payload: {
+                dynamicData: data_Demon,
+              },
+            });
+          }, gap);
+        }
       }
     }
   };
@@ -85,13 +115,15 @@ const TestApp = (props) => {
   };
   const handleChartClick = (params) => {
     console.log(params);
-    console.log('分贝(db):' + params.value);
+    console.log('分贝(db):' + params.value.toPrecision(3));
     console.log('频率(hz)):' + params.dataIndex);
     let span_db_int = document.getElementById('db_int');
     let span_db_decimal = document.getElementById('db_decimal');
-    span_db_int.innerText = (params.value + '').split('.')[0];
-    span_db_decimal.innerText = '.' + (params.value + '').split('.')[1];
     let span_hz_int = document.getElementById('hz_int');
+
+    span_db_int.innerText = (params.value.toPrecision(3) + '').split('.')[0];
+    span_db_decimal.innerText =
+      '.' + (params.value.toPrecision(3) + '').split('.')[1];
     span_hz_int.innerText = params.dataIndex + '';
   };
 
@@ -104,14 +136,28 @@ const TestApp = (props) => {
       let id = res?.id;
       setid(id);
       for (let i of res.picIfo.fftf) {
-        Xdata.push(i);
+        x_data.push(i);
       }
       for (let i of res.picIfo.Y_demon) {
         data_Demon.push(i);
       }
       setPicType('line');
-      //setdata(data_Demon);
+      setdata(data_Demon);
       setdataL(data_Demon.length);
+      data_L = data_Demon.length;
+      dispatch({
+        type: 'data_demon/savedataL',
+        payload: {
+          dataL: data_Demon.length,
+        },
+      });
+      dispatch({
+        type: 'data_demon/savedata',
+        payload: {
+          data: data_Demon,
+        },
+      });
+      console.log('data_Demon.length' + data_L);
       setXdata(x_data);
       console.log('data_Demon' + data_Demon);
       console.log('data:' + data);
@@ -119,12 +165,13 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
   return (
     <div>
       <Card title="折线图表之一">
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(myType, data, Xdata, PicType)}
+            option={getOption(myType, Data.data, Xdata, PicType)}
             theme="dark"
             style={{ height: '400px' }}
             onEvents={{
@@ -139,8 +186,10 @@ const TestApp = (props) => {
   );
 };
 
-const mapStateToProps = ({}) => {
-  return {};
+const mapStateToProps = ({ data_demon }) => {
+  return {
+    Data: data_demon,
+  };
 };
 
 export default connect(mapStateToProps)(TestApp);

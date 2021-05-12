@@ -136,7 +136,7 @@ const TestApp = (props) => {
       setid(id);
       console.log(id);
       for (var i in res.dataIfo) {
-        data_Power.push(res.dataIfo[i] * 10);
+        data_Power.push(res.dataIfo[i]);
         x_data.push(i);
       }
       setmyType('log');
@@ -160,7 +160,7 @@ const TestApp = (props) => {
     }).then((res) => {
       console.log(res?.dataIfo);
       for (var i in res?.dataIfo) {
-        data_Power.push(res?.dataIfo[i] * 10);
+        data_Power.push(res?.dataIfo[i]);
         x_data.push(i);
       }
       setdata(data_Power);

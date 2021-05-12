@@ -17,7 +17,6 @@ export interface StateType {
   audio_name: any;
   signal_type: any;
   db: any;
-  animation: any;
 }
 
 export interface ModelType {
@@ -29,7 +28,6 @@ export interface ModelType {
   };
   reducers: {
     save: Reducer<StateType>;
-    change: Reducer<StateType>;
   };
 }
 
@@ -43,7 +41,6 @@ const Model: ModelType = {
     audio_name: undefined,
     signal_type: undefined,
     db: undefined,
-    animation: false,
   },
 
   effects: {
@@ -70,16 +67,6 @@ const Model: ModelType = {
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-
-    change(state) {
-      let newState = JSON.parse(JSON.stringify(state));
-      if (newState.animation) {
-        newState.animation = false;
-      } else {
-        newState.animation = true;
-      }
-      return newState;
     },
   },
 };
