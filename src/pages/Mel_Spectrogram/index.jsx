@@ -317,10 +317,14 @@ const TestApp = (props) => {
     setloading(true);
     request(`/v1/feature/Mel_Spectrogram`, {
       method: 'POST',
-      data: { file_id: audio_id },
+      data: {
+        file_id: audio_id,
+        resolution: 20,
+      },
     }).then((res) => {
       console.log('success');
       console.log('signal_type: ' + signal_type);
+      console.log(JSON.stringify(res));
       let cur = [];
       let obj = JSON.parse(res?.picIfo.picIfo);
       let time = res?.picIfo.time;

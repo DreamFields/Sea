@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
 import { Card, Spin, Table, Popover } from 'antd';
 import { connect } from 'umi';
@@ -59,6 +59,7 @@ const TestApp = (props) => {
       },
       yAxis: {
         type: Type,
+        scale: true,
       },
       dataZoom: [
         {
@@ -147,6 +148,29 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+  const getData4 = () => {
+    setloading(true);
+    request(`/v1/feature/Zero_Crossing`, {
+      method: 'POST',
+      data: {
+        file_id: audio_id,
+      },
+    }).then((res) => {
+      console.log('过零率： ' + JSON.stringify(res));
+      for (var i in res.picIfo.picIfo) {
+        data_Power.push(res.picIfo.picIfo[i]);
+        x_data.push(parseInt(i));
+      }
+      setdata(data_Power);
+      setmyType('value');
+      setPicType('line');
+      setXdata(x_data);
+      console.log(data);
+      console.log(Xdata);
+      setloading(false);
+    });
+  };
+
   const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
@@ -154,7 +178,6 @@ const TestApp = (props) => {
       data: { file_id: audio_id },
     }).then((res) => {
       console.log('res: ', JSON.stringify(res));
-
       let id = res?.id;
       setid(id);
       console.log(id);
@@ -171,9 +194,8 @@ const TestApp = (props) => {
       setdata(data_Power);
       setdataL(data_Power.length);
       setXdata(x_data);
-      // console.log(data);
-      // console.log(Xdata);
-      // console.log('200');
+      console.log(data);
+      console.log(Xdata);
       setloading(false);
     });
   };
@@ -216,7 +238,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={getData3}>功率谱y轴切换</Button>
+        <Button onClick={getData3}>幅度-分贝转换</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>

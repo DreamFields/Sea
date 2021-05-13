@@ -24,6 +24,7 @@ import PowerApp from '../power/index.jsx';
 import DemonApp from '../demon_analysis/index';
 import MelApp from '../Mel_Spectrogram/index';
 import LofarApp from '../lofar_v1/index';
+import ZeroApp from '../Zero_crossing/index';
 const { SubMenu } = Menu;
 const rightWidth = '22%';
 let feature_key;
@@ -169,21 +170,6 @@ const Index = (props) => {
           setmean(res?.picIfo.mean);
           setcalc(res?.picIfo.calc);
         });
-      } else if (feature_key == '5') {
-        request(`/v1/feature/Zero_Crossing`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-            EndTime: form.getFieldsValue().end,
-            StartTime: form.getFieldsValue().start,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          setpicIfo(res?.picIfo.picIfo);
-          setva(res?.picIfo.var);
-          setmean(res?.picIfo.mean);
-          setcalc(res?.picIfo.calc);
-        });
       }
     }
     handleClick = (e) => {
@@ -293,7 +279,7 @@ const Index = (props) => {
             style={{
               width: '100%',
               height: 320,
-              display: f_key === '4' || f_key === '5' ? 'block' : 'none',
+              display: f_key === '4' ? 'block' : 'none',
             }}
             id="divshow_0"
           >
@@ -349,7 +335,19 @@ const Index = (props) => {
             />
           </div>
           <div
-            id="divshow_3"
+            id="divshow_5"
+            style={{ display: f_key === '5' ? 'block' : 'none' }}
+          >
+            <ZeroApp
+              audio_id={FeaturesInfor.audio_id}
+              audio_name={FeaturesInfor.audio_name}
+              setva={setva}
+              setmean={setmean}
+              setcalc={setcalc}
+            />
+          </div>
+          <div
+            id="divshow_6"
             style={{ display: f_key === '6' ? 'block' : 'none' }}
           >
             <MelApp
@@ -492,46 +490,6 @@ const Index = (props) => {
           <Statistic title="均值" value={mean} />
           <Statistic title="方差" value={va} />
           {/* <Statistic title="分贝" value={FeaturesInfor.db} style={{ display: f_key === '1' ? 'block' : 'none' }} id='db' /> */}
-        </div>
-      </div>
-
-      <div
-        style={{
-          width: rightWidth,
-          height: 300,
-          float: 'left',
-          marginLeft: '1rem',
-        }}
-      >
-        <div style={{ color: 'white', fontSize: 20 }}>参数选择</div>
-        <div
-          style={{
-            width: '100%',
-            height: 270,
-            border: '1px solid grey',
-            backgroundColor: 'black',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-          }}
-        >
-          <div
-            id="divPara"
-            style={{
-              width: '96%',
-              marginTop: 20,
-              marginLeft: '2%',
-              display: f_key === '5' ? 'block' : 'none',
-            }}
-          >
-            <Form name="edit_fleet" layout="vertical" form={form}>
-              <Form.Item name="start" label="开始时间">
-                <Input autoComplete="off" placeholder="单位：ms" />
-              </Form.Item>
-              <Form.Item name="end" label="结束时间">
-                <Input autoComplete="off" placeholder="单位：ms" />
-              </Form.Item>
-            </Form>
-          </div>
         </div>
       </div>
     </>
