@@ -18,7 +18,7 @@ import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
-  const { audio_id, audio_name, dispatch } = props;
+  const { audio_id, audio_name, dispatch, setva, setmean, setcalc } = props;
 
   useEffect(() => {
     dispatch({
@@ -196,6 +196,9 @@ const TestApp = (props) => {
       setXdata(x_data);
       console.log(data);
       console.log(Xdata);
+      //setva(1);
+      //setcalc(1);
+      //setmean(1);
       setloading(false);
     });
   };
@@ -237,7 +240,7 @@ const TestApp = (props) => {
             }}
           />
         </Spin>
-        <Button onClick={getData}>功率谱分析</Button>
+        <Button onClick={getData4}>功率谱分析</Button>
         <Button onClick={getData3}>幅度-分贝转换</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />

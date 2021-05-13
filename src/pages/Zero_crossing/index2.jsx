@@ -11,11 +11,11 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
-  const { audio_id, audio_name, dispatch, setmean, setcalc, setva } = props;
+  const { audio_id, audio_name, dispatch, setva, setmean, setcalc } = props;
   const [loading, setloading] = useState(false);
   var data_Zero = [];
   var x_data = [];
-  const [myType, setmyType] = useState('value'); //对数还是线性
+  const [myType, setmyType] = useState('log'); //对数还是线性
   const [data, setdata] = useState(data_Zero);
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
