@@ -117,29 +117,56 @@ const TestApp = (props) => {
       },
     });
   };
-
-  const change = () => {
-    if (myType === 'value') setmyType('log');
-    else {
-      setmyType('value');
-    }
-  };
-
   const getData = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
       data: { file_id: audio_id },
     }).then((res) => {
-      console.log('res: ', res);
+      console.log('res: ', JSON.stringify(res));
+
       let id = res?.id;
       setid(id);
       console.log(id);
-      for (var i in res.dataIfo) {
-        data_Power.push(res.dataIfo[i]);
-        x_data.push(i);
+      let count = 0;
+      for (var i in res.dataIfo.dataIfo) {
+        data_Power.push(res.dataIfo.dataIfo[i]);
+        if (count < 500) {
+          x_data.push(count);
+        }
+        count++;
       }
-      setmyType('log');
+      setmyType('value');
+      setPicType('line');
+      setdata(data_Power);
+      setdataL(data_Power.length);
+      setXdata(x_data);
+      // console.log(data);
+      // console.log(Xdata);
+      // console.log('200');
+      setloading(false);
+    });
+  };
+  const getData3 = () => {
+    setloading(true);
+    request(`/v1/feature/Power`, {
+      method: 'POST',
+      data: { file_id: audio_id },
+    }).then((res) => {
+      console.log('res: ', JSON.stringify(res));
+
+      let id = res?.id;
+      setid(id);
+      console.log(id);
+      let count = 0;
+      for (var i in res.dataIfo.dataIfo_log) {
+        data_Power.push(res.dataIfo.dataIfo_log[i]);
+        if (count < 500) {
+          x_data.push(count);
+        }
+        count++;
+      }
+      setmyType('value');
       setPicType('line');
       setdata(data_Power);
       setdataL(data_Power.length);
@@ -189,7 +216,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={change}>功率谱y轴切换</Button>
+        <Button onClick={getData3}>功率谱y轴切换</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>
