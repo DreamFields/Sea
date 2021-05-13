@@ -11,22 +11,41 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
-  console.log(props);
-  const { audio_id, audio_name, animation, Data, dispatch } = props;
+  const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
   let data_Demon = [];
-  let data_demon = [];
   let data_L = 0;
   let x_data = [];
+
+  // 播放控制
   let animationValue = false;
+  // 播放到的帧数
+  let frame_count = 1;
+  // 计时器id
+  let move;
+  // 音频总时长，以ms为单位
+  let duration = 0;
+  // 帧间隔时间，以ms为单位
+  const interval = 100;
+
   const [myType, setmyType] = useState('value'); //对数还是线性
+
   const [data, setdata] = useState(data_Demon);
-  const [dataL, setdataL] = useState(0);
   const [Xdata, setXdata] = useState(x_data);
   const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   useEffect(() => {
+    // 获取音频时长
+    if (path) {
+      let audioElement = new Audio(path);
+      audioElement.addEventListener('loadedmetadata', function (_event) {
+        duration = audioElement.duration * 1000;
+        console.log('视频的时长为(ms):', duration);
+      });
+    }
+
     let dom = document.getElementById('btnPlay');
+
     dom.addEventListener('click', () => {
       if (animationValue) {
         animationValue = false;
@@ -36,39 +55,45 @@ const TestApp = (props) => {
       animationController();
     });
   }, []);
+
   const animationController = function () {
-    console.log('Demon_animation: ' + animationValue);
-    console.log('data_L: ' + Data.dataL);
-    let data_demon = Data.dynamicData ? Data.dynamicData : [];
-    let data_Demon = Data.data ? Data.data : [];
-    console.log('Data: ' + Data);
-    console.log('data_demon: ' + data_demon);
-    console.log('data_Demon: ' + Data.data);
-    let gap = Math.floor(4850 / Data.dataL);
-    console.log('gap: ' + gap);
     if (animationValue === true) {
-      if (data_Demon && data_demon) {
-        while (data_demon.length < Data.dataL) {
-          console.log('while');
-          setTimeout(() => {
-            data_demon.push(data_Demon.reverse().pop());
-            dispatch({
-              type: 'data_demon/savedata',
-              payload: {
-                data: data_demon,
-              },
-            });
-            dispatch({
-              type: 'data_demon/savedynamicData',
-              payload: {
-                dynamicData: data_Demon,
-              },
-            });
-          }, gap);
+      move = setInterval(() => {
+        // console.log(frame_count);
+        if (Data.data) {
+          const old_data = data.slice();
+          let datadis = Math.floor(
+            (old_data.length * frame_count * interval) / duration,
+          );
+          let new_data = old_data.splice(0, datadis);
+
+          dispatch({
+            type: 'data_demon/savedata',
+            payload: {
+              data: new_data,
+            },
+          });
         }
-      }
+        frame_count++;
+        if (frame_count > Math.floor(duration / interval)) {
+          clearInterval(move);
+          frame_count = 1;
+
+          dispatch({
+            type: 'data_demon/savedata',
+            payload: {
+              data: data,
+            },
+          });
+
+          animationValue = false;
+        }
+      }, interval);
+    } else {
+      clearInterval(move);
     }
   };
+
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -113,6 +138,7 @@ const TestApp = (props) => {
     };
     return option;
   };
+
   const handleChartClick = (params) => {
     console.log(params);
     console.log('分贝(db):' + params.value.toPrecision(3));
@@ -143,7 +169,6 @@ const TestApp = (props) => {
       }
       setPicType('line');
       setdata(data_Demon);
-      setdataL(data_Demon.length);
       data_L = data_Demon.length;
       dispatch({
         type: 'data_demon/savedataL',
@@ -160,7 +185,6 @@ const TestApp = (props) => {
       console.log('data_Demon.length' + data_L);
       setXdata(x_data);
       console.log('data_Demon' + data_Demon);
-      console.log('data:' + data);
       console.log('Xdata:' + Xdata);
       setloading(false);
     });
