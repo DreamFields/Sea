@@ -18,7 +18,7 @@ import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
-  const { audio_id, audio_name, dispatch, setva, setmean, setcalc } = props;
+  const { audio_id, dispatch } = props;
 
   useEffect(() => {
     dispatch({
@@ -142,35 +142,32 @@ const TestApp = (props) => {
       setdata(data_Power);
       setdataL(data_Power.length);
       setXdata(x_data);
-      // console.log(data);
-      // console.log(Xdata);
-      // console.log('200');
       setloading(false);
     });
   };
-  const getData4 = () => {
+  const getData2 = () => {
     setloading(true);
-    request(`/v1/feature/Zero_Crossing`, {
+    console.log('send requir');
+    request('/v1/feature/onethree', {
       method: 'POST',
-      data: {
-        file_id: audio_id,
-      },
+      data: { file_id: audio_id },
     }).then((res) => {
-      console.log('过零率： ' + JSON.stringify(res));
-      for (var i in res.picIfo.picIfo) {
-        data_Power.push(res.picIfo.picIfo[i]);
-        x_data.push(parseInt(i));
+      console.log(res?.dataIfo);
+      for (var i in res?.dataIfo) {
+        data_Power.push(res?.dataIfo[i]);
+        x_data.push(i);
       }
       setdata(data_Power);
-      setmyType('value');
-      setPicType('line');
+      setdataL(data_Power.length);
       setXdata(x_data);
+      setmyType('value');
+      setPicType('bar');
       console.log(data);
       console.log(Xdata);
+      console.log('200');
       setloading(false);
     });
   };
-
   const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
@@ -203,30 +200,6 @@ const TestApp = (props) => {
     });
   };
 
-  const getData2 = () => {
-    setloading(true);
-    console.log('send requir');
-    request('/v1/feature/onethree', {
-      method: 'POST',
-      data: { file_id: audio_id },
-    }).then((res) => {
-      console.log(res?.dataIfo);
-      for (var i in res?.dataIfo) {
-        data_Power.push(res?.dataIfo[i]);
-        x_data.push(i);
-      }
-      setdata(data_Power);
-      setdataL(data_Power.length);
-      setXdata(x_data);
-      setmyType('value');
-      setPicType('bar');
-      console.log(data);
-      console.log(Xdata);
-      console.log('200');
-      setloading(false);
-    });
-  };
-
   return (
     <div>
       <Card title="功率谱">
@@ -240,7 +213,7 @@ const TestApp = (props) => {
             }}
           />
         </Spin>
-        <Button onClick={getData4}>功率谱分析</Button>
+        <Button onClick={getData}>功率谱分析</Button>
         <Button onClick={getData3}>幅度-分贝转换</Button>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />

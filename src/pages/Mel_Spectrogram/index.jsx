@@ -25,6 +25,8 @@ const TestApp = (props) => {
   let data_Mel = [];
   let Y_data = [];
   let X_data = [];
+  let personx_data = [];
+  let persondata = [];
   const [data, setdata] = useState(data_Mel);
   const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
@@ -37,6 +39,9 @@ const TestApp = (props) => {
   const [pulse_cycle, setpulse_cycle] = useState(undefined); //脉冲周期
   const [pulse_width, setpulse_width] = useState(undefined); //脉冲宽度
   const [time1, settime1] = useState(undefined);
+  const [personXdata, setpersonXdata] = useState([]);
+  const [personData, setpersonData] = useState([]);
+  const [objlength, setlength] = useState(128);
   let xleft, xright, yleft, yright;
   let person = [];
   const uploadTip = (
@@ -288,7 +293,7 @@ const TestApp = (props) => {
     console.log(signal_type2),
       setecho_length(Math.floor((Xdistance / 667.9) * time1 * 100) / 100);
     setecho_width(Math.floor((Ydistance / 305) * 8000 * 100) / 100);
-    setpulse_cycle(Math.floor((8000 / 128) * 100) / 100);
+    setpulse_cycle(Math.floor((8000 / objlength) * 100) / 100);
     setpulse_width(Math.floor((Xdistance / 666.9) * time1 * 100) / 100);
   };
   const dispatchEcho = () => {
@@ -319,7 +324,7 @@ const TestApp = (props) => {
       method: 'POST',
       data: {
         file_id: audio_id,
-        resolution: 20,
+        resolution: 25,
       },
     }).then((res) => {
       console.log('success');
@@ -331,8 +336,11 @@ const TestApp = (props) => {
       settime1(time);
       let id = res?.id;
       setid(id);
+      console.log('typeof obj' + typeof obj);
       console.log('obj: ' + obj[0]);
-      for (let i = 0; i < 128; i++) {
+      console.log('objlength: ' + Object.keys(obj).length);
+      setlength(Object.keys(obj).length);
+      for (let i = 0; i < Object.keys(obj).length; i++) {
         cur.push(obj[i]);
       }
       console.log(cur);
