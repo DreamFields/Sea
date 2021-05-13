@@ -346,6 +346,7 @@ const Index = (props) => {
             <DemonApp
               audio_id={FeaturesInfor.audio_id}
               audio_name={FeaturesInfor.audio_name}
+              path={path}
             />
           </div>
           <div
