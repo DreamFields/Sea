@@ -40,7 +40,7 @@ const TestApp = (props) => {
       let audioElement = new Audio(path);
       audioElement.addEventListener('loadedmetadata', function (_event) {
         duration = audioElement.duration * 1000;
-        console.log('视频的时长为(ms):', duration);
+        // console.log('视频的时长为(ms):', duration);
       });
     }
 

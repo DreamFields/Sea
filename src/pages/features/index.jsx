@@ -116,18 +116,7 @@ const Index = (props) => {
       value: spectral_entropy,
     },
   ];
-  useEffect(() => {
-    console.log('FeaturesInfor', FeaturesInfor);
-    if (FeaturesInfor.audio_id) {
-      request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
-        method: 'GET',
-      }).then((res) => {
-        console.log('版本文件路径', res?.url);
-        setpath(res?.url);
-      });
-    }
-    return () => {};
-  }, [FeaturesInfor]);
+
   class RightSidermenu extends React.Component {
     getFeatures() {
       let loading = document.querySelector('#divLoading');
@@ -202,9 +191,15 @@ const Index = (props) => {
       );
     }
   }
-  class Waveform extends React.Component {
-    componentDidMount() {
-      var wavesurfer = WaveSurfer.create({
+
+  const Waveform = () => {
+    var wavesurfer;
+
+    useEffect(() => {
+      console.log('FeaturesInfor', FeaturesInfor);
+
+      // 初始化wavesurfer组件
+      wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: 'skyblue',
         progressColor: '#1e90ff',
@@ -233,12 +228,11 @@ const Index = (props) => {
           }),
         ],
       });
-      if (path) {
-        wavesurfer.load(path);
-      }
+
       btnPlay.addEventListener('click', function () {
         wavesurfer.playPause();
       });
+
       // Progress bar
       (function () {
         var progressDiv = document.querySelector('#progress-bar');
@@ -256,111 +250,124 @@ const Index = (props) => {
         wavesurfer.on('destroy', hideProgress);
         wavesurfer.on('error', hideProgress);
       })();
-    }
-    render() {
-      return (
-        <div style={{ backgroundColor: '#2F2F2F' }}>
-          <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
-            <Button
-              type="primary"
-              id="btnPlay"
-              style={{ fontSize: 15, float: 'left' }}
-            >
-              <PlayCircleOutlined />/<PauseOutlined />
-            </Button>
-          </div>
-          <div id="wave-timeline" style={{ marginTop: 20 }}></div>
-          <div id="waveform" style={{ backgroundColor: 'black' }}>
-            <div className="progress progress-striped active" id="progress-bar">
-              <div className="progress-bar progress-bar-info"></div>
-            </div>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              height: 320,
-              display: f_key === '4' ? 'block' : 'none',
-            }}
-            id="divshow_0"
+      // 初始化完成
+
+      if (FeaturesInfor.audio_id) {
+        request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
+          method: 'GET',
+        }).then((res) => {
+          console.log('版本文件路径', res?.url);
+          wavesurfer.load(res?.url);
+        });
+      }
+      return () => {};
+    }, [FeaturesInfor]);
+
+    // render() {
+    return (
+      <div style={{ backgroundColor: '#2F2F2F' }}>
+        <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
+          <Button
+            type="primary"
+            id="btnPlay"
+            style={{ fontSize: 15, float: 'left' }}
           >
-            <img
-              src={picIfo}
-              style={{
-                marginTop: 20,
-                width: '100%',
-                height: 300,
-                display: picIfo ? 'block' : 'none',
-              }}
-              id="resImg"
-            />
-            <Table
-              columns={columns}
-              dataSource={data}
-              style={{
-                marginTop: 20,
-                width: '100%',
-                height: 200,
-                display: f_key === '4' && picIfo ? 'block' : 'none',
-              }}
-            />
-            <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
-              <LoadingOutlined style={{ marginTop: 80, marginLeft: 366 }} />
-            </div>
-          </div>
-          <div
-            id="divshow_1"
-            style={{ display: f_key === '1' ? 'block' : 'none' }}
-          >
-            <PowerApp
-              audio_id={FeaturesInfor.audio_id}
-              audio_name={FeaturesInfor.audio_name}
-            />
-          </div>
-          <div
-            id="divshow_2"
-            style={{ display: f_key === '2' ? 'block' : 'none' }}
-          >
-            <LofarApp
-              audio_id={FeaturesInfor.audio_id}
-              audio_name={FeaturesInfor.audio_name}
-            />
-          </div>
-          <div
-            id="divshow_3"
-            style={{ display: f_key === '3' ? 'block' : 'none' }}
-          >
-            <DemonApp
-              audio_id={FeaturesInfor.audio_id}
-              audio_name={FeaturesInfor.audio_name}
-              path={path}
-            />
-          </div>
-          <div
-            id="divshow_5"
-            style={{ display: f_key === '5' ? 'block' : 'none' }}
-          >
-            <ZeroApp
-              audio_id={FeaturesInfor.audio_id}
-              audio_name={FeaturesInfor.audio_name}
-              setva={setva}
-              setmean={setmean}
-              setcalc={setcalc}
-            />
-          </div>
-          <div
-            id="divshow_6"
-            style={{ display: f_key === '6' ? 'block' : 'none' }}
-          >
-            <MelApp
-              audio_id={FeaturesInfor.audio_id}
-              audio_name={FeaturesInfor.audio_name}
-              signal_type={FeaturesInfor.signal_type}
-            />
+            <PlayCircleOutlined />/<PauseOutlined />
+          </Button>
+        </div>
+        <div id="wave-timeline" style={{ marginTop: 20 }}></div>
+        <div id="waveform" style={{ backgroundColor: 'black' }}>
+          <div className="progress progress-striped active" id="progress-bar">
+            <div className="progress-bar progress-bar-info"></div>
           </div>
         </div>
-      );
-    }
-  }
+        <div
+          style={{
+            width: '100%',
+            height: 320,
+            display: f_key === '4' ? 'block' : 'none',
+          }}
+          id="divshow_0"
+        >
+          <img
+            src={picIfo}
+            style={{
+              marginTop: 20,
+              width: '100%',
+              height: 300,
+              display: picIfo ? 'block' : 'none',
+            }}
+            id="resImg"
+          />
+          <Table
+            columns={columns}
+            dataSource={data}
+            style={{
+              marginTop: 20,
+              width: '100%',
+              height: 200,
+              display: f_key === '4' && picIfo ? 'block' : 'none',
+            }}
+          />
+          <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
+            <LoadingOutlined style={{ marginTop: 80, marginLeft: 366 }} />
+          </div>
+        </div>
+        <div
+          id="divshow_1"
+          style={{ display: f_key === '1' ? 'block' : 'none' }}
+        >
+          <PowerApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+          />
+        </div>
+        <div
+          id="divshow_2"
+          style={{ display: f_key === '2' ? 'block' : 'none' }}
+        >
+          <LofarApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+          />
+        </div>
+        <div
+          id="divshow_3"
+          style={{ display: f_key === '3' ? 'block' : 'none' }}
+        >
+          <DemonApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            path={path}
+          />
+        </div>
+        <div
+          id="divshow_5"
+          style={{ display: f_key === '5' ? 'block' : 'none' }}
+        >
+          <ZeroApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            setva={setva}
+            setmean={setmean}
+            setcalc={setcalc}
+          />
+        </div>
+        <div
+          id="divshow_6"
+          style={{ display: f_key === '6' ? 'block' : 'none' }}
+        >
+          <MelApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            signal_type={FeaturesInfor.signal_type}
+          />
+        </div>
+      </div>
+    );
+    // }
+  };
+
   const MainContent = () => {
     return (
       <div

@@ -124,8 +124,8 @@ function custom_request(
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
     }).then((res) => {
-      console.log('res', res);
-      console.log('type res', typeof res);
+      // console.log('res', res);
+      // console.log('type res', typeof res);
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
 
@@ -136,7 +136,7 @@ function custom_request(
           resolve(res.data !== undefined ? res.data : true);
         }
       } else if (res) {
-        console.log('res', typeof res);
+        // console.log('res', typeof res);
         if (res?.msg === 'token is invalid' && res.code === 10031) {
           document.cookie = '';
           message.warning('登陆状态失效，请重新登陆！');
