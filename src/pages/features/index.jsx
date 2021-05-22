@@ -25,6 +25,7 @@ import DemonApp from '../demon_analysis/index';
 import MelApp from '../Mel_Spectrogram/index';
 import LofarApp from '../lofar_v1/index';
 import ZeroApp from '../Zero_crossing/index';
+import MCFFApp from '../MCFF/index';
 const { SubMenu } = Menu;
 const rightWidth = '22%';
 let feature_key;
@@ -131,21 +132,20 @@ const Index = (props) => {
           },
         }).then((res) => {
           loading.style.display = 'none';
-          console.log(res);
+          console.log('MCFFRES' + res);
           let spectral_centroid =
-            Math.floor(res?.picIfo.spectral_centroid * 1000) / 1000;
+            Math.floor(res?.data.spectral_centroid * 1000) / 1000;
           let spectral_centroid_width =
-            Math.floor(res?.picIfo.spectral_centroid_width * 1000) / 1000;
-          let spectral_area =
-            Math.floor(res?.picIfo.spectral_area * 1000) / 1000;
+            Math.floor(res?.data.spectral_centroid_width * 1000) / 1000;
+          let spectral_area = Math.floor(res?.data.spectral_area * 1000) / 1000;
           let spectral_decline =
-            Math.floor(res?.picIfo.spectral_decline * 1000) / 1000;
+            Math.floor(res?.data.spectral_decline * 1000) / 1000;
           let spectral_Irregularity =
-            Math.floor(res?.picIfo.spectral_Irregularity * 1000) / 1000;
+            Math.floor(res?.data.spectral_Irregularity * 1000) / 1000;
           let spectral_Uneven =
-            Math.floor(res?.picIfo.spectral_Uneven * 1000) / 1000;
+            Math.floor(res?.data.spectral_Uneven * 1000) / 1000;
           let spectral_entropy =
-            Math.floor(res?.picIfo.spectral_entropy * 1000) / 1000;
+            Math.floor(res?.data.spectral_entropy * 1000) / 1000;
           setSpectral_centroid(spectral_centroid);
           setSpectral_centroid_width(spectral_centroid_width);
           setSpectral_area(spectral_area);
@@ -154,10 +154,10 @@ const Index = (props) => {
           setSpectral_Irregularity(spectral_Irregularity);
           setSpectral_Uneven(spectral_Uneven);
           setSpectral_entropy(spectral_entropy);
-          setpicIfo(res?.picIfo.picIfo);
-          setva(res?.picIfo.var);
-          setmean(res?.picIfo.mean);
-          setcalc(res?.picIfo.calc);
+          setpicIfo(res?.data.picIfo);
+          setva(res?.data.var);
+          setmean(res?.data.mean);
+          setcalc(res?.data.calc);
         });
       }
     }
@@ -228,11 +228,9 @@ const Index = (props) => {
           }),
         ],
       });
-
       btnPlay.addEventListener('click', function () {
         wavesurfer.playPause();
       });
-
       // Progress bar
       (function () {
         var progressDiv = document.querySelector('#progress-bar');
@@ -241,7 +239,6 @@ const Index = (props) => {
           progressDiv.style.display = 'block';
           progressBar.style.width = percent + '%';
         };
-
         var hideProgress = function () {
           progressDiv.style.display = 'none';
         };
@@ -251,7 +248,6 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
       // 初始化完成
-
       if (FeaturesInfor.audio_id) {
         request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
           method: 'GET',
@@ -262,7 +258,6 @@ const Index = (props) => {
       }
       return () => {};
     }, [FeaturesInfor]);
-
     // render() {
     return (
       <div style={{ backgroundColor: '#2F2F2F' }}>
@@ -290,6 +285,7 @@ const Index = (props) => {
           id="divshow_0"
         >
           <img
+            alt="MCFF"
             src={picIfo}
             style={{
               marginTop: 20,
@@ -340,6 +336,12 @@ const Index = (props) => {
             audio_name={FeaturesInfor.audio_name}
             path={path}
           />
+        </div>
+        <div
+          id="divshow_4"
+          style={{ display: f_key === '4' ? 'block' : 'none' }}
+        >
+          <MCFFApp audio_id={FeaturesInfor.audio_id} />
         </div>
         <div
           id="divshow_5"
@@ -494,9 +496,9 @@ const Index = (props) => {
               </span>
             </div>
           </div>
-          <Statistic title="信息熵" value={calc} />
-          <Statistic title="均值" value={mean} />
-          <Statistic title="方差" value={va} />
+          <Statistic id="clac" title="信息熵" value={calc} />
+          <Statistic id="mean" title="均值" value={mean} />
+          <Statistic id="va" title="方差" value={va} />
           {/* <Statistic title="分贝" value={FeaturesInfor.db} style={{ display: f_key === '1' ? 'block' : 'none' }} id='db' /> */}
         </div>
       </div>

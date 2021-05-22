@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin, Table, Popover } from 'antd';
+import {
+  Card,
+  Spin,
+  Table,
+  Popover,
+  Radio,
+  RadioGroup,
+  Space,
+  Input,
+  Select,
+} from 'antd';
 import { connect } from 'umi';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
@@ -19,7 +29,8 @@ import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
   const { audio_id, dispatch } = props;
-
+  const [nfft, setNFFT] = useState(1000);
+  const { Option } = Select;
   useEffect(() => {
     dispatch({
       type: 'power/setdata',
@@ -46,6 +57,15 @@ const TestApp = (props) => {
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
+  const SelectTip = (
+    <div>
+      频率选择的默认值为1000Hz
+      <br />
+      <b style={{ color: 'cyan' }}>额外提示</b>
+      <br />
+      频率选择范围为512Hz～8192Hz
+    </div>
+  );
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -122,16 +142,18 @@ const TestApp = (props) => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
-      data: { file_id: audio_id },
+      data: {
+        file_id: audio_id,
+        file_nfft: nfft,
+      },
     }).then((res) => {
       console.log('res: ', JSON.stringify(res));
-
       let id = res?.id;
       setid(id);
       console.log(id);
       let count = 0;
-      for (var i in res.dataIfo.dataIfo) {
-        data_Power.push(res.dataIfo.dataIfo[i]);
+      for (var i in res.dataIfo) {
+        data_Power.push(res.dataIfo[i]);
         if (count < 500) {
           x_data.push(count);
         }
@@ -168,7 +190,7 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
-  const getData3 = () => {
+  /*const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
@@ -179,8 +201,8 @@ const TestApp = (props) => {
       setid(id);
       console.log(id);
       let count = 0;
-      for (var i in res.dataIfo.dataIfo_log) {
-        data_Power.push(res.dataIfo.dataIfo_log[i]);
+      for (var i in res.dataIfo) {
+        data_Power.push(res.dataIfo[i]);
         if (count < 500) {
           x_data.push(count);
         }
@@ -198,7 +220,7 @@ const TestApp = (props) => {
       //setmean(1);
       setloading(false);
     });
-  };
+  };*/
 
   return (
     <div>
@@ -214,7 +236,22 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={getData3}>幅度-分贝转换</Button>
+        <Button onClick={getData}>幅度-分贝转换</Button>
+        <Popover title={'提示'} content={SelectTip}>
+          <Select
+            defaultValue="频率选择"
+            style={{ width: 120 }}
+            onChange={(value) => {
+              setNFFT(value);
+            }}
+          >
+            <Option value={512}>512</Option>
+            <Option value={1024}>1024</Option>
+            <Option value={2048}>2048</Option>
+            <Option value={4096}>4096</Option>
+            <Option value={8192}>8192</Option>
+          </Select>
+        </Popover>
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>
