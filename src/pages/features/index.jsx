@@ -129,7 +129,9 @@ const Index = (props) => {
           wavesurfer.load(res?.url);
         });
       }
-      return () => {};
+      return () => {
+        wavesurfer = null;
+      };
     }, [FeaturesInfor]);
     // render() {
     return (
@@ -144,8 +146,12 @@ const Index = (props) => {
           </Button>
         </div>
         <div id="wave-timeline" style={{ marginTop: 20 }}></div>
-        <div id="waveform" style={{ backgroundColor: 'black' }}>
-          <div className="progress progress-striped active" id="progress-bar">
+        <div id="waveform" style={{ backgroundColor: '#3D3D3D' }}>
+          <div
+            className="progress progress-striped active"
+            id="progress-bar"
+            style={{ display: 'none' }}
+          >
             <div className="progress-bar progress-bar-info"></div>
           </div>
         </div>
@@ -263,9 +269,7 @@ const Index = (props) => {
           marginLeft: '1rem',
         }}
       >
-        <div style={{ color: 'white', fontSize: 20, overflowY: 'scroll' }}>
-          特征选择
-        </div>
+        <div style={{ color: 'white', fontSize: 20 }}>特征选择</div>
         <div
           style={{
             backgroundColor: 'black',

@@ -62,8 +62,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             signal_type: 1,
             ...infor,
             name: undefined,
-            depth: infor.depth_str,
-            shaft_blade_count: `${infor.shaft_count}_${infor.blade_count}`,
+            shaft_blade_rotationl: `${infor.shaft_count}_${infor.blade_count}_${infor.rotationl_speed}`,
             collect_d: infor.collect_time
               ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
               : undefined,
@@ -77,7 +76,6 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             signal_type: 2,
             ...infor,
             name: undefined,
-            depth: infor.depth_str,
             collect_d: infor.collect_time
               ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
               : undefined,
@@ -91,7 +89,6 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             signal_type: 3,
             ...infor,
             name: undefined,
-            depth: infor.depth_str,
             collect_d: infor.collect_time
               ? moment(infor.collect_time?.split(' ')[0], 'YYYY/MM/DD')
               : undefined,
@@ -691,7 +688,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="shaft_blade_count"
+                name="shaft_blade_rotationl"
                 label="螺旋桨"
                 labelAlign="left"
                 labelCol={{ span: 2 }}
@@ -940,7 +937,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   delete copy_vals[key];
                 }
               }
-              delete copy_vals['shaft_blade_count'];
+              delete copy_vals['shaft_blade_rotationl'];
               console.log('目标信息表单值', copy_vals);
               modify[type - 1](copy_vals);
             }
@@ -1271,7 +1268,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
                   }}
                   style={{ marginLeft: 16 }}
                 >
-                  数据预处理
+                  数据整编
                 </Button>
               </>
             )}

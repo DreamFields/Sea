@@ -104,15 +104,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   useEffect(() => {
     dispatch({
       type: 'soundList/fetchSoundList',
-    }).then((res) => {
-      console.log(res);
     });
     return () => {};
   }, [1]);
 
   useEffect(() => {
     if (sound_list) {
-      // console.log('sound_list', sound_list);
+      console.log('sound_list', sound_list);
     }
   }, [sound_list]);
 
@@ -1036,6 +1034,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             }).then((res) => {
               if (res) {
                 message.success('修改成功！');
+                dispatch({
+                  type: 'soundList/fetchSoundList',
+                });
               } else {
                 message.error('修改失败！');
                 dispatch({
