@@ -133,7 +133,61 @@ const Index = (props) => {
         wavesurfer = null;
       };
     }, [FeaturesInfor]);
-    // render() {
+
+    const FeatureMainDiv = {
+      1: (
+        <div>
+          <PowerApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+          />
+        </div>
+      ),
+      2: (
+        <div>
+          <LofarApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+          />
+        </div>
+      ),
+      3: (
+        <div>
+          <DemonApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            path={path}
+          />
+        </div>
+      ),
+
+      4: (
+        <div>
+          <MCFFApp audio_id={FeaturesInfor.audio_id} />
+        </div>
+      ),
+      5: (
+        <div>
+          <ZeroApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            setva={setva}
+            setmean={setmean}
+            setcalc={setcalc}
+          />
+        </div>
+      ),
+      6: (
+        <div>
+          <MelApp
+            audio_id={FeaturesInfor.audio_id}
+            audio_name={FeaturesInfor.audio_name}
+            signal_type={FeaturesInfor.signal_type}
+          />
+        </div>
+      ),
+    };
+
     return (
       <div style={{ backgroundColor: '#2F2F2F' }}>
         <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
@@ -155,65 +209,10 @@ const Index = (props) => {
             <div className="progress-bar progress-bar-info"></div>
           </div>
         </div>
-        <div
-          id="divshow_1"
-          style={{ display: f_key === '1' ? 'block' : 'none' }}
-        >
-          <PowerApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-          />
-        </div>
-        <div
-          id="divshow_2"
-          style={{ display: f_key === '2' ? 'block' : 'none' }}
-        >
-          <LofarApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-          />
-        </div>
-        <div
-          id="divshow_3"
-          style={{ display: f_key === '3' ? 'block' : 'none' }}
-        >
-          <DemonApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            path={path}
-          />
-        </div>
-        <div
-          id="divshow_4"
-          style={{ display: f_key === '4' ? 'block' : 'none' }}
-        >
-          <MCFFApp audio_id={FeaturesInfor.audio_id} />
-        </div>
-        <div
-          id="divshow_5"
-          style={{ display: f_key === '5' ? 'block' : 'none' }}
-        >
-          <ZeroApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            setva={setva}
-            setmean={setmean}
-            setcalc={setcalc}
-          />
-        </div>
-        <div
-          id="divshow_6"
-          style={{ display: f_key === '6' ? 'block' : 'none' }}
-        >
-          <MelApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            signal_type={FeaturesInfor.signal_type}
-          />
-        </div>
+
+        {FeatureMainDiv[f_key]}
       </div>
     );
-    // }
   };
 
   const MainContent = () => {
