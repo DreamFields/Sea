@@ -292,7 +292,9 @@ const Index = (props) => {
           marginLeft: '1rem',
         }}
       >
-        <div style={{ color: 'white', fontSize: 20 }}>基本听音特征</div>
+        <div style={{ color: 'white', fontSize: 20 }}>
+          {f_key === '5' ? '过零率统计特征' : '基本听音特征'}
+        </div>
         <div
           style={{
             backgroundColor: 'black',
@@ -339,9 +341,15 @@ const Index = (props) => {
               </span>
             </div>
           </div>
-          <Statistic id="clac" title="信息熵" value={calc} />
-          <Statistic id="mean" title="均值" value={mean} />
-          <Statistic id="va" title="方差" value={va} />
+          <div
+            style={{
+              display: f_key === '4' || f_key === '5' ? 'block' : 'none',
+            }}
+          >
+            <Statistic id="clac" title="信息熵" value={calc} />
+            <Statistic id="mean" title="均值" value={mean} />
+            <Statistic id="va" title="方差" value={va} />
+          </div>
           {/* <Statistic title="分贝" value={FeaturesInfor.db} style={{ display: f_key === '1' ? 'block' : 'none' }} id='db' /> */}
         </div>
       </div>
