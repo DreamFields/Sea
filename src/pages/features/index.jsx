@@ -39,137 +39,10 @@ const Index = (props) => {
   const [calc, setcalc] = useState(undefined); // 信息熵
   const [db, setdb] = useState(undefined); //分贝
   const [form] = Form.useForm();
-  const [spectral_centroid, setSpectral_centroid] = useState(undefined); //谱质心
-  const [spectral_centroid_width, setSpectral_centroid_width] = useState(
-    undefined,
-  ); //谱质心带宽
-  const [spectral_area, setSpectral_area] = useState(undefined); //谱包络面积
-  const [spectral_slope, setSpectral_slope] = useState(undefined); //谱斜率
-  const [spectral_decline, setSpectral_decline] = useState(undefined); //谱下降图
-  const [spectral_Irregularity, setSpectral_Irregularity] = useState(undefined); //谱不规律性
-  const [spectral_Uneven, setSpectral_Uneven] = useState(undefined); //谱不平整性
-  const [spectral_entropy, setSpectral_entropy] = useState(undefined); //谱熵
-
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Tag',
-      dataIndex: 'tag',
-      key: 'tag',
-    },
-    {
-      title: 'Value',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      name: '谱质心',
-      tag: 'spectral_centroid',
-      value: spectral_centroid,
-    },
-    {
-      key: '2',
-      name: '谱质心带宽',
-      tag: 'spectral_centroid_width',
-      value: spectral_centroid_width,
-    },
-    {
-      key: '3',
-      name: '谱包络面积',
-      tag: 'spectral_area',
-      value: spectral_area,
-    },
-    {
-      key: '4',
-      name: '谱斜率',
-      tag: 'spectral_slope',
-      value: spectral_slope,
-    },
-    {
-      key: '5',
-      name: '谱下降图',
-      tag: 'spectral_decline',
-      value: spectral_decline,
-    },
-    {
-      key: '6',
-      name: '谱不规律性',
-      tag: 'spectral_Irregularity',
-      value: spectral_Irregularity,
-    },
-    {
-      key: '7',
-      name: '谱不平整性',
-      tag: 'spectral_Uneven',
-      value: spectral_Uneven,
-    },
-    {
-      key: '8',
-      name: '谱熵',
-      tag: 'spectral_entropy',
-      value: spectral_entropy,
-    },
-  ];
-
   class RightSidermenu extends React.Component {
-    getFeatures() {
-      let loading = document.querySelector('#divLoading');
-      if (feature_key !== '1') {
-        loading.style.display = 'block';
-      }
-      if (feature_key === '4') {
-        request(`/v1/feature/MCFF`, {
-          method: 'POST',
-          data: {
-            file_id: FeaturesInfor.audio_id,
-          },
-        }).then((res) => {
-          loading.style.display = 'none';
-          console.log('MCFFRES' + res);
-          let spectral_centroid =
-            Math.floor(res?.data.spectral_centroid * 1000) / 1000;
-          let spectral_centroid_width =
-            Math.floor(res?.data.spectral_centroid_width * 1000) / 1000;
-          let spectral_area = Math.floor(res?.data.spectral_area * 1000) / 1000;
-          let spectral_decline =
-            Math.floor(res?.data.spectral_decline * 1000) / 1000;
-          let spectral_Irregularity =
-            Math.floor(res?.data.spectral_Irregularity * 1000) / 1000;
-          let spectral_Uneven =
-            Math.floor(res?.data.spectral_Uneven * 1000) / 1000;
-          let spectral_entropy =
-            Math.floor(res?.data.spectral_entropy * 1000) / 1000;
-          setSpectral_centroid(spectral_centroid);
-          setSpectral_centroid_width(spectral_centroid_width);
-          setSpectral_area(spectral_area);
-          setSpectral_slope(res?.picIfo.spectral_slope);
-          setSpectral_decline(spectral_decline);
-          setSpectral_Irregularity(spectral_Irregularity);
-          setSpectral_Uneven(spectral_Uneven);
-          setSpectral_entropy(spectral_entropy);
-          setpicIfo(res?.data.picIfo);
-          setva(res?.data.var);
-          setmean(res?.data.mean);
-          setcalc(res?.data.calc);
-        });
-      }
-    }
     handleClick = (e) => {
-      console.log('click ', e);
       feature_key = e.key;
       setfkey(e.key);
-      setpicIfo(undefined);
-      setva(undefined);
-      setmean(undefined);
-      setcalc(undefined);
-      this.getFeatures();
     };
     render() {
       return (
@@ -274,39 +147,6 @@ const Index = (props) => {
         <div id="waveform" style={{ backgroundColor: 'black' }}>
           <div className="progress progress-striped active" id="progress-bar">
             <div className="progress-bar progress-bar-info"></div>
-          </div>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            height: 320,
-            display: f_key === '4' ? 'block' : 'none',
-          }}
-          id="divshow_0"
-        >
-          <img
-            alt="MCFF"
-            src={picIfo}
-            style={{
-              marginTop: 20,
-              width: '100%',
-              height: 300,
-              display: picIfo ? 'block' : 'none',
-            }}
-            id="resImg"
-          />
-          <Table
-            columns={columns}
-            dataSource={data}
-            style={{
-              marginTop: 20,
-              width: '100%',
-              height: 200,
-              display: f_key === '4' && picIfo ? 'block' : 'none',
-            }}
-          />
-          <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
-            <LoadingOutlined style={{ marginTop: 80, marginLeft: 366 }} />
           </div>
         </div>
         <div

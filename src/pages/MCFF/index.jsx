@@ -138,15 +138,6 @@ const TestApp = (props) => {
         height: 320,
       }}
     >
-      <button
-        style={{
-          backgroundColor: 'cyan',
-          color: 'black',
-        }}
-        onClick={getData}
-      >
-        加载
-      </button>
       <img
         alt="MCFF"
         src={picIfo}

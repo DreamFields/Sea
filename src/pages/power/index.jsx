@@ -64,6 +64,8 @@ const TestApp = (props) => {
       <b style={{ color: 'cyan' }}>额外提示</b>
       <br />
       频率选择范围为512Hz～8192Hz
+      <br />
+      选择频率之后需要再点击一次功率谱分析按钮才能实现重新加载
     </div>
   );
   const getOption = (Type, data1, Xdata, Type2) => {
