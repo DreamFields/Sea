@@ -33,12 +33,6 @@ const Index = (props) => {
   const { FeaturesInfor, dispatch } = props;
   const [path, setpath] = useState(undefined);
   const [f_key, setfkey] = useState(undefined);
-  const [picIfo, setpicIfo] = useState(undefined);
-  const [va, setva] = useState(undefined); // 方差
-  const [mean, setmean] = useState(undefined); // 平均值
-  const [calc, setcalc] = useState(undefined); // 信息熵
-  const [db, setdb] = useState(undefined); //分贝
-  const [form] = Form.useForm();
   class RightSidermenu extends React.Component {
     handleClick = (e) => {
       feature_key = e.key;
@@ -394,6 +388,12 @@ const Index = (props) => {
                 </span>
               </div>
             </div>
+
+            <Statistic
+              value={0}
+              title="测试"
+              style={{ visibility: 'hidden' }}
+            ></Statistic>
           </div>
         </div>
       </div>
