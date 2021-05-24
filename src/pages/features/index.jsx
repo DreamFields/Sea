@@ -126,12 +126,12 @@ const Index = (props) => {
           method: 'GET',
         }).then((res) => {
           console.log('版本文件路径', res?.url);
-          wavesurfer.load(res?.url);
+          if (wavesurfer) {
+            wavesurfer.load(res?.url);
+          }
         });
       }
-      return () => {
-        wavesurfer = null;
-      };
+      return () => {};
     }, [FeaturesInfor]);
 
     const FeatureMainDiv = {
@@ -341,16 +341,63 @@ const Index = (props) => {
               </span>
             </div>
           </div>
+
           <div
             style={{
               display: f_key === '4' || f_key === '5' ? 'block' : 'none',
             }}
           >
-            <Statistic id="clac" title="信息熵" value={calc} />
-            <Statistic id="mean" title="均值" value={mean} />
-            <Statistic id="va" title="方差" value={va} />
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">信息熵</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span
+                    className="ant-statistic-content-value-int"
+                    id="calc_int"
+                  >
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="calc_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">均值</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span
+                    className="ant-statistic-content-value-int"
+                    id="mean_int"
+                  >
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="mean_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">方差</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="va_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="va_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
           </div>
-          {/* <Statistic title="分贝" value={FeaturesInfor.db} style={{ display: f_key === '1' ? 'block' : 'none' }} id='db' /> */}
         </div>
       </div>
     </>
