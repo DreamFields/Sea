@@ -96,7 +96,7 @@ const TestApp = (props) => {
         file_id: audio_id,
       },
     }).then((res) => {
-      console.log('MCFFRES' + res);
+      console.log('MCFFRES', res);
       let spectral_centroid = Math.floor(res?.spectral_centroid * 1000) / 1000;
       let spectral_centroid_width =
         Math.floor(res?.spectral_centroid_width * 1000) / 1000;
@@ -126,9 +126,24 @@ const TestApp = (props) => {
         setSpectral_entropy(spectral_entropy);
          */
       setpicIfo(res?.picIfo);
-      /*setva(res?.var);
-        setmean(res?.mean);
-        setcalc(res?.calc);*/
+
+      // 修改dom信息
+      let span_calc_int = document.getElementById('calc_int');
+      let span_calc_decimal = document.getElementById('calc_decimal');
+      let span_mean_int = document.getElementById('mean_int');
+      let span_mean_decimal = document.getElementById('mean_decimal');
+      let span_va_int = document.getElementById('va_int');
+      let span_va_decimal = document.getElementById('va_decimal');
+
+      span_calc_int.innerText = (res?.calc.toPrecision(3) + '').split('.')[0];
+      span_calc_decimal.innerText =
+        '.' + (res?.calc.toPrecision(3) + '').split('.')[1];
+      span_mean_int.innerText = (res?.mean.toPrecision(3) + '').split('.')[0];
+      span_mean_decimal.innerText =
+        '.' + (res?.mean.toPrecision(3) + '').split('.')[1];
+      span_va_int.innerText = (res?.var.toPrecision(3) + '').split('.')[0];
+      span_va_decimal.innerText =
+        '.' + (res?.var.toPrecision(3) + '').split('.')[1];
     });
   };
   return (
