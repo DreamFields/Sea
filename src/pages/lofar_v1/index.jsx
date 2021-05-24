@@ -22,10 +22,10 @@ const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name, signal_type } = props;
   const [loading, setloading] = useState(false);
-  let data_Mel = [];
+  let data_Lofar = [];
   let Y_data = [];
   let X_data = [];
-  const [data, setdata] = useState(data_Mel);
+  const [data, setdata] = useState(data_Lofar);
   const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
   const [Ydata, setYdata] = useState(Y_data);
@@ -55,8 +55,8 @@ const TestApp = (props) => {
         },
       },
       visualMap: {
-        min: -80,
-        max: 0,
+        min: 0,
+        max: 5000,
         calculable: true,
         orient: 'horizontal',
         inRange: {
@@ -90,7 +90,7 @@ const TestApp = (props) => {
       },
       series: [
         {
-          name: 'Mel_Spectrogram',
+          name: 'Lofar_V1',
           type: 'heatmap',
           data: data,
           emphasis: {
@@ -114,12 +114,30 @@ const TestApp = (props) => {
         sid: audio_id,
       },
     }).then((res) => {
-      console.log('低频线谱： ' + JSON.stringify(res));
-      console.log(res?.data.t);
-      console.log(res?.data.f);
-      console.log(res?.data.lof_n);
-      setXdata(res?.data.t);
-      setYdata(res?.data.f);
+      let temp = [];
+      console.log(res.OutputData1);
+      for (let i = 0; i < res.OutputData1.length; i++) {
+        X_data.push(i);
+        for (let j = 0; j < res.OutputData1[i].length; j++) {
+          if (i === 0) {
+            Y_data.push(j);
+          }
+          temp.push(i);
+          temp.push(j);
+          temp.push(Math.floor(res.OutputData1[i][j] * 100) / 100);
+          data_Lofar.push(temp);
+          temp = [];
+        }
+      }
+      console.log(Object.prototype.toString.call(data_Lofar));
+      console.log(Object.prototype.toString.call(data_Lofar[0]));
+      console.log('data_Lofar: ' + data_Lofar);
+      console.log('X_data： ' + X_data);
+      console.log('Y_data: ' + Y_data);
+      setdata(data_Lofar);
+      setXdata(X_data);
+      setYdata(Y_data);
+      setloading(false);
     });
   };
   return (

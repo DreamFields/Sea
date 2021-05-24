@@ -161,12 +161,13 @@ const TestApp = (props) => {
     }).then((res) => {
       let id = res?.id;
       setid(id);
-      for (let i of res.picIfo.fftf) {
+      for (let i of res.FreqV) {
         x_data.push(i);
       }
-      for (let i of res.picIfo.Y_demon) {
+      for (let i of res.outputData_2) {
         data_Demon.push(i);
       }
+      console.log(JSON.stringify(res));
       setPicType('line');
       setdata(data_Demon);
       data_L = data_Demon.length;

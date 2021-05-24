@@ -29,7 +29,7 @@ import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
   const { audio_id, dispatch } = props;
-  const [nfft, setNFFT] = useState(1000);
+  const [nfft, setNFFT] = useState(2048);
   const { Option } = Select;
   useEffect(() => {
     dispatch({
@@ -50,7 +50,8 @@ const TestApp = (props) => {
   for (var i = 0; i < 500; i++) {
     dataTest.push(i + 3);
   }
-  const [myType, setmyType] = useState('log'); //对数还是线性
+  const [XType, setXType] = useState('value');
+  const [YType, setYType] = useState('log'); //对数还是线性
   // const [data1, setdata1] = useState(dataTest);
   const [data, setdata] = useState(data_Power);
   const [dataL, setdataL] = useState(data_L);
@@ -59,7 +60,7 @@ const TestApp = (props) => {
   const [id, setid] = useState('');
   const SelectTip = (
     <div>
-      频率选择的默认值为1000Hz
+      频率选择的默认值为2048Hz
       <br />
       <b style={{ color: 'cyan' }}>额外提示</b>
       <br />
@@ -68,7 +69,7 @@ const TestApp = (props) => {
       选择频率之后需要再点击一次功率谱分析按钮才能实现重新加载
     </div>
   );
-  const getOption = (Type, data1, Xdata, Type2) => {
+  const getOption = (XType, YType, data1, Xdata, Type2) => {
     let option = {
       title: {
         text: '特征提取',
@@ -76,11 +77,11 @@ const TestApp = (props) => {
       },
       animation: true,
       xAxis: {
-        type: 'category',
+        type: XType,
         data: Xdata,
       },
       yAxis: {
-        type: Type,
+        type: YType,
         scale: true,
       },
       dataZoom: [
@@ -156,12 +157,11 @@ const TestApp = (props) => {
       let count = 0;
       for (var i in res.dataIfo) {
         data_Power.push(res.dataIfo[i]);
-        if (count < 500) {
-          x_data.push(count);
-        }
+        x_data.push(count);
         count++;
       }
-      setmyType('value');
+      setXType('category');
+      setYType('value');
       setPicType('line');
       setdata(data_Power);
       setdataL(data_Power.length);
@@ -184,7 +184,8 @@ const TestApp = (props) => {
       setdata(data_Power);
       setdataL(data_Power.length);
       setXdata(x_data);
-      setmyType('value');
+      setXType('category');
+      setYType('value');
       setPicType('bar');
       console.log(data);
       console.log(Xdata);
@@ -192,11 +193,14 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
-  /*const getData3 = () => {
+  const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
-      data: { file_id: audio_id },
+      data: {
+        file_id: audio_id,
+        file_nfft: nfft,
+      },
     }).then((res) => {
       console.log('res: ', JSON.stringify(res));
       let id = res?.id;
@@ -205,31 +209,24 @@ const TestApp = (props) => {
       let count = 0;
       for (var i in res.dataIfo) {
         data_Power.push(res.dataIfo[i]);
-        if (count < 500) {
-          x_data.push(count);
-        }
+        x_data.push(count);
         count++;
       }
-      setmyType('value');
+      setXType('log');
+      setYType('value');
       setPicType('line');
       setdata(data_Power);
       setdataL(data_Power.length);
       setXdata(x_data);
-      console.log(data);
-      console.log(Xdata);
-      //setva(1);
-      //setcalc(1);
-      //setmean(1);
       setloading(false);
     });
-  };*/
-
+  };
   return (
     <div>
       <Card title="功率谱">
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(myType, data, Xdata, PicType)}
+            option={getOption(XType, YType, data, Xdata, PicType)}
             theme="dark"
             style={{ height: '400px' }}
             onEvents={{
@@ -238,7 +235,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={getData}>幅度-分贝转换</Button>
+        <Button onClick={getData3}>幅度-分贝转换</Button>
         <Popover title={'提示'} content={SelectTip}>
           <Select
             defaultValue="频率选择"

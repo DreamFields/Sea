@@ -72,9 +72,9 @@ const TestApp = (props) => {
       },
     }).then((res) => {
       console.log('过零率： ' + JSON.stringify(res));
-      for (var i in res.picIfo.picIfo) {
-        data_Zero.push(res.picIfo.picIfo[i]);
-        x_data.push(parseInt(i));
+      for (let i = 0; i < res.picIfo[0].length; i++) {
+        data_Zero.push(res.picIfo[0][i]);
+        x_data.push(i);
       }
       setdata(data_Zero);
       setmyType('value');
@@ -82,9 +82,6 @@ const TestApp = (props) => {
       setXdata(x_data);
       console.log(data);
       console.log(Xdata);
-      setva(res?.picIfo.var.toPrecision(3));
-      setmean(res?.picIfo.mean.toPrecision(3));
-      setcalc(res?.picIfo.calc.toPrecision(3));
       setloading(false);
     });
   };

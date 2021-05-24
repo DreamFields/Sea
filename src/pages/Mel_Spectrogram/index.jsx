@@ -320,6 +320,30 @@ const TestApp = (props) => {
   };
   const getData = () => {
     setloading(true);
+    request('/v1/feature/Mel_Spectrogram', {
+      method: 'POST',
+      data: {
+        file_id: audio_id,
+        resolution: 25,
+      },
+    }).then((res) => {
+      console.log(res);
+      console.log('person.length: ' + res.person.length);
+      console.log(
+        'picIfo.length: ' + Object.keys(JSON.parse(res.picIfo)).length,
+      );
+      console.log(
+        'picIfo.length: ' + Object.keys(JSON.parse(res.picIfo)[0]).length,
+      );
+      console.log('f.length: ' + res.f.length);
+      console.log('t.length: ' + res.t.length);
+
+      setloading(false);
+    });
+  };
+  /*
+  const getData = () => {
+    setloading(true);
     request(`/v1/feature/Mel_Spectrogram`, {
       method: 'POST',
       data: {
@@ -435,6 +459,7 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+  */
   return (
     <div>
       <Card title="图表之一">

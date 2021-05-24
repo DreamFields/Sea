@@ -171,9 +171,6 @@ const Index = (props) => {
           <ZeroApp
             audio_id={FeaturesInfor.audio_id}
             audio_name={FeaturesInfor.audio_name}
-            setva={setva}
-            setmean={setmean}
-            setcalc={setcalc}
           />
         </div>
       ),
