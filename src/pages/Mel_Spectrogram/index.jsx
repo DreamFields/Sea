@@ -25,7 +25,7 @@ const TestApp = (props) => {
   let data_Mel = [];
   let Y_data = [];
   let X_data = [];
-  let personx_data = [];
+  let person_xdata = [];
   let persondata = [];
   const [data, setdata] = useState(data_Mel);
   const [id, setid] = useState('0');
@@ -42,6 +42,7 @@ const TestApp = (props) => {
   const [personXdata, setpersonXdata] = useState([]);
   const [personData, setpersonData] = useState([]);
   const [objlength, setlength] = useState(128);
+  const [resolution, setResolution] = useState(25);
   let xleft, xright, yleft, yright;
   let person = [];
   const uploadTip = (
@@ -68,6 +69,19 @@ const TestApp = (props) => {
       中心频率要求输入纯数字,例如:1000
       <br />
       如果输入其他字符就会提交失败,错误示例:1000Hz
+    </div>
+  );
+  const InputTip2 = (
+    <div>
+      Resolution需要手动输入
+      <br />
+      <b style={{ color: 'cyan' }}>额外提示</b>
+      <br />
+      输入之后重新点击语谱图分析即可加载新的图表
+      <br />
+      Resolution要求输入纯数字,例如:1000
+      <br />
+      Resolution的范围为0～50
     </div>
   );
   const getOption = (data, Xdata, Ydata) => {
@@ -142,6 +156,49 @@ const TestApp = (props) => {
           },
           progressive: 1000,
           animation: false,
+        },
+      ],
+    };
+    return option;
+  };
+  const getOption2 = (data, Xdata) => {
+    let option = {
+      title: {
+        text: '特征提取',
+        subtext: 'person相关系数',
+      },
+      xAxis: {
+        type: 'category',
+        data: Xdata,
+      },
+      yAxis: {
+        type: 'value',
+      },
+      dataZoom: [
+        {
+          type: 'inside',
+        },
+      ],
+      tooltip: {
+        trigger: 'axis',
+      },
+      toolbox: {
+        left: 'center',
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none',
+          },
+          saveAsImage: {
+            pixelRatio: 5,
+          },
+          restore: {},
+        },
+      },
+      series: [
+        {
+          data: data,
+          type: 'line',
+          color: 'skyblue',
         },
       ],
     };
@@ -324,20 +381,31 @@ const TestApp = (props) => {
       method: 'POST',
       data: {
         file_id: audio_id,
-        resolution: 25,
+        resolution: resolution,
       },
     }).then((res) => {
-      console.log(res);
-      console.log('person.length: ' + res.person.length);
-      console.log(
-        'picIfo.length: ' + Object.keys(JSON.parse(res.picIfo)).length,
-      );
-      console.log(
-        'picIfo.length: ' + Object.keys(JSON.parse(res.picIfo)[0]).length,
-      );
-      console.log('f.length: ' + res.f.length);
-      console.log('t.length: ' + res.t.length);
-
+      let temp = [];
+      let data = JSON.parse(res.picIfo);
+      for (let i = 0; i < res.t.length; i++) {
+        for (let j = 0; j < res.f.length; j++) {
+          temp.push(i);
+          temp.push(j);
+          temp.push(data[j][i]);
+          data_Mel.push(temp);
+          temp = [];
+        }
+      }
+      setdata(data_Mel);
+      setXdata(res.t.map((e) => Math.floor(e * 100) / 100));
+      setYdata(res.f.map(Math.round));
+      let data2 = JSON.parse(res.person);
+      let data3 = Object.keys(data2);
+      for (let i = 0; i < data3.length; i++) {
+        person_xdata.push(data3[i]);
+        persondata.push(data2[i]);
+      }
+      setpersonData(persondata);
+      setpersonXdata(person_xdata);
       setloading(false);
     });
   };
@@ -475,6 +543,16 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>语谱谱分析</Button>
+        <Popover title="提示" content={InputTip2}>
+          <Input
+            placeholder="Input Resolution"
+            onChange={(e) => {
+              setResolution(parseInt(e.target.value));
+            }}
+            maxLength={25}
+            style={{ width: 120 }}
+          />
+        </Popover>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
       </Card>
       <div
@@ -491,14 +569,17 @@ const TestApp = (props) => {
             height: 200,
           }}
         />
-        <Table
-          columns={columns3}
-          dataSource={person_coefficient}
-          style={{
-            width: '100%',
-            height: 200,
-          }}
-        />
+        <div>
+          <Card title="person相关系数">
+            <Spin spinning={loading}>
+              <ReactEcharts
+                option={getOption2(personData, personXdata)}
+                theme="dark"
+                style={{ height: '400px' }}
+              />
+            </Spin>
+          </Card>
+        </div>
       </div>
       <div
         style={{
