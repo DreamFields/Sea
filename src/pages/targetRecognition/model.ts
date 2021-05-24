@@ -5,7 +5,8 @@ import {} from './service';
 export interface StateType {
   audio_id: any;
   audio_name: any;
-  audio_result: any;
+  audio_result1: any;
+  audio_result2: any;
 }
 
 export interface ModelType {
@@ -25,7 +26,8 @@ const Model: ModelType = {
   state: {
     audio_id: undefined,
     audio_name: undefined,
-    audio_result: undefined,
+    audio_result1: undefined,
+    audio_result2: undefined,
   },
 
   effects: {

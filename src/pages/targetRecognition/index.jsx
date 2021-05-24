@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect, Dispatch } from 'umi';
-import { Menu, Popover, Typography } from 'antd';
+import { Menu, Popover, Typography, Select, message } from 'antd';
 import {
   PlayCircleOutlined,
   PauseOutlined,
@@ -16,7 +16,18 @@ const rightWidth = '22%';
 const Index = (props) => {
   const { targetInfor } = props;
   const [path, setpath] = useState(undefined);
-  const [result, setResult] = useState(undefined);
+  const [mark, setMark] = useState('MFCC');
+  const [result1, setResult1] = useState(undefined);
+  const [result2, setResult2] = useState(undefined);
+
+  useEffect(() => {
+    console.log('targetInfor.audio_id', targetInfor);
+    targetInfor.audio_result1 = undefined;
+    setResult1(undefined);
+    setResult2(undefined);
+    targetInfor.audio_result2 = undefined;
+    return () => {};
+  }, [targetInfor.audio_id]);
 
   useEffect(() => {
     console.log('targetInfor', targetInfor);
@@ -35,8 +46,14 @@ const Index = (props) => {
     render() {
       return (
         <div>
-          <Typography>
-            <Title level={2}>{result}</Title>
+          <Typography style={{ marginLeft: '5%' }}>
+            <br />
+            <Title key="1" level={2}>
+              类型：{result1}
+            </Title>
+            <Title key="2" level={2}>
+              置信度：{result2}
+            </Title>
           </Typography>
         </div>
       );
@@ -104,17 +121,48 @@ const Index = (props) => {
       })();
     }
 
+    handleChange(value) {
+      setMark(value);
+    }
+
     getTargetResult() {
-      request(`/v1/classification/audio_classification`, {
-        method: 'POST',
-        data: {
-          sound_id: targetInfor.audio_id,
-        },
-      }).then((res) => {
-        setResult(res.result === 'FishingBoat' ? '渔船' : '未知来源');
-        targetInfor.audio_result = res.result;
-        console.log(result);
-      });
+      if (!targetInfor.audio_id) {
+        message.error('请先选择音频！');
+        return;
+      }
+      if (mark === 'MFCC') {
+        request(`/v1/classification/audio_classification`, {
+          method: 'POST',
+          data: {
+            sound_id: targetInfor.audio_id,
+          },
+        }).then((res) => {
+          if (res.result1) {
+            setResult1(res.result1 === 'FishingBoat' ? '渔船' : res.result1);
+            targetInfor.audio_result1 = res.result1;
+          }
+          if (res.result2) {
+            setResult2(res.result2 === 'FishingBoat' ? '渔船' : res.result2);
+            targetInfor.audio_result2 = res.result2;
+          }
+        });
+      } else {
+        request(`/v1/classification/lofar_classification`, {
+          method: 'POST',
+          data: {
+            sound_id: targetInfor.audio_id,
+          },
+        }).then((res) => {
+          if (res.result1) {
+            setResult1(res.result1 === 'FishingBoat' ? '渔船' : res.result1);
+            targetInfor.audio_result1 = res.result1;
+          }
+          if (res.result2) {
+            setResult2(res.result2 === 'FishingBoat' ? '渔船' : res.result2);
+            targetInfor.audio_result2 = res.result2;
+          }
+        });
+      }
     }
 
     render() {
@@ -129,10 +177,26 @@ const Index = (props) => {
             >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
-            <Popover content="先在左侧选择音频，再点击分类" title="分类">
+            <Select
+              defaultValue="MFCC"
+              style={{ marginLeft: '60%' }}
+              onChange={this.handleChange}
+            >
+              <Select.Option key="1" value="MFCC">
+                基于MFCC的CNN模型
+              </Select.Option>
+              <Select.Option key="2" value="LOFAR">
+                基于LOFAR谱的CNN模型
+              </Select.Option>
+            </Select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <Popover
+              content="先在左侧选择音频，然后选择模型，再点击分类"
+              title="分类"
+            >
               <Button
                 type="primary"
-                style={{ marginLeft: '80%' }}
+                style={{ fontSize: 15 }}
                 onClick={this.getTargetResult}
               >
                 分类
