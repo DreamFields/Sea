@@ -420,6 +420,65 @@ const TestApp = (props) => {
       setpersonData(persondata);
       setpersonXdata(person_xdata);
       setloading(false);
+
+      // 操作dom更改语谱图相关属性值
+      let span_sc_int = document.getElementById('sc_int');
+      let span_sc_decimal = document.getElementById('sc_decimal');
+      let span_scw_int = document.getElementById('scw_int');
+      let span_scw_decimal = document.getElementById('scw_decimal');
+      let span_sa_int = document.getElementById('sa_int');
+      let span_sa_decimal = document.getElementById('sa_decimal');
+      let span_ss_int = document.getElementById('ss_int');
+      let span_ss_decimal = document.getElementById('ss_decimal');
+      let span_sd_int = document.getElementById('sd_int');
+      let span_sd_decimal = document.getElementById('sd_decimal');
+      let span_si_int = document.getElementById('si_int');
+      let span_si_decimal = document.getElementById('si_decimal');
+      let span_su_int = document.getElementById('su_int');
+      let span_su_decimal = document.getElementById('su_decimal');
+      let span_se_int = document.getElementById('calc_int');
+      let span_se_decimal = document.getElementById('se_decimal');
+
+      span_sc_int.innerText = (
+        res?.spectral_centroid.toPrecision(3) + ''
+      ).split('.')[0];
+      span_sc_decimal.innerText =
+        '.' + (res?.spectral_centroid.toPrecision(3) + '').split('.')[1];
+      span_scw_int.innerText = (
+        res?.spectral_centroid_width.toPrecision(3) + ''
+      ).split('.')[0];
+      span_scw_decimal.innerText =
+        '.' + (res?.spectral_centroid_width.toPrecision(3) + '').split('.')[1];
+      span_sa_int.innerText = (res?.spectral_area.toPrecision(3) + '').split(
+        '.',
+      )[0];
+      span_sa_decimal.innerText =
+        '.' + (res?.spectral_area.toPrecision(3) + '').split('.')[1];
+      span_ss_int.innerText = (res?.spectral_slope.toPrecision(3) + '').split(
+        '.',
+      )[0];
+      span_ss_decimal.innerText =
+        '.' + (res?.spectral_slope.toPrecision(3) + '').split('.')[1];
+      span_sd_int.innerText = (res?.spectral_decline.toPrecision(3) + '').split(
+        '.',
+      )[0];
+      span_sd_decimal.innerText =
+        '.' + (res?.spectral_decline.toPrecision(3) + '').split('.')[1];
+      span_si_int.innerText = (
+        res?.spectral_Irregularity.toPrecision(3) + ''
+      ).split('.')[0];
+      span_si_decimal.innerText =
+        '.' + (res?.spectral_Irregularity.toPrecision(3) + '').split('.')[1];
+      span_su_int.innerText = (res?.spectral_Uneven.toPrecision(3) + '').split(
+        '.',
+      )[0];
+      span_su_decimal.innerText =
+        '.' + (res?.spectral_Uneven.toPrecision(3) + '').split('.')[1];
+      span_se_int.innerText = (res?.spectral_entropy.toPrecision(3) + '').split(
+        '.',
+      )[0];
+      span_se_decimal.innerText =
+        '.' + (res?.spectral_entropy.toPrecision(3) + '').split('.')[1];
     });
   };
   /*

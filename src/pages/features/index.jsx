@@ -385,156 +385,139 @@ const Index = (props) => {
               </div>
             </div>
 
-            <div className="Mel_Spectrogram">
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱质心</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="sc_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="sc_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱质心带宽</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="scw_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="scw_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱包络面积</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="sa_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="sa_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱斜率</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="ss_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="ss_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱下降图</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="sd_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="sd_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱不规律性</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="si_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="si_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱不平整性</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="su_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="su_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="ant-statistic">
-                <div className="ant-statistic-title">谱熵</div>
-                <div className="ant-statistic-content">
-                  <span className="ant-statistic-content-value">
-                    <span
-                      className="ant-statistic-content-value-int"
-                      id="se_int"
-                    >
-                      0
-                    </span>
-                    <span
-                      className="ant-statistic-content-value-decimal"
-                      id="se_decimal"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-            </div>
             <Statistic
               value={0}
               title="测试"
               style={{ visibility: 'hidden' }}
             ></Statistic>
+          </div>
+
+          <div
+            className="Mel_Spectrogram"
+            style={{ display: f_key === '6' ? 'block' : 'none' }}
+          >
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱质心</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="sc_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="sc_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱质心带宽</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span
+                    className="ant-statistic-content-value-int"
+                    id="scw_int"
+                  >
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="scw_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱包络面积</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="sa_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="sa_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱斜率</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="ss_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="ss_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱下降图</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="sd_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="sd_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱不规律性</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="si_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="si_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱不平整性</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="su_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="su_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
+
+            <div className="ant-statistic">
+              <div className="ant-statistic-title">谱熵</div>
+              <div className="ant-statistic-content">
+                <span className="ant-statistic-content-value">
+                  <span className="ant-statistic-content-value-int" id="se_int">
+                    0
+                  </span>
+                  <span
+                    className="ant-statistic-content-value-decimal"
+                    id="se_decimal"
+                  ></span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
