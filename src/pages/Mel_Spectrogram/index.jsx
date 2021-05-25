@@ -170,8 +170,7 @@ const TestApp = (props) => {
   const getOption2 = (data, Xdata) => {
     let option = {
       title: {
-        text: '特征提取',
-        subtext: 'person相关系数',
+        text: 'person相关系数',
       },
       xAxis: {
         type: 'category',
@@ -584,7 +583,7 @@ const TestApp = (props) => {
           }}
         />
         <div>
-          <Card title="person相关系数">
+          <Card>
             <Spin spinning={loading}>
               <ReactEcharts
                 option={getOption2(personData, personXdata)}
