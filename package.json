@@ -50,5 +50,8 @@
     "umi": "^3.2.3",
     "wavesurfer.js": "^4.0.1",
     "yorkie": "^2.0.0"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0"
   }
 }
