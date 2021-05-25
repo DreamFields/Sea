@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder';
 import { LoadingOutlined } from '@ant-design/icons';
 import './index.less';
@@ -15,11 +15,13 @@ const Index = () => {
   const [loading, setloading] = useState(false);
 
   const recorderPlay = () => {
+    console.log(play, url);
     if (play === 'start') {
       setrecordState(RecordState.PAUSE);
       setplay(RecordState.PAUSE);
       setloading(false);
     } else {
+      console.log('reacoedState', RecordState);
       setrecordState(RecordState.START);
       setplay(RecordState.START);
       seturl(null);
