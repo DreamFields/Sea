@@ -12,11 +12,7 @@ import { connect, Dispatch } from 'umi';
 // import '../main.less';
 // import '../audioEdit/edit.less';
 import { Menu, Popover, Statistic } from 'antd';
-import {
-  PlayCircleOutlined,
-  PauseOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
+import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import { Input, Button, Form, Table } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
