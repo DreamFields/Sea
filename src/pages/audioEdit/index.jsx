@@ -91,6 +91,11 @@ const Index = (props) => {
           type: 'pretreatment/getTips',
           payload: Pretreatment.audio_id,
         });
+      } else {
+        dispatch({
+          type: 'pretreatment/getVersions',
+          payload: Pretreatment.audio_id,
+        });
       }
     }
   }, [tab, Pretreatment.audio_id]);
@@ -520,31 +525,19 @@ const Index = (props) => {
 
   const RollBackLine = (props) => {
     const [title, settitle] = useState('初始版本');
-    const [versions, setversions] = useState(undefined);
-    const [loading, setloading] = useState(false);
+    // const [loading, setloading] = useState(false);
 
     useEffect(() => {
-      // console.log(Pretreatment.tips === undefined)
-      if (Pretreatment.audio_id && !versions) {
-        setloading(true);
-        request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
-          method: 'GET',
-        }).then((res) => {
-          // console.log("versions", res);
-          if (res) {
-            // console.log(res);
-            setversions(res);
-            setloading(false);
-            if (res[0]) {
-              settitle(res[0].now_version);
-            }
-          }
-        });
+      // console.log(Pretreatment)
+      if (
+        Pretreatment.audio_versions &&
+        Pretreatment.audio_versions.length != 0
+      ) {
+        settitle(Pretreatment.audio_versions[0].now_version);
       }
     }, [Pretreatment]);
 
     const handle_rollBack = (version) => {
-      setloading(true);
       dispatch({
         type: 'pretreatment/rollBack',
         payload: {
@@ -554,11 +547,9 @@ const Index = (props) => {
       }).then(() => {
         const _path = path + '?ran=' + randomString(true, 5, 15);
         setpath(_path);
-        request(`/v1/sound/all_version_asc/${Pretreatment.audio_id}`, {
-          method: 'GET',
-        }).then((res) => {
-          setversions(res);
-          setloading(false);
+        dispatch({
+          type: 'pretreatment/getVersions',
+          payload: Pretreatment.audio_id,
         });
       });
     };
@@ -568,47 +559,48 @@ const Index = (props) => {
         style={{
           overflowY: 'scroll',
           height: 350,
-          display: versions && tab === '1' ? 'block' : 'none',
+          display:
+            Pretreatment?.audio_versions && tab === '1' ? 'block' : 'none',
           marginTop: 32,
         }}
       >
-        <Spin spinning={loading}>
-          <h4>
-            <b>
-              音频版本信息(当前版本：
-              {title}
-              ):
-            </b>
-          </h4>
-          <Timeline style={{ marginTop: 20 }} className={style.timeLine}>
-            {versions?.map((item, index) => {
-              return index === 0 ? null : (
-                <Timeline.Item>
-                  <p style={{ color: '#08979c' }}>
-                    {item.generate_time}&nbsp;&nbsp;&nbsp;&nbsp;
-                  </p>
-                  <p>
-                    <span style={{ color: '#08979c' }}>
-                      {' '}
-                      {`${item.user?.role_str}${item.user?.nickname}`}{' '}
-                    </span>
-                    保存了版本
-                    <span style={{ color: '#08979c' }}> {item.version} </span>。
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                  </p>
-                  <a
-                    style={{ marginRight: 20, color: '#ff4d4f' }}
-                    onClick={() => {
-                      handle_rollBack(item.version);
-                    }}
-                  >
-                    回滚
-                  </a>
-                </Timeline.Item>
-              );
-            })}
-          </Timeline>
-        </Spin>
+        {/* <Spin spinning={loading}> */}
+        <h4>
+          <b>
+            音频版本信息(当前版本：
+            {title}
+            ):
+          </b>
+        </h4>
+        <Timeline style={{ marginTop: 20 }} className={style.timeLine}>
+          {Pretreatment.audio_versions?.map((item, index) => {
+            return index === 0 ? null : (
+              <Timeline.Item>
+                <p style={{ color: '#08979c' }}>
+                  {item.generate_time}&nbsp;&nbsp;&nbsp;&nbsp;
+                </p>
+                <p>
+                  <span style={{ color: '#08979c' }}>
+                    {' '}
+                    {`${item.user?.role_str}${item.user?.nickname}`}{' '}
+                  </span>
+                  保存了版本
+                  <span style={{ color: '#08979c' }}> {item.version} </span>。
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                </p>
+                <a
+                  style={{ marginRight: 20, color: '#ff4d4f' }}
+                  onClick={() => {
+                    handle_rollBack(item.version);
+                  }}
+                >
+                  回滚
+                </a>
+              </Timeline.Item>
+            );
+          })}
+        </Timeline>
+        {/* </Spin> */}
       </div>
     );
   };
@@ -689,18 +681,24 @@ const Index = (props) => {
 
           <div
             className={style.showWave}
-            style={{ height: tab === '2' ? 388 : 608 }}
+            style={{ height: tab === '2' ? 388 : 458 }}
           >
             <Waveform />
           </div>
 
           <RollBackLine />
 
-          <div style={{ height: 500, overflowY: 'auto', marginTop: 48 }}>
+          <div
+            style={{
+              height: 500,
+              overflowY: 'auto',
+              marginTop: 48,
+              display: tab === '2' ? 'block' : 'none',
+            }}
+          >
             <Card
               title="标签列表"
               style={{
-                display: tab === '2' ? 'block' : 'none',
                 backgroundColor: '#272727',
               }}
             >

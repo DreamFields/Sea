@@ -87,16 +87,8 @@ const Model: ModelType = {
     },
     *getVersions({ payload }, { call, put }) {
       const data = yield call(GetVersions, payload);
+      console.log('音频版本：', data);
       if (data) {
-        // console.log("版本记录", data);
-        // let versions = [];
-        // if (data) {
-        //   for (let i = data.length - 1; i >= 0; i--) {
-        //     if (data[i].version !== -1) {
-        //       versions.push(data[i]);
-        //     }
-        //   }
-        // }
         yield put({
           type: 'save',
           payload: { audio_versions: data },
