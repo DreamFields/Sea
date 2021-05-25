@@ -147,7 +147,7 @@ const TestApp = (props) => {
   };
   return (
     <div>
-      <Card title="图表之一">
+      <Card>
         <Spin spinning={loading}>
           <ReactEcharts
             option={getOption(data, Xdata, Ydata, min, max)}

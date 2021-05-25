@@ -223,7 +223,7 @@ const TestApp = (props) => {
   };
   return (
     <div>
-      <Card title="功率谱">
+      <Card>
         <Spin spinning={loading}>
           <ReactEcharts
             option={getOption(XType, YType, data, Xdata, PicType)}

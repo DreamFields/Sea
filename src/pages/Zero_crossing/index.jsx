@@ -105,7 +105,7 @@ const TestApp = (props) => {
   };
   return (
     <div>
-      <Card title="过零率">
+      <Card>
         <Spin spinning={loading}>
           <ReactEcharts
             option={getOption(myType, data, Xdata, PicType)}

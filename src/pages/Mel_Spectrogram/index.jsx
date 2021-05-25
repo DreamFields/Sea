@@ -27,6 +27,9 @@ const TestApp = (props) => {
   let X_data = [];
   let person_xdata = [];
   let persondata = [];
+  let fMax = -10000;
+  let Min = 10000;
+  let Max = -10000;
   const [data, setdata] = useState(data_Mel);
   const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
@@ -42,7 +45,10 @@ const TestApp = (props) => {
   const [personXdata, setpersonXdata] = useState([]);
   const [personData, setpersonData] = useState([]);
   const [objlength, setlength] = useState(128);
-  const [resolution, setResolution] = useState(25);
+  const [resolution, setResolution] = useState(25); //分辨率
+  const [fmax, setFmax] = useState(0);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
   let xleft, xright, yleft, yright;
   let person = [];
   const uploadTip = (
@@ -73,18 +79,18 @@ const TestApp = (props) => {
   );
   const InputTip2 = (
     <div>
-      Resolution需要手动输入
+      分辨率需要手动输入
       <br />
       <b style={{ color: 'cyan' }}>额外提示</b>
       <br />
       输入之后重新点击语谱图分析即可加载新的图表
       <br />
-      Resolution要求输入纯数字,例如:1000
+      分辨率要求输入纯数字,例如:25
       <br />
-      Resolution的范围为0～50
+      分辨率的范围为0～50，默认值为25
     </div>
   );
-  const getOption = (data, Xdata, Ydata) => {
+  const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
       darkMode: true,
       title: {
@@ -110,8 +116,8 @@ const TestApp = (props) => {
         },
       },
       visualMap: {
-        min: -80,
-        max: 0,
+        min: Min,
+        max: Max,
         calculable: true,
         orient: 'horizontal',
         inRange: {
@@ -348,9 +354,9 @@ const TestApp = (props) => {
     console.log(Ydistance);
     console.log(center_frequency);
     console.log(signal_type2),
-      setecho_length(Math.floor((Xdistance / 667.9) * time1 * 100) / 100);
-    setecho_width(Math.floor((Ydistance / 305) * 8000 * 100) / 100);
-    setpulse_cycle(Math.floor((8000 / objlength) * 100) / 100);
+      setecho_length(Math.floor((Xdistance / 667.9) * time1 * 100) / 100); //667.9是画布的像素宽度
+    setecho_width(Math.floor((Ydistance / 305) * fmax * 100) / 100); //305是画布的像素高度
+    setpulse_cycle(Math.floor((fmax / objlength) * 100) / 100);
     setpulse_width(Math.floor((Xdistance / 666.9) * time1 * 100) / 100);
   };
   const dispatchEcho = () => {
@@ -388,6 +394,8 @@ const TestApp = (props) => {
       let data = JSON.parse(res.picIfo);
       for (let i = 0; i < res.t.length; i++) {
         for (let j = 0; j < res.f.length; j++) {
+          if (data[j][i] > Max) Max = data[j][i];
+          if (data[j][i] < Min) Min = data[j][i];
           temp.push(i);
           temp.push(j);
           temp.push(data[j][i]);
@@ -395,6 +403,12 @@ const TestApp = (props) => {
           temp = [];
         }
       }
+      for (let i = 0; i < res.f.length; i++) {
+        if (fMax < res.f[i]) fMax = res.f[i];
+      }
+      setFmax(fMax);
+      setMax(Max);
+      setMin(Min);
       setdata(data_Mel);
       setXdata(res.t.map((e) => Math.floor(e * 100) / 100));
       setYdata(res.f.map(Math.round));
@@ -530,10 +544,10 @@ const TestApp = (props) => {
   */
   return (
     <div>
-      <Card title="图表之一">
+      <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(data, Xdata, Ydata)}
+            option={getOption(data, Xdata, Ydata, min, max)}
             theme="dark"
             style={{ height: '400px' }}
             onEvents={{
@@ -545,7 +559,7 @@ const TestApp = (props) => {
         <Button onClick={getData}>语谱谱分析</Button>
         <Popover title="提示" content={InputTip2}>
           <Input
-            placeholder="Input Resolution"
+            placeholder="请输入分辨率"
             onChange={(e) => {
               setResolution(parseInt(e.target.value));
             }}
