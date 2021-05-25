@@ -25,11 +25,15 @@ const TestApp = (props) => {
   let data_Lofar = [];
   let Y_data = [];
   let X_data = [];
+  let minValue = 0;
+  let maxValue = 0;
   const [data, setdata] = useState(data_Lofar);
   const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
   const [Ydata, setYdata] = useState(Y_data);
-  const getOption = (data, Xdata, Ydata) => {
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
+  const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
       darkMode: true,
       title: {
@@ -55,12 +59,12 @@ const TestApp = (props) => {
         },
       },
       visualMap: {
-        min: 0,
-        max: 5000,
+        min: Min,
+        max: Max,
         calculable: true,
         orient: 'horizontal',
         inRange: {
-          color: ['#080707', '#261379', '#9708a4', '#c94f2d', '#eaea5e'],
+          color: ['#280128', '#2306a2', '#07cf39', '#96cd17', '#fada74'],
         },
         realtime: false,
         left: 'center',
@@ -115,28 +119,29 @@ const TestApp = (props) => {
       },
     }).then((res) => {
       let temp = [];
+      console.log(JSON.stringify(res));
       console.log(res.OutputData1);
-      for (let i = 0; i < res.OutputData1.length; i++) {
-        X_data.push(i);
-        for (let j = 0; j < res.OutputData1[i].length; j++) {
-          if (i === 0) {
-            Y_data.push(j);
-          }
+      for (let i = 0; i < res.fk.length; i++) {
+        for (let j = 0; j < res.y_l.length; j++) {
           temp.push(i);
           temp.push(j);
-          temp.push(Math.floor(res.OutputData1[i][j] * 100) / 100);
+          temp.push(Math.floor(res.OutputData1[j][i] * 100) / 100);
+          if (Math.round(res.OutputData1[j][i]) > maxValue) {
+            maxValue = Math.round(res.OutputData1[j][i]);
+          }
+          if (Math.round(res.OutputData1[j][i]) < minValue) {
+            minValue = Math.round(res.OutputData1[j][i]);
+          }
           data_Lofar.push(temp);
           temp = [];
         }
       }
-      console.log(Object.prototype.toString.call(data_Lofar));
-      console.log(Object.prototype.toString.call(data_Lofar[0]));
-      console.log('data_Lofar: ' + data_Lofar);
-      console.log('X_data： ' + X_data);
-      console.log('Y_data: ' + Y_data);
+      console.log('max' + maxValue);
       setdata(data_Lofar);
-      setXdata(X_data);
-      setYdata(Y_data);
+      setXdata(res.fk);
+      setYdata(res.y_l);
+      setMin(minValue);
+      setMax(maxValue);
       setloading(false);
     });
   };
@@ -145,7 +150,7 @@ const TestApp = (props) => {
       <Card title="图表之一">
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(data, Xdata, Ydata)}
+            option={getOption(data, Xdata, Ydata, min, max)}
             theme="dark"
             style={{ height: '400px' }}
           />
