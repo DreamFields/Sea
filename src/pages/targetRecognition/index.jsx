@@ -122,6 +122,7 @@ const Index = (props) => {
     }
 
     handleChange(value) {
+      console.log(value);
       setMark(value);
     }
 
@@ -178,9 +179,10 @@ const Index = (props) => {
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
             <Select
-              defaultValue="MFCC"
+              // defaultValue="MFCC"
               style={{ marginLeft: '60%' }}
               onChange={this.handleChange}
+              value={mark}
             >
               <Select.Option key="1" value="MFCC">
                 基于MFCC的CNN模型
