@@ -11,45 +11,35 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
-  const {
-    audio_id,
-    audio_name,
-    dispatch,
-    setva,
-    setmean,
-    setcalc,
-    path,
-    Data,
-  } = props;
+  const { audio_id, audio_name, dispatch, path, Data } = props;
   const [loading, setloading] = useState(false);
   let data_Zero = [];
   let x_data = [];
   // 播放控制
   let animationValue = false;
   // 播放到的帧数
-  let frame_count = 1;
+  let frame_count = -1;
   // 计时器id
   let move;
-  // 音频总时长，以ms为单位
-  let duration = 0;
   // 帧间隔时间，以ms为单位
-  const interval = 100;
+  const interval = 1000;
 
   const [myType, setmyType] = useState('log'); //对数还是线性
-  const [data, setdata] = useState(data_Zero);
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
-  const [time, setTime] = useState(0); //音频时长
   useEffect(() => {
     // 获取音频时长
-    if (path) {
-      let audioElement = new Audio(path);
-      audioElement.addEventListener('loadedmetadata', function (_event) {
-        duration = audioElement.duration * 1000;
-        // console.log('视频的时长为(ms):', duration);
-      });
-    }
+    // if (path) {
+    //   let audioElement = new Audio(path);
+    //   audioElement.addEventListener('loadedmetadata', function (_event) {
+    //     duration = audioElement.duration * 1000;
+    //     // console.log('视频的时长为(ms):', duration);
+    //   });
+    // }
+    setmyType('value');
+    setPicType('line');
+
     let dom = document.getElementById('btnPlay');
     dom.addEventListener('click', () => {
       if (animationValue) {
@@ -60,33 +50,33 @@ const TestApp = (props) => {
       animationController();
     });
   }, []);
+
+  // useEffect(()=>{
+  //   console.log("label", Data?.label);
+  // },[Data])
+
   const animationController = function () {
     if (animationValue === true) {
       move = setInterval(() => {
-        // console.log(frame_count);
-        if (Data.data) {
-          const old_data = data.slice();
-          let datadis = Math.floor(
-            (old_data.length * frame_count * interval) / duration,
-          );
-          let new_data = old_data.splice(0, datadis);
-          dispatch({
-            type: 'data_demon/savedata',
-            payload: {
-              data: new_data,
-            },
-          });
-        }
+        console.log(frame_count);
+        dispatch({
+          type: 'Zero_crossing/savelabel',
+          payload: {
+            label: frame_count,
+          },
+        });
+
         frame_count++;
-        if (frame_count > Math.floor(duration / interval)) {
+
+        if (frame_count >= Data.data?.length) {
           clearInterval(move);
-          frame_count = 1;
-          dispatch({
-            type: 'data_demon/savedata',
-            payload: {
-              data: data,
-            },
-          });
+          frame_count = -1;
+          // dispatch({
+          //   type: 'data_demon/savelabel',
+          //   payload: {
+          //     label: 0,
+          //   },
+          // });
           animationValue = false;
         }
       }, interval);
@@ -97,6 +87,7 @@ const TestApp = (props) => {
 
   const getOption = (Type, data, Xdata, Type2) => {
     let option = {
+      // animation: false,
       title: {
         text: '特征提取',
         subtext: '过零率',
@@ -138,6 +129,7 @@ const TestApp = (props) => {
     };
     return option;
   };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/Zero_Crossing`, {
@@ -146,39 +138,35 @@ const TestApp = (props) => {
         file_id: audio_id,
       },
     }).then((res) => {
-      console.log('过零率： ' + JSON.stringify(res));
-      for (let i = 0; i < res.picIfo[0].length; i++) {
-        data_Zero.push(res.picIfo[0][i]);
-        x_data.push(i);
+      // console.log('过零率： ' + JSON.stringify(res));
+      if (res) {
+        for (let i = 0; i < res.picIfo[0].length; i++) {
+          data_Zero.push(res.picIfo[0][i]);
+          x_data.push(i);
+        }
+
+        let temp = [];
+        for (let i = 1; i < Object.keys(res.picIfo).length; i++) {
+          temp.push(res.picIfo[i]);
+        }
+        temp.push(res.picIfo[0]);
+        // console.log(temp);
+
+        dispatch({
+          type: 'Zero_crossing/savedata',
+          payload: {
+            data: temp,
+            label: temp.length - 1,
+          },
+        });
+
+        // setdata(data_Zero);
+
+        setXdata(x_data);
+        // console.log(data);
+        // console.log(Xdata);
       }
-      let temp = [];
-      for (let i = 0; i < Object.keys(res.picIfo).length; i++) {
-        temp.push(res.picIfo[i]);
-      }
-      dispatch({
-        type: 'Zero_Crossing/savedata',
-        payload: {
-          data: temp,
-        },
-      });
-      dispatch({
-        type: 'Zero_Crossing/savelabel',
-        payload: {
-          label: 1,
-        },
-      });
-      dispatch({
-        type: 'Zero_Crossing/saveframe_num',
-        payload: {
-          frame_num: temp.length - 1,
-        },
-      });
-      setdata(data_Zero);
-      setmyType('value');
-      setPicType('line');
-      setXdata(x_data);
-      console.log(data);
-      console.log(Xdata);
+
       setloading(false);
 
       // 修改dom信息
@@ -205,7 +193,12 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(myType, data, Xdata, PicType)}
+            option={getOption(
+              myType,
+              Data?.label === -1 ? [] : Data?.data[Data.label],
+              Xdata,
+              PicType,
+            )}
             theme="dark"
             style={{ height: '400px' }}
           />
@@ -217,9 +210,10 @@ const TestApp = (props) => {
   );
 };
 
-const mapStateToProps = ({ Zero_Crossing }) => {
+const mapStateToProps = ({ Zero_crossing }) => {
+  // console.log("Zero_crossing", Zero_crossing);
   return {
-    Data: Zero_Crossing,
+    Data: Zero_crossing,
   };
 };
 

@@ -108,11 +108,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     return () => {};
   }, [1]);
 
-  useEffect(() => {
-    if (sound_list) {
-      console.log('sound_list', sound_list);
-    }
-  }, [sound_list]);
+  // useEffect(() => {
+  //   if (sound_list) {
+  //     console.log('sound_list', sound_list);
+  //   }
+  // }, [sound_list]);
 
   useEffect(() => {
     dispatch({
@@ -1651,7 +1651,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             onSearch={handleSearch}
             enterButton
             style={{ float: 'left', width: 220 }}
-            disabled
+            // disabled
           />
         </Popover>
       </div>
