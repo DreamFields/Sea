@@ -43,9 +43,7 @@ const TestApp = (props) => {
         // console.log('视频的时长为(ms):', duration);
       });
     }
-
     let dom = document.getElementById('btnPlay');
-
     dom.addEventListener('click', () => {
       if (animationValue) {
         animationValue = false;
@@ -55,7 +53,6 @@ const TestApp = (props) => {
       animationController();
     });
   }, []);
-
   const animationController = function () {
     if (animationValue === true) {
       move = setInterval(() => {
@@ -66,7 +63,6 @@ const TestApp = (props) => {
             (old_data.length * frame_count * interval) / duration,
           );
           let new_data = old_data.splice(0, datadis);
-
           dispatch({
             type: 'data_demon/savedata',
             payload: {
@@ -78,14 +74,12 @@ const TestApp = (props) => {
         if (frame_count > Math.floor(duration / interval)) {
           clearInterval(move);
           frame_count = 1;
-
           dispatch({
             type: 'data_demon/savedata',
             payload: {
               data: data,
             },
           });
-
           animationValue = false;
         }
       }, interval);
