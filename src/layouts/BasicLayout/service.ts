@@ -163,8 +163,7 @@ export async function SearchByam({ info }: { info: any }) {
 
 // 通过声音获取文件
 export async function GetAudioInforById({ id }: { id: number }) {
-  var timestamp = new Date().getTime();
-  return request(`/v1/sound/detail/${id}?timestamp=${timestamp}`, {
+  return request(`/v1/sound/detail/${id}`, {
     method: 'GET',
   });
 }

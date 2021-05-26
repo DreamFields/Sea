@@ -112,6 +112,12 @@ function custom_request(
   }
   if (!COOKIE_CONFIRM) COOKIE_CONFIRM = true; // 防止同时多次请求
 
+  // url加一个时间戳防止缓存引发的bug
+  if (method === 'GET') {
+    let timestamp = new Date().getTime();
+    url += '?timestamp=' + timestamp;
+  }
+
   return new Promise((resolve) => {
     request(prefix + url, {
       method,
