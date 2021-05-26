@@ -11,7 +11,7 @@ import request from '@/utils/request';
 
 // 获取声音文件列表
 export async function FetchSoundList(body: any) {
-  return request('/v1/sound/list', {
+  return request('/v1/sound/list_new', {
     method: 'GET',
   });
 }
@@ -157,6 +157,14 @@ export async function SearchBypm({ info }: { info: any }) {
 // 辅机搜索
 export async function SearchByam({ info }: { info: any }) {
   return request(`/v1/sound/am/${info}`, {
+    method: 'GET',
+  });
+}
+
+// 通过声音获取文件
+export async function GetAudioInforById({ id }: { id: number }) {
+  var timestamp = new Date().getTime();
+  return request(`/v1/sound/detail/${id}?timestamp=${timestamp}`, {
     method: 'GET',
   });
 }

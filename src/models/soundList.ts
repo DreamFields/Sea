@@ -31,10 +31,12 @@ import {
   SearchBywater,
   SearchByam,
   SearchBypm,
+  GetAudioInforById,
 } from '@/layouts/BasicLayout/service';
 
 export interface StateType {
   sound_list?: any;
+  detail?: any;
 }
 
 export interface ModelType {
@@ -62,6 +64,7 @@ export interface ModelType {
     searchBywater: Effect;
     searchByam: Effect;
     searchBypm: Effect;
+    getAudioInforById: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -89,6 +92,21 @@ const Model: ModelType = {
             sound_list: data.reverse(),
           },
         });
+      }
+    },
+
+    *getAudioInforById({ payload, setitem }, { call, put }) {
+      const data = yield call(GetAudioInforById, payload);
+      if (data) {
+        // console.log("detail", data);
+        setitem(data.sound_list_specific_data);
+        // 可以put但没必要
+        // yield put({
+        //   type: 'save',
+        //   payload:{
+        //     detail: data
+        //   }
+        // });
       }
     },
 
