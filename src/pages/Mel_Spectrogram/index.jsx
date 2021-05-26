@@ -8,7 +8,7 @@ import {
   Table,
   message,
 } from 'antd';
-import { Card, Spin, Popover } from 'antd';
+import { Card, Spin, Popover, Checkbox, Row, Col } from 'antd';
 import { connect } from 'umi';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/tooltip';
@@ -274,6 +274,27 @@ const TestApp = (props) => {
       dataIndex: 'signal_type',
       key: 'signal_type',
       render: (text) => (
+        <Checkbox.Group
+          style={
+            {
+              //width: '100%'
+            }
+          }
+          onChange={onChange}
+        >
+          <Row>
+            <Col span={24}>
+              <Checkbox value="CW">CW</Checkbox>
+            </Col>
+            <Col span={24}>
+              <Checkbox value="LFM">LFM</Checkbox>
+            </Col>
+            <Col span={24}>
+              <Checkbox value="HFM">HFM</Checkbox>
+            </Col>
+          </Row>
+        </Checkbox.Group>
+        /*
         <Radio.Group onChange={onChange} value={signal_type2}>
           <Space direction="vertical">
             <Radio value={'CW'}>CW</Radio>
@@ -288,7 +309,7 @@ const TestApp = (props) => {
               ) : null}
             </Radio>
           </Space>
-        </Radio.Group>
+        </Radio.Group>*/
       ),
     },
     {
@@ -332,12 +353,19 @@ const TestApp = (props) => {
     },
   ];
   let data3 = [];
+
   //信号选择框变化
+  /*
   const onChange = (e) => {
     console.log('radio checked', e.target.value);
     setsignal_type2(e.target.value);
     console.log(signal_type2);
+  };*/
+  const onChange = (checkedValues) => {
+    setsignal_type2(checkedValues);
+    console.log('checked = ', checkedValues);
   };
+
   const handleBrushSelected = (params) => {
     if (params.batch[0].areas.length > 0) {
       xleft = params.batch[0].areas[0].range[0][0];
