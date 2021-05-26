@@ -39,51 +39,11 @@ const TestApp = (props) => {
     // }
     setmyType('value');
     setPicType('line');
-
-    let dom = document.getElementById('btnPlay');
-    dom.addEventListener('click', () => {
-      if (animationValue) {
-        animationValue = false;
-      } else {
-        animationValue = true;
-      }
-      animationController();
-    });
   }, []);
 
   // useEffect(()=>{
   //   console.log("label", Data?.label);
   // },[Data])
-
-  const animationController = function () {
-    if (animationValue === true) {
-      move = setInterval(() => {
-        console.log(frame_count);
-        dispatch({
-          type: 'Zero_crossing/savelabel',
-          payload: {
-            label: frame_count,
-          },
-        });
-
-        frame_count++;
-
-        if (frame_count >= Data.data?.length) {
-          clearInterval(move);
-          frame_count = -1;
-          // dispatch({
-          //   type: 'data_demon/savelabel',
-          //   payload: {
-          //     label: 0,
-          //   },
-          // });
-          animationValue = false;
-        }
-      }, interval);
-    } else {
-      clearInterval(move);
-    }
-  };
 
   const getOption = (Type, data, Xdata, Type2) => {
     let option = {
@@ -165,6 +125,47 @@ const TestApp = (props) => {
         setXdata(x_data);
         // console.log(data);
         // console.log(Xdata);
+
+        let dom = document.getElementById('btnPlay');
+
+        const animationController = function () {
+          if (animationValue === true) {
+            move = setInterval(() => {
+              console.log(frame_count);
+              dispatch({
+                type: 'Zero_crossing/savelabel',
+                payload: {
+                  label: frame_count,
+                },
+              });
+
+              frame_count++;
+              console.log(temp);
+              if (frame_count >= temp.length) {
+                clearInterval(move);
+                frame_count = -1;
+                // dispatch({
+                //   type: 'data_demon/savelabel',
+                //   payload: {
+                //     label: 0,
+                //   },
+                // });
+                animationValue = false;
+              }
+            }, interval);
+          } else {
+            clearInterval(move);
+          }
+        };
+
+        dom.addEventListener('click', () => {
+          if (animationValue) {
+            animationValue = false;
+          } else {
+            animationValue = true;
+          }
+          animationController();
+        });
       }
 
       setloading(false);
