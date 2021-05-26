@@ -383,7 +383,7 @@ const TestApp = (props) => {
     console.log(signal_type2),
       setecho_length(Math.floor((Xdistance / 667.9) * time1 * 100) / 100); //667.9是画布的像素宽度
     setecho_width(Math.floor((Ydistance / 305) * fmax * 100) / 100); //305是画布的像素高度
-    setpulse_cycle(Math.floor((fmax / objlength) * 100) / 100);
+    setpulse_cycle(Math.floor((fMax / objlength) * 100) / 100);
     setpulse_width(Math.floor((Xdistance / 666.9) * time1 * 100) / 100);
   };
   const dispatchEcho = () => {
@@ -417,6 +417,7 @@ const TestApp = (props) => {
         resolution: resolution,
       },
     }).then((res) => {
+      settime1(res.time);
       let temp = [];
       let data = JSON.parse(res.picIfo);
       for (let i = 0; i < res.t.length; i++) {
@@ -431,7 +432,8 @@ const TestApp = (props) => {
         }
       }
       for (let i = 0; i < res.f.length; i++) {
-        if (fMax < res.f[i]) fMax = res.f[i];
+        console.log(res.f[i]);
+        if (fMax < parseInt(res.f[i])) fMax = parseInt(res.f[i]);
       }
       setFmax(fMax);
       setMax(Max);
@@ -448,7 +450,6 @@ const TestApp = (props) => {
       setpersonData(persondata);
       setpersonXdata(person_xdata);
       setloading(false);
-
       // 操作dom更改语谱图相关属性值
       let span_sc_int = document.getElementById('sc_int');
       let span_sc_decimal = document.getElementById('sc_decimal');
