@@ -27,7 +27,7 @@ const PowerTable = (props) => {
         <a
           onClick={() => {
             dispatch({
-              type: 'power/setdata',
+              type: 'powerTable/setdata',
               payload: {},
               callback: (state) => {
                 let copy_data = state.tabledata.slice();
@@ -52,9 +52,9 @@ const PowerTable = (props) => {
   );
 };
 
-const mapStateToProps = ({ power }) => {
+const mapStateToProps = ({ powerTable }) => {
   return {
-    table_data: power.tabledata,
+    table_data: powerTable.tabledata,
   };
 };
 

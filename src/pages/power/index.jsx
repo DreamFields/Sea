@@ -28,12 +28,13 @@ import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
-  const { audio_id, dispatch } = props;
+  const { audio_id, dispatch, Data } = props;
   const [nfft, setNFFT] = useState(2048);
   const { Option } = Select;
+
   useEffect(() => {
     dispatch({
-      type: 'power/setdata',
+      type: 'powerTable/setdata',
       payload: {},
       callback: (state) => {
         return { tabledata: [] };
@@ -42,14 +43,30 @@ const TestApp = (props) => {
     return () => {};
   }, [audio_id]);
 
+  useEffect(() => {
+    setXType('category');
+    setYType('value');
+    setPicType('line');
+    return () => {};
+  }, []);
+
+  let data_Power = [];
+  let data_L = 0;
+  let x_data = [];
+  // 播放控制
+  let animationValue = false;
+  // 播放到的帧数
+  let frame_count = -1;
+  // 计时器id
+  let move;
+  // 帧间隔时间，以ms为单位
+  let interval = 1000;
+  // 音频总时长
+  let duration;
+  // 动画函数
+  var handleMove;
+
   const [loading, setloading] = useState(false);
-  var dataTest = [];
-  var data_Power = [];
-  var data_L = 0;
-  var x_data = [];
-  for (var i = 0; i < 500; i++) {
-    dataTest.push(i + 3);
-  }
   const [XType, setXType] = useState('value');
   const [YType, setYType] = useState('log'); //对数还是线性
   // const [data1, setdata1] = useState(dataTest);
@@ -58,6 +75,7 @@ const TestApp = (props) => {
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
+
   const SelectTip = (
     <div>
       频率选择的默认值为2048Hz
@@ -114,6 +132,7 @@ const TestApp = (props) => {
     };
     return option;
   };
+
   const handleChartClick = (params) => {
     console.log(params);
     console.log('分贝(db):' + params.value.toPrecision(3));
@@ -129,7 +148,7 @@ const TestApp = (props) => {
 
     let copy_data;
     dispatch({
-      type: 'power/setdata',
+      type: 'powerTable/setdata',
       payload: {},
       callback: (state) => {
         copy_data = state.tabledata.slice();
@@ -141,6 +160,7 @@ const TestApp = (props) => {
       },
     });
   };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
@@ -150,49 +170,128 @@ const TestApp = (props) => {
         file_nfft: nfft,
       },
     }).then((res) => {
-      console.log('res: ', JSON.stringify(res));
-      let id = res?.id;
-      setid(id);
-      console.log(id);
-      let count = 0;
-      for (var i in res.dataIfo[0]) {
-        data_Power.push(res.dataIfo[0][i]);
-        x_data.push(count);
-        count++;
+      if (res) {
+        console.log('res: ', res);
+
+        let id = res?.id;
+        setid(id);
+
+        let xd = [];
+        let allYData = [];
+        for (let i = 0, len = res.dataIfo[0].length; i < len; i++) {
+          xd.push(i);
+        }
+        for (let i = 1, len = res.dataIfo.length; i < len; i++) {
+          allYData.push(res.dataIfo[i]);
+        }
+        allYData.push(res.dataIfo[0]);
+
+        dispatch({
+          type: 'power/setdata',
+          payload: {
+            y_data: allYData,
+            x_data: xd,
+            label: allYData.length - 1,
+          },
+        });
+
+        //=============================================================================================>>
+        let dom = document.getElementById('btnPlay');
+        duration = res.time * 1000;
+        interval = duration / allYData.length;
+
+        const animationController = function () {
+          if (animationValue === true) {
+            move = setInterval(() => {
+              console.log(frame_count);
+              dispatch({
+                type: 'power/setdata',
+                payload: {
+                  label: frame_count,
+                },
+              });
+
+              frame_count++;
+              // console.log(ydata);
+              if (frame_count >= allYData.length) {
+                clearInterval(move);
+                frame_count = -1;
+                animationValue = false;
+              }
+            }, interval);
+          } else {
+            clearInterval(move);
+          }
+        };
+
+        handleMove = () => {
+          if (animationValue) {
+            animationValue = false;
+          } else {
+            animationValue = true;
+          }
+          // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
+          if (frame_count === -1) {
+            dispatch({
+              type: 'power/setdata',
+              payload: {
+                label: frame_count,
+              },
+            });
+            frame_count++;
+            animationController();
+          } else {
+            animationController();
+          }
+        };
+
+        dom.addEventListener('click', handleMove);
       }
-      setXType('category');
-      setYType('value');
-      setPicType('line');
-      setdata(data_Power);
-      setdataL(data_Power.length);
-      setXdata(x_data);
+      //=============================================================================================>>
+
       setloading(false);
     });
   };
+
   const getData2 = () => {
     setloading(true);
-    console.log('send requir');
+    // console.log('send requir');
     request('/v1/feature/onethree', {
       method: 'POST',
       data: { file_id: audio_id },
     }).then((res) => {
-      console.log(res?.dataIfo);
-      for (var i in res?.dataIfo) {
-        data_Power.push(res?.dataIfo[i]);
-        x_data.push(i);
+      if (res) {
+        console.log('res', res);
+
+        let xd = [];
+        let yd = [];
+        for (let i in res?.dataIfo) {
+          yd.push(res?.dataIfo[i]);
+          xd.push(i);
+        }
+
+        dispatch({
+          type: 'power/setdata',
+          payload: {
+            ot_y_data: yd,
+            ot_x_data: xd,
+            y_data: [],
+            x_data: [],
+          },
+        });
+
+        let dom = document.getElementById('btnPlay');
+        dom.removeEventListener('click', handleMove);
+
+        setXType('category');
+        setYType('value');
+        setPicType('bar');
       }
-      setdata(data_Power);
-      setdataL(data_Power.length);
-      setXdata(x_data);
-      setXType('category');
-      setYType('value');
-      setPicType('bar');
-      console.log(data);
-      console.log(Xdata);
-      console.log('200');
+
       setloading(false);
     });
   };
+
   const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
@@ -202,31 +301,56 @@ const TestApp = (props) => {
         file_nfft: nfft,
       },
     }).then((res) => {
-      console.log('res: ', JSON.stringify(res));
-      let id = res?.id;
-      setid(id);
-      console.log(id);
-      let count = 0;
-      for (var i in res.dataIfo[0]) {
-        data_Power.push(res.dataIfo[0][i]);
-        x_data.push(count);
-        count++;
+      if (res) {
+        console.log('res: ', JSON.stringify(res));
+        let id = res?.id;
+        setid(id);
+
+        let xd = [];
+        let allYData = [];
+        for (let i = 0, len = res.dataIfo[0].length; i < len; i++) {
+          xd.push(i);
+        }
+        for (let i = 1, len = res.dataIfo.length; i < len; i++) {
+          allYData.push(res.dataIfo[i]);
+        }
+        allYData.push(res.dataIfo[0]);
+
+        dispatch({
+          type: 'power/setdata',
+          payload: {
+            y_data: allYData,
+            x_data: xd,
+            label: allYData.length - 1,
+          },
+        });
+
+        let dom = document.getElementById('btnPlay');
+        dom.removeEventListener('click', handleMove);
+
+        setXType('log');
+        setYType('value');
+        setPicType('line');
       }
-      setXType('log');
-      setYType('value');
-      setPicType('line');
-      setdata(data_Power);
-      setdataL(data_Power.length);
-      setXdata(x_data);
+
       setloading(false);
     });
   };
+
   return (
     <div>
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(XType, YType, data, Xdata, PicType)}
+            option={getOption(
+              XType,
+              YType,
+              Data.y_data.length === 0
+                ? Data.ot_y_data
+                : Data.y_data[Data.label],
+              Data.x_data.length === 0 ? Data.ot_x_data : Data.x_data,
+              PicType,
+            )}
             theme="dark"
             style={{ height: '400px' }}
             onEvents={{
@@ -259,9 +383,11 @@ const TestApp = (props) => {
   );
 };
 
-const mapStateToProps = ({}) => {
-  // console.log(power);
-  return {};
+const mapStateToProps = ({ power }) => {
+  console.log(power);
+  return {
+    Data: power,
+  };
 };
 
 export default connect(mapStateToProps)(TestApp);

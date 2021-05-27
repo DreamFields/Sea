@@ -1,7 +1,9 @@
 const Model = {
-  namespace: 'power',
+  namespace: 'powerTable',
 
-  state: { tabledata: [] },
+  state: {
+    tabledata: [],
+  },
 
   reducers: {
     setdata(state, { payload, callback }) {
