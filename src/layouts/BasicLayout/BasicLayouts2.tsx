@@ -1289,12 +1289,22 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               },
             });
             //清除低频线谱数据
-            // dispatch({
-            //   type: '',
-            //   payload: {
-
-            //   }
-            // });
+            dispatch({
+              type: 'lofar_v1/savedata',
+              payload: {
+                data: [],
+                // 所有横坐标数据
+                all_x_data: [],
+                //所有纵坐标数据
+                all_y_data: [],
+                //所有最大值数据
+                all_max_value: [],
+                //所有最小值数据
+                all_min_value: [],
+                // 当前帧
+                label: -2,
+              },
+            });
           }}
           style={{ width: '50%' }}
         >
