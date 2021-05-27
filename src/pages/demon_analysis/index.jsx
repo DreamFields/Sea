@@ -13,80 +13,37 @@ import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
-  let data_Demon = [];
-  let data_L = 0;
-  let x_data = [];
 
   // 播放控制
   let animationValue = false;
   // 播放到的帧数
-  let frame_count = 1;
+  let frame_count = -1;
   // 计时器id
   let move;
   // 音频总时长，以ms为单位
   let duration = 0;
   // 帧间隔时间，以ms为单位
-  const interval = 100;
+  let interval = 0;
 
-  const [myType, setmyType] = useState('value'); //对数还是线性
-
-  const [data, setdata] = useState(data_Demon);
-  const [Xdata, setXdata] = useState(x_data);
+  const [myType, setmyType] = useState('log'); //对数还是线性
   const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
+
+  // useEffect(() => {
+  // 获取音频时长
+  // if (path) {
+  //   let audioElement = new Audio(path);
+  //   audioElement.addEventListener('loadedmetadata', function (_event) {
+  //     duration = audioElement.duration * 1000;
+  //     // console.log('视频的时长为(ms):', duration);
+  //   });
+  // }
+  // }, []);
+
   useEffect(() => {
-    // 获取音频时长
-    if (path) {
-      let audioElement = new Audio(path);
-      audioElement.addEventListener('loadedmetadata', function (_event) {
-        duration = audioElement.duration * 1000;
-        // console.log('视频的时长为(ms):', duration);
-      });
-    }
-    let dom = document.getElementById('btnPlay');
-    dom.addEventListener('click', () => {
-      if (animationValue) {
-        animationValue = false;
-      } else {
-        animationValue = true;
-      }
-      animationController();
-    });
+    setmyType('value');
+    setPicType('line');
   }, []);
-  const animationController = function () {
-    if (animationValue === true) {
-      move = setInterval(() => {
-        // console.log(frame_count);
-        if (Data.data) {
-          const old_data = data.slice();
-          let datadis = Math.floor(
-            (old_data.length * frame_count * interval) / duration,
-          );
-          let new_data = old_data.splice(0, datadis);
-          dispatch({
-            type: 'data_demon/savedata',
-            payload: {
-              data: new_data,
-            },
-          });
-        }
-        frame_count++;
-        if (frame_count > Math.floor(duration / interval)) {
-          clearInterval(move);
-          frame_count = 1;
-          dispatch({
-            type: 'data_demon/savedata',
-            payload: {
-              data: data,
-            },
-          });
-          animationValue = false;
-        }
-      }, interval);
-    } else {
-      clearInterval(move);
-    }
-  };
 
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
@@ -94,7 +51,6 @@ const TestApp = (props) => {
         text: '特征提取',
         subtext: '调制谱',
       },
-      animation: true,
       xAxis: {
         type: 'category',
         data: Xdata,
@@ -153,34 +109,80 @@ const TestApp = (props) => {
       method: 'POST',
       data: { sid: audio_id },
     }).then((res) => {
-      let id = res?.id;
-      setid(id);
-      for (let i of res.FreqV[0]) {
-        x_data.push(i);
+      if (res) {
+        console.log('res', res);
+
+        let id = res?.id;
+        setid(id);
+        let ydata = [];
+        let xdata = [];
+        for (let i = 1, len = res.FreqV.length; i < len; i++) {
+          xdata.push(res.FreqV[i]);
+          ydata.push(res.outputData_2[i]);
+        }
+        xdata.push(res.FreqV[0]);
+        ydata.push(res.outputData_2[0]);
+        dispatch({
+          type: 'data_demon/savedata',
+          payload: {
+            xdata: xdata,
+            ydata: ydata,
+            label: res.FreqV.length - 1,
+          },
+        });
+
+        //=============================================================================================>>
+        let dom = document.getElementById('btnPlay');
+        duration = res.time * 1000;
+        interval = duration / ydata.length;
+
+        const animationController = function () {
+          if (animationValue === true) {
+            move = setInterval(() => {
+              console.log(frame_count);
+              dispatch({
+                type: 'data_demon/savedata',
+                payload: {
+                  label: frame_count,
+                },
+              });
+
+              frame_count++;
+              // console.log(ydata);
+              if (frame_count >= ydata.length) {
+                clearInterval(move);
+                frame_count = -1;
+                animationValue = false;
+              }
+            }, interval);
+          } else {
+            clearInterval(move);
+          }
+        };
+
+        dom.addEventListener('click', () => {
+          if (animationValue) {
+            animationValue = false;
+          } else {
+            animationValue = true;
+          }
+          // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
+          if (frame_count === -1) {
+            dispatch({
+              type: 'data_demon/savedata',
+              payload: {
+                label: frame_count,
+              },
+            });
+            frame_count++;
+            animationController();
+          } else {
+            animationController();
+          }
+        });
       }
-      for (let i of res.outputData_2[0]) {
-        data_Demon.push(i);
-      }
-      console.log(JSON.stringify(res));
-      setPicType('line');
-      setdata(data_Demon);
-      data_L = data_Demon.length;
-      dispatch({
-        type: 'data_demon/savedataL',
-        payload: {
-          dataL: data_Demon.length,
-        },
-      });
-      dispatch({
-        type: 'data_demon/savedata',
-        payload: {
-          data: data_Demon,
-        },
-      });
-      console.log('data_Demon.length' + data_L);
-      setXdata(x_data);
-      console.log('data_Demon' + data_Demon);
-      console.log('Xdata:' + Xdata);
+      //=============================================================================================>>
+
       setloading(false);
     });
   };
@@ -190,7 +192,12 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(myType, Data.data, Xdata, PicType)}
+            option={getOption(
+              myType,
+              Data.ydata[Data.label],
+              Data.xdata[Data.label],
+              PicType,
+            )}
             theme="dark"
             style={{ height: '400px' }}
             onEvents={{
@@ -206,6 +213,7 @@ const TestApp = (props) => {
 };
 
 const mapStateToProps = ({ data_demon }) => {
+  // console.log(data_demon);
   return {
     Data: data_demon,
   };

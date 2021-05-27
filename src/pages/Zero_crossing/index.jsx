@@ -12,7 +12,7 @@ import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
-  const { audio_id, dispatch, Data } = props;
+  const { audio_id, dispatch, Data, path } = props;
   const [loading, setloading] = useState(false);
 
   // 播放控制
@@ -35,18 +35,6 @@ const TestApp = (props) => {
     setmyType('value');
     setPicType('line');
   }, []);
-
-  // useEffect(()=>{
-  //   if (path) {
-  //     // console.log(path);
-  //     let audioElement = new Audio(path);
-  //     audioElement.addEventListener('loadedmetadata', function (_event) {
-  //       duration = audioElement.duration * 1000;
-  //       console.log('视频的时长为(ms):', duration);
-  //     });
-  //   };
-  //   return ()=>{};
-  // }, [path])
 
   const getOption = (Type, data, Xdata, Type2) => {
     let option = {
@@ -103,7 +91,7 @@ const TestApp = (props) => {
     }).then((res) => {
       // console.log('过零率： ' + JSON.stringify(res));
       if (res) {
-        // console.log(res);
+        console.log(res);
 
         // temp是每一帧纵坐标组成的数组
         let temp = [];
@@ -111,19 +99,51 @@ const TestApp = (props) => {
         let all_X_data = [];
 
         // 根据res结果初始化temp和all_X_data
-        for (let i = 1; i < Object.keys(res.picIfo).length; i++) {
+        for (let i = 1, len = Object.keys(res.picIfo).length; i < len; i++) {
           temp.push(res.picIfo[i]);
+
+          // 处理横坐标
           let xd = [];
-          for (let j = 0; j < res.picIfo[i].length; j++) {
-            xd.push(j);
+          let gap =
+            ((res.time_list[i][1] - res.time_list[i][0]) * 1000) /
+            (res.picIfo[i].length - 1);
+
+          let j = res.time_list[i][0] * 1000;
+          while (true) {
+            if (j < res.time_list[i][1] * 1000) {
+              xd.push(Math.floor(j));
+            } else {
+              if (xd.length < res.picIfo[i].length) {
+                xd.push(Math.floor(res.time_list[i][1] * 1000));
+                break;
+              } else {
+                break;
+              }
+            }
+            j += gap;
           }
+          // console.log(xd.length, res.picIfo[i].length);
           all_X_data.push(xd);
         }
         temp.push(res.picIfo[0]);
 
         let xd = [];
-        for (let i = 0; i < res.picIfo[0].length; i++) {
-          xd.push(i);
+        let gap =
+          ((res.time_list[0][1] - res.time_list[0][0]) * 1000) /
+          (res.picIfo[0].length - 1);
+        let j = res.time_list[0][0] * 1000;
+        while (true) {
+          if (j < res.time_list[0][1] * 1000) {
+            xd.push(Math.floor(j));
+          } else {
+            if (xd.length < res.picIfo[0].length) {
+              xd.push(Math.floor(res.time_list[0][1] * 1000));
+              break;
+            } else {
+              break;
+            }
+          }
+          j += gap;
         }
         all_X_data.push(xd);
 
