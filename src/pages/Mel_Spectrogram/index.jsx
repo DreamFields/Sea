@@ -419,21 +419,21 @@ const TestApp = (props) => {
     }).then((res) => {
       settime1(res.time);
       let temp = [];
-      let data = JSON.parse(res.picIfo);
-      for (let i = 0; i < res.t.length; i++) {
-        for (let j = 0; j < res.f.length; j++) {
-          if (data[j][i] > Max) Max = data[j][i];
-          if (data[j][i] < Min) Min = data[j][i];
+      let data = res.picIfo;
+      for (let i = 0; i < res.t[0].length; i++) {
+        for (let j = 0; j < res.f[0].length; j++) {
+          if (data[j][i] > Max) Max = data[0][j][i];
+          if (data[j][i] < Min) Min = data[0][j][i];
           temp.push(i);
           temp.push(j);
-          temp.push(data[j][i]);
+          temp.push(data[0][j][i]);
           data_Mel.push(temp);
           temp = [];
         }
       }
-      for (let i = 0; i < res.f.length; i++) {
-        console.log(res.f[i]);
-        if (fMax < parseInt(res.f[i])) fMax = parseInt(res.f[i]);
+      for (let i = 0; i < res.f[0].length; i++) {
+        console.log(res.f[0][i]);
+        if (fMax < parseInt(res.f[0][i])) fMax = parseInt(res.f[0][i]);
       }
       setFmax(fMax);
       setMax(Max);

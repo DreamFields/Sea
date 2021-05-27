@@ -155,8 +155,8 @@ const TestApp = (props) => {
       setid(id);
       console.log(id);
       let count = 0;
-      for (var i in res.dataIfo) {
-        data_Power.push(res.dataIfo[i]);
+      for (var i in res.dataIfo[0]) {
+        data_Power.push(res.dataIfo[0][i]);
         x_data.push(count);
         count++;
       }
@@ -207,8 +207,8 @@ const TestApp = (props) => {
       setid(id);
       console.log(id);
       let count = 0;
-      for (var i in res.dataIfo) {
-        data_Power.push(res.dataIfo[i]);
+      for (var i in res.dataIfo[0]) {
+        data_Power.push(res.dataIfo[0][i]);
         x_data.push(count);
         count++;
       }

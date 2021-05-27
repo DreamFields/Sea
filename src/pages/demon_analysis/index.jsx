@@ -155,10 +155,10 @@ const TestApp = (props) => {
     }).then((res) => {
       let id = res?.id;
       setid(id);
-      for (let i of res.FreqV) {
+      for (let i of res.FreqV[0]) {
         x_data.push(i);
       }
-      for (let i of res.outputData_2) {
+      for (let i of res.outputData_2[0]) {
         data_Demon.push(i);
       }
       console.log(JSON.stringify(res));

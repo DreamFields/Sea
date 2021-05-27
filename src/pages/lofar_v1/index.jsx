@@ -121,16 +121,16 @@ const TestApp = (props) => {
       let temp = [];
       console.log(JSON.stringify(res));
       console.log(res.OutputData1);
-      for (let i = 0; i < res.fk.length; i++) {
-        for (let j = 0; j < res.y_l.length; j++) {
+      for (let i = 0; i < res.fk[0].length; i++) {
+        for (let j = 0; j < res.y_l[0].length; j++) {
           temp.push(i);
           temp.push(j);
-          temp.push(Math.floor(res.OutputData1[j][i] * 100) / 100);
-          if (Math.round(res.OutputData1[j][i]) > maxValue) {
-            maxValue = Math.round(res.OutputData1[j][i]);
+          temp.push(Math.floor(res.OutputData1[0][j][i] * 100) / 100);
+          if (Math.round(res.OutputData1[0][j][i]) > maxValue) {
+            maxValue = Math.round(res.OutputData1[0][j][i]);
           }
-          if (Math.round(res.OutputData1[j][i]) < minValue) {
-            minValue = Math.round(res.OutputData1[j][i]);
+          if (Math.round(res.OutputData1[0][j][i]) < minValue) {
+            minValue = Math.round(res.OutputData1[0][j][i]);
           }
           data_Lofar.push(temp);
           temp = [];
@@ -138,8 +138,8 @@ const TestApp = (props) => {
       }
       console.log('max' + maxValue);
       setdata(data_Lofar);
-      setXdata(res.fk);
-      setYdata(res.y_l);
+      setXdata(res.fk[0]);
+      setYdata(res.y_l[0]);
       setMin(minValue);
       setMax(maxValue);
       setloading(false);
