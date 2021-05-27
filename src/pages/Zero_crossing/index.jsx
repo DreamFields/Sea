@@ -237,8 +237,8 @@ const TestApp = (props) => {
           <ReactEcharts
             option={getOption(
               myType,
-              Data?.label === -1 ? [] : Data?.data[Data.label],
-              Data?.label === -1 ? [] : Data?.all_x_data[Data.label],
+              Data?.data[Data.label],
+              Data?.all_x_data[Data.label],
               PicType,
             )}
             theme="dark"
