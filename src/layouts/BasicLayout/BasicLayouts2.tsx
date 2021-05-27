@@ -1259,6 +1259,52 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               payload: { id: id },
               setitem: load,
             });
+            // 清除功率谱数据
+            dispatch({
+              type: 'power/setdata',
+              payload: {
+                y_data: [],
+                x_data: [],
+                ot_x_data: [],
+                ot_y_data: [],
+                label: 0,
+              },
+            });
+            //清除过零率数据
+            dispatch({
+              type: 'Zero_crossing/savedata',
+              payload: {
+                data: [],
+                all_x_data: [],
+                label: 0,
+              },
+            });
+            //清除调质谱数据
+            dispatch({
+              type: 'data_demon/savedata',
+              payload: {
+                ydata: [],
+                xdata: [],
+                label: 0,
+              },
+            });
+            //清除低频线谱数据
+            dispatch({
+              type: 'lofar_v1/savedata',
+              payload: {
+                data: [],
+                // 所有横坐标数据
+                all_x_data: [],
+                //所有纵坐标数据
+                all_y_data: [],
+                //所有最大值数据
+                all_max_value: [],
+                //所有最小值数据
+                all_min_value: [],
+                // 当前帧
+                label: -2,
+              },
+            });
           }}
           style={{ width: '50%' }}
         >
