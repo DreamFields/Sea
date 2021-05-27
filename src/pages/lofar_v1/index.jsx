@@ -19,20 +19,33 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
+  // 播放控制
+  let animationValue = false;
+  // 播放到的帧数
+  let frame_count = -1;
+  // 计时器id
+  let move;
+  // 帧间隔时间，以ms为单位
+  let interval = 1000;
+  // 音频总时长
+  let duration;
+
   console.log(props);
-  const { audio_id, audio_name, signal_type } = props;
+  const { audio_id, audio_name, signal_type, dispatch, Data } = props;
   const [loading, setloading] = useState(false);
   let data_Lofar = [];
   let Y_data = [];
   let X_data = [];
   let minValue = 0;
   let maxValue = 0;
-  const [data, setdata] = useState(data_Lofar);
   const [id, setid] = useState('0');
+  /*
+  const [data, setdata] = useState(data_Lofar);
   const [Xdata, setXdata] = useState(X_data);
   const [Ydata, setYdata] = useState(Y_data);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
+  */
   const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
       darkMode: true,
@@ -118,31 +131,111 @@ const TestApp = (props) => {
         sid: audio_id,
       },
     }).then((res) => {
-      let temp = [];
-      console.log(JSON.stringify(res));
-      console.log(res.OutputData1);
-      for (let i = 0; i < res.fk[0].length; i++) {
-        for (let j = 0; j < res.y_l[0].length; j++) {
-          temp.push(i);
-          temp.push(j);
-          temp.push(Math.floor(res.OutputData1[0][j][i] * 100) / 100);
-          if (Math.round(res.OutputData1[0][j][i]) > maxValue) {
-            maxValue = Math.round(res.OutputData1[0][j][i]);
+      if (res) {
+        let temp = [];
+        let dataAll = []; //所有时间的数据集合
+        let maxAll = []; //所有时间的最大值集合
+        let minAll = []; //所有数据的最小值集合
+
+        for (let z = 0; z < res.fk.length; z++) {
+          for (let i = 0; i < res.fk[z].length; i++) {
+            for (let j = 0; j < res.y_l[z].length; j++) {
+              temp.push(i);
+              temp.push(j);
+              temp.push(Math.floor(res.OutputData1[z][j][i] * 100) / 100);
+              if (Math.round(res.OutputData1[z][j][i]) > maxValue) {
+                maxValue = Math.round(res.OutputData1[z][j][i]);
+              }
+              if (Math.round(res.OutputData1[z][j][i]) < minValue) {
+                minValue = Math.round(res.OutputData1[z][j][i]);
+              }
+              data_Lofar.push(temp);
+              temp = [];
+            }
           }
-          if (Math.round(res.OutputData1[0][j][i]) < minValue) {
-            minValue = Math.round(res.OutputData1[0][j][i]);
-          }
-          data_Lofar.push(temp);
-          temp = [];
+          console.log(data_Lofar);
+          console.log(maxValue);
+          console.log(minValue);
+          dataAll.push(data_Lofar);
+          maxAll.push(maxValue);
+          minAll.push(minValue);
+          data_Lofar = [];
+          minValue = 0;
+          maxValue = 0;
         }
+        dispatch({
+          type: 'lofar_v1/savedata',
+          payload: {
+            data: dataAll,
+            all_x_data: res.fk,
+            all_y_data: res.y_l,
+            all_max_value: maxAll,
+            all_min_value: minAll,
+            label: dataAll.length - 1,
+          },
+        });
+        // 这个下面到setloading之前都是动画逻辑
+        //=============================================================================================>>
+        let dom = document.getElementById('btnPlay');
+        duration = res.time * 1000;
+        interval = duration / dataAll.length;
+
+        const animationController = function () {
+          if (animationValue === true) {
+            move = setInterval(() => {
+              console.log(frame_count);
+              dispatch({
+                type: 'lofar_v1/savedata',
+                payload: {
+                  label: frame_count,
+                },
+              });
+
+              frame_count++;
+              // console.log(temp);
+              if (frame_count >= dataAll.length) {
+                clearInterval(move);
+                frame_count = -1;
+                animationValue = false;
+              }
+            }, interval);
+          } else {
+            clearInterval(move);
+          }
+        };
+
+        dom.addEventListener('click', () => {
+          if (animationValue) {
+            animationValue = false;
+          } else {
+            animationValue = true;
+          }
+          // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
+          if (frame_count === -1) {
+            dispatch({
+              type: 'lofar/savedata',
+              payload: {
+                label: frame_count,
+              },
+            });
+            frame_count++;
+            animationController();
+          } else {
+            animationController();
+          }
+        });
+
+        //=============================================================================================>>
+        /*
+        console.log('max' + maxValue);
+          setdata(data_Lofar);
+          setXdata(res.fk[0]);
+          setYdata(res.y_l[0]);
+          setMin(minValue);
+          setMax(maxValue);
+         */
+        setloading(false);
       }
-      console.log('max' + maxValue);
-      setdata(data_Lofar);
-      setXdata(res.fk[0]);
-      setYdata(res.y_l[0]);
-      setMin(minValue);
-      setMax(maxValue);
-      setloading(false);
     });
   };
   return (
@@ -150,7 +243,23 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            option={getOption(data, Xdata, Ydata, min, max)}
+            option={getOption(
+              Data?.label === -2 || Data?.label === -1
+                ? []
+                : Data?.data[Data.label],
+              Data?.label === -2 || Data?.label === -1
+                ? []
+                : Data?.all_x_data[Data.label],
+              Data?.label === -2 || Data?.label === -1
+                ? []
+                : Data?.all_y_data[Data.label],
+              Data?.label === -2 || Data?.label === -1
+                ? 0
+                : Data?.all_min_value[Data.label],
+              Data?.label === -2 || Data?.label === -1
+                ? 0
+                : Data?.all_max_value[Data.label],
+            )}
             theme="dark"
             style={{ height: '400px' }}
           />
@@ -161,7 +270,9 @@ const TestApp = (props) => {
     </div>
   );
 };
-const mapStateToProps = ({}) => {
-  return {};
+const mapStateToProps = ({ lofar_v1 }) => {
+  return {
+    Data: lofar_v1,
+  };
 };
 export default connect(mapStateToProps)(TestApp);
