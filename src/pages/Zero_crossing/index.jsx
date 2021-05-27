@@ -10,10 +10,11 @@ import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
+
 const TestApp = (props) => {
-  const { audio_id, audio_name, dispatch, path, Data } = props;
+  const { audio_id, dispatch, Data } = props;
   const [loading, setloading] = useState(false);
-  let x_data = [];
+
   // 播放控制
   let animationValue = false;
   // 播放到的帧数
@@ -26,7 +27,7 @@ const TestApp = (props) => {
   let duration;
 
   const [myType, setmyType] = useState('log'); //对数还是线性
-  const [Xdata, setXdata] = useState(x_data);
+  // const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
 
@@ -122,7 +123,6 @@ const TestApp = (props) => {
 
         let xd = [];
         for (let i = 0; i < res.picIfo[0].length; i++) {
-          x_data.push(i);
           xd.push(i);
         }
         all_X_data.push(xd);
@@ -135,12 +135,10 @@ const TestApp = (props) => {
             label: temp.length - 1,
           },
         });
-
-        setXdata(x_data);
-        // console.log(data);
-        // console.log(Xdata);
+        // setXdata(x_data);
 
         // 这个下面到setloading之前都是动画逻辑
+        //=============================================================================================>>
         let dom = document.getElementById('btnPlay');
         duration = res.time * 1000;
         interval = duration / temp.length;
@@ -150,7 +148,7 @@ const TestApp = (props) => {
             move = setInterval(() => {
               console.log(frame_count);
               dispatch({
-                type: 'Zero_crossing/savelabel',
+                type: 'Zero_crossing/savedata',
                 payload: {
                   label: frame_count,
                 },
@@ -178,7 +176,7 @@ const TestApp = (props) => {
           // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
           if (frame_count === -1) {
             dispatch({
-              type: 'Zero_crossing/savelabel',
+              type: 'Zero_crossing/savedata',
               payload: {
                 label: frame_count,
               },
@@ -190,6 +188,7 @@ const TestApp = (props) => {
           }
         });
       }
+      //=============================================================================================>>
 
       setloading(false);
       // 修改dom信息
