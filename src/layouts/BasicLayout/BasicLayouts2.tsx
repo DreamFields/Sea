@@ -1663,7 +1663,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       <Layout>
         <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999, height: 66 }}>
           <div className="logo">
-            <b>水声数据库系统</b>
+            <b>水声数据整编分析系统</b>
           </div>
 
           <TopMenu />
@@ -1705,7 +1705,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         </Layout>
 
         <Footer style={{ backgroundColor: '#292929', textAlign: 'center' }}>
-          水声数据库系统 Created by 海工小分队
+          水声数据整编分析系统
         </Footer>
       </Layout>
     </div>

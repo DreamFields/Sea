@@ -170,7 +170,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                   <span style={{ fontSize: 80 }}>
                     <ScissorOutlined />
                   </span>
-                  <span style={{ fontSize: 25 }}>数据预处理</span>
+                  <span style={{ fontSize: 25 }}>数据整编</span>
                 </Space>
               </div>
             </Link>
