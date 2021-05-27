@@ -1,7 +1,7 @@
 import { Effect, Reducer } from 'umi';
 export interface StateType {
   data: any;
-  cur_data: any;
+  all_x_data: any;
   label: any;
   frame_num: any;
 }
@@ -10,7 +10,7 @@ export interface ModelType {
   state: StateType;
   reducers: {
     savedata: Reducer<StateType>;
-    setCurData: Reducer<StateType>;
+    setAllXData: Reducer<StateType>;
     savelabel: Reducer<StateType>;
     saveframe_num: Reducer<StateType>;
   };
@@ -19,7 +19,7 @@ const Model: ModelType = {
   namespace: 'Zero_crossing',
   state: {
     data: [],
-    cur_data: [],
+    all_x_data: [],
     label: 0,
     frame_num: 0,
   },
@@ -30,7 +30,7 @@ const Model: ModelType = {
       // return newState;
       return { ...state, ...payload };
     },
-    setCurData(state, { payload }) {
+    setAllXData(state, { payload }) {
       return { ...state, ...payload };
     },
     savelabel(state, { payload }) {

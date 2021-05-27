@@ -13,7 +13,6 @@ import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   const { audio_id, audio_name, dispatch, path, Data } = props;
   const [loading, setloading] = useState(false);
-  let data_Zero = [];
   let x_data = [];
   // 播放控制
   let animationValue = false;
@@ -22,28 +21,31 @@ const TestApp = (props) => {
   // 计时器id
   let move;
   // 帧间隔时间，以ms为单位
-  const interval = 1000;
+  let interval = 1000;
+  // 音频总时长
+  let duration;
 
   const [myType, setmyType] = useState('log'); //对数还是线性
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
+
   useEffect(() => {
-    // 获取音频时长
-    // if (path) {
-    //   let audioElement = new Audio(path);
-    //   audioElement.addEventListener('loadedmetadata', function (_event) {
-    //     duration = audioElement.duration * 1000;
-    //     // console.log('视频的时长为(ms):', duration);
-    //   });
-    // }
     setmyType('value');
     setPicType('line');
   }, []);
 
   // useEffect(()=>{
-  //   console.log("label", Data?.label);
-  // },[Data])
+  //   if (path) {
+  //     // console.log(path);
+  //     let audioElement = new Audio(path);
+  //     audioElement.addEventListener('loadedmetadata', function (_event) {
+  //       duration = audioElement.duration * 1000;
+  //       console.log('视频的时长为(ms):', duration);
+  //     });
+  //   };
+  //   return ()=>{};
+  // }, [path])
 
   const getOption = (Type, data, Xdata, Type2) => {
     let option = {
@@ -100,33 +102,48 @@ const TestApp = (props) => {
     }).then((res) => {
       // console.log('过零率： ' + JSON.stringify(res));
       if (res) {
-        for (let i = 0; i < res.picIfo[0].length; i++) {
-          data_Zero.push(res.picIfo[0][i]);
-          x_data.push(i);
-        }
+        // console.log(res);
 
+        // temp是每一帧纵坐标组成的数组
         let temp = [];
+        // all_X_data是每一帧横坐标组成的数组
+        let all_X_data = [];
+
+        // 根据res结果初始化temp和all_X_data
         for (let i = 1; i < Object.keys(res.picIfo).length; i++) {
           temp.push(res.picIfo[i]);
+          let xd = [];
+          for (let j = 0; j < res.picIfo[i].length; j++) {
+            xd.push(j);
+          }
+          all_X_data.push(xd);
         }
         temp.push(res.picIfo[0]);
-        // console.log(temp);
+
+        let xd = [];
+        for (let i = 0; i < res.picIfo[0].length; i++) {
+          x_data.push(i);
+          xd.push(i);
+        }
+        all_X_data.push(xd);
 
         dispatch({
           type: 'Zero_crossing/savedata',
           payload: {
             data: temp,
+            all_x_data: all_X_data,
             label: temp.length - 1,
           },
         });
-
-        // setdata(data_Zero);
 
         setXdata(x_data);
         // console.log(data);
         // console.log(Xdata);
 
+        // 这个下面到setloading之前都是动画逻辑
         let dom = document.getElementById('btnPlay');
+        duration = res.time * 1000;
+        interval = duration / temp.length;
 
         const animationController = function () {
           if (animationValue === true) {
@@ -140,16 +157,10 @@ const TestApp = (props) => {
               });
 
               frame_count++;
-              console.log(temp);
+              // console.log(temp);
               if (frame_count >= temp.length) {
                 clearInterval(move);
                 frame_count = -1;
-                // dispatch({
-                //   type: 'data_demon/savelabel',
-                //   payload: {
-                //     label: 0,
-                //   },
-                // });
                 animationValue = false;
               }
             }, interval);
@@ -164,12 +175,23 @@ const TestApp = (props) => {
           } else {
             animationValue = true;
           }
-          animationController();
+          // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
+          if (frame_count === -1) {
+            dispatch({
+              type: 'Zero_crossing/savelabel',
+              payload: {
+                label: frame_count,
+              },
+            });
+            frame_count++;
+            animationController();
+          } else {
+            animationController();
+          }
         });
       }
 
       setloading(false);
-
       // 修改dom信息
       let span_calc_int = document.getElementById('calc_int');
       let span_calc_decimal = document.getElementById('calc_decimal');
@@ -197,7 +219,7 @@ const TestApp = (props) => {
             option={getOption(
               myType,
               Data?.label === -1 ? [] : Data?.data[Data.label],
-              Xdata,
+              Data?.label === -1 ? [] : Data?.all_x_data[Data.label],
               PicType,
             )}
             theme="dark"

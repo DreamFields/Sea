@@ -59,7 +59,7 @@ const Index = (props) => {
     var wavesurfer;
 
     useEffect(() => {
-      console.log('FeaturesInfor', FeaturesInfor);
+      // console.log('FeaturesInfor', FeaturesInfor);
 
       // 初始化wavesurfer组件
       wavesurfer = WaveSurfer.create({
@@ -115,10 +115,11 @@ const Index = (props) => {
         request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
           method: 'GET',
         }).then((res) => {
-          console.log('版本文件路径', res?.url);
+          // console.log('版本文件路径', res?.url);
           if (wavesurfer) {
             wavesurfer.load(res?.url);
           }
+          setpath(res?.url);
         });
       }
       return () => {};
