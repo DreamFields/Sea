@@ -137,7 +137,7 @@ const TestApp = (props) => {
         let maxAll = []; //所有时间的最大值集合
         let minAll = []; //所有数据的最小值集合
 
-        for (let z = 0; z < res.fk.length; z++) {
+        for (let z = 1; z < res.fk.length; z++) {
           for (let i = 0; i < res.fk[z].length; i++) {
             for (let j = 0; j < res.y_l[z].length; j++) {
               temp.push(i);
@@ -153,9 +153,6 @@ const TestApp = (props) => {
               temp = [];
             }
           }
-          console.log(data_Lofar);
-          console.log(maxValue);
-          console.log(minValue);
           dataAll.push(data_Lofar);
           maxAll.push(maxValue);
           minAll.push(minValue);
@@ -163,12 +160,38 @@ const TestApp = (props) => {
           minValue = 0;
           maxValue = 0;
         }
+        for (let i = 0; i < res.fk[0].length; i++) {
+          for (let j = 0; j < res.y_l[0].length; j++) {
+            temp.push(i);
+            temp.push(j);
+            temp.push(Math.floor(res.OutputData1[0][j][i] * 100) / 100);
+            if (Math.round(res.OutputData1[0][j][i]) > maxValue) {
+              maxValue = Math.round(res.OutputData1[0][j][i]);
+            }
+            if (Math.round(res.OutputData1[0][j][i]) < minValue) {
+              minValue = Math.round(res.OutputData1[0][j][i]);
+            }
+            data_Lofar.push(temp);
+            temp = [];
+          }
+        }
+        dataAll.push(data_Lofar);
+        maxAll.push(maxValue);
+        minAll.push(minValue);
+        for (let i = 1; i < res.fk.length; i++) {
+          X_data.push(res.fk[i]);
+        }
+        X_data.push(res.fk[0]);
+        for (let i = 1; i < res.y_l.length; i++) {
+          Y_data.push(res.y_l[i]);
+        }
+        Y_data.push(res.y_l[0]);
         dispatch({
           type: 'lofar_v1/savedata',
           payload: {
             data: dataAll,
-            all_x_data: res.fk,
-            all_y_data: res.y_l,
+            all_x_data: X_data,
+            all_y_data: Y_data,
             all_max_value: maxAll,
             all_min_value: minAll,
             label: dataAll.length - 1,
