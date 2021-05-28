@@ -9,6 +9,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
+import DemonTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
@@ -119,6 +120,23 @@ const TestApp = (props) => {
     span_db_decimal.innerText =
       '.' + (params.value.toPrecision(3) + '').split('.')[1];
     span_hz_int.innerText = params.dataIndex + '';
+
+    let copy_data;
+    dispatch({
+      type: 'demonTable/setdata',
+      payload: {},
+      callback: (state) => {
+        // copy_data = state.tabledata.slice();
+        copy_data = [];
+        for (let i = 0; i < 7; i++)
+          copy_data.push({
+            hz: params.dataIndex * (i + 1),
+            db: params.value.toPrecision(3),
+            rpm: params.dataIndex * 60 * (i + 1),
+          });
+        return { tabledata: copy_data };
+      },
+    });
   };
 
   const getData = () => {
@@ -229,6 +247,7 @@ const TestApp = (props) => {
         <Button onClick={getData}>调制谱分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/demon/${id}`} />
       </Card>
+      <DemonTable />
     </div>
   );
 };

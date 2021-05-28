@@ -420,7 +420,7 @@ const TestApp = (props) => {
     }).then((res) => {
       settime1(res.time);
       let temp = [];
-      let data = res.picIfo;
+      let data = JSON.parse(res.picIfo);
       for (let i = 0; i < res.t.length; i++) {
         for (let j = 0; j < res.f.length; j++) {
           if (data[j][i] > Max) Max = data[j][i];

@@ -17,6 +17,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
+import LofarTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   // 播放控制
@@ -38,6 +39,7 @@ const TestApp = (props) => {
   let X_data = [];
   let minValue = 0;
   let maxValue = 0;
+  let count = 0;
   const [id, setid] = useState('0');
   /*
   const [data, setdata] = useState(data_Lofar);
@@ -46,6 +48,7 @@ const TestApp = (props) => {
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
   */
+
   const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
       darkMode: true,
@@ -126,6 +129,26 @@ const TestApp = (props) => {
     };
     return option;
   };
+  const handleChartClick = (params) => {
+    console.log(params);
+    count++;
+    let copy_data;
+    dispatch({
+      type: 'lofarTable/setdata',
+      payload: {},
+      callback: (state) => {
+        copy_data = state.tabledata.slice();
+        copy_data.push({
+          fk: Data.all_x_data[Data.label][params.value[0]],
+          y_l: Data.all_y_data[Data.label][params.value[1]],
+          outdata: params.value[2],
+          count: count,
+        });
+        return { tabledata: copy_data };
+      },
+    });
+  };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/lofar_v1`, {
@@ -269,6 +292,9 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
+            onEvents={{
+              click: handleChartClick,
+            }}
             option={getOption(
               Data?.label === -2 || Data?.label === -1
                 ? []
@@ -293,6 +319,7 @@ const TestApp = (props) => {
         <Button onClick={getData}>低频线谱分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
       </Card>
+      <LofarTable />
     </div>
   );
 };

@@ -1305,6 +1305,24 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 label: -2,
               },
             });
+            //清除调制谱列表数据
+            dispatch({
+              type: 'demonTable/setdata',
+              payload: {},
+              callback: (state) => {
+                let copy_data = [];
+                return { tabledata: copy_data };
+              },
+            });
+            //清除低频线谱谱列表数据
+            dispatch({
+              type: 'lofarTable/setdata',
+              payload: {},
+              callback: (state) => {
+                let copy_data = [];
+                return { tabledata: copy_data };
+              },
+            });
           }}
           style={{ width: '50%' }}
         >
