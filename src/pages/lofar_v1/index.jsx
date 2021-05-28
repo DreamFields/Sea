@@ -86,6 +86,9 @@ const TestApp = (props) => {
       dataZoom: [
         {
           type: 'inside',
+          //实现横纵坐标缩放，折线图不设置默认只缩放x轴
+          xAxisIndex: [0],
+          yAxisIndex: [0],
         },
       ],
       tooltip: {
