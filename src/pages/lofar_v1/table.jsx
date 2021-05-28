@@ -41,10 +41,14 @@ const LofarTable = (props) => {
         <a
           onClick={() => {
             dispatch({
-              type: 'demonTable/setdata',
+              type: 'lofarTable/setdata',
               payload: {},
               callback: (state) => {
                 let copy_data = state.tabledata.slice();
+                let curcount = copy_data[0].count;
+                for (let i = 0; i < copy_data.length; i++) {
+                  copy_data[i].count = curcount - 1;
+                }
                 copy_data.splice(index, 1);
                 return { tabledata: copy_data };
               },

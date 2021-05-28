@@ -39,7 +39,6 @@ const TestApp = (props) => {
   let X_data = [];
   let minValue = 0;
   let maxValue = 0;
-  let count = 0;
   const [id, setid] = useState('0');
   /*
   const [data, setdata] = useState(data_Lofar);
@@ -131,19 +130,32 @@ const TestApp = (props) => {
   };
   const handleChartClick = (params) => {
     console.log(params);
-    count++;
     let copy_data;
     dispatch({
       type: 'lofarTable/setdata',
       payload: {},
       callback: (state) => {
         copy_data = state.tabledata.slice();
-        copy_data.push({
-          fk: Data.all_x_data[Data.label][params.value[0]],
-          y_l: Data.all_y_data[Data.label][params.value[1]],
-          outdata: params.value[2],
-          count: count,
-        });
+        if (copy_data.length === 0) {
+          copy_data.push({
+            fk: Data.all_x_data[Data.label][params.value[0]],
+            y_l: Data.all_y_data[Data.label][params.value[1]],
+            outdata: params.value[2],
+            count: 1,
+          });
+        } else {
+          let curcount = copy_data[copy_data.length - 1].count;
+          copy_data.push({
+            fk: Data.all_x_data[Data.label][params.value[0]],
+            y_l: Data.all_y_data[Data.label][params.value[1]],
+            outdata: params.value[2],
+            count: curcount + 1,
+          });
+          for (let i = 0; i < copy_data.length; i++) {
+            copy_data[i].count = curcount + 1;
+          }
+        }
+
         return { tabledata: copy_data };
       },
     });
