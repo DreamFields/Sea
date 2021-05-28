@@ -318,7 +318,9 @@ const Index = (props) => {
           </div>
           <div
             className="ant-statistic"
-            style={{ display: f_key === '1' ? 'block' : 'none' }}
+            style={{
+              display: f_key === '1' || f_key === '3' ? 'block' : 'none',
+            }}
           >
             <div className="ant-statistic-title">频率</div>
             <div className="ant-statistic-content">

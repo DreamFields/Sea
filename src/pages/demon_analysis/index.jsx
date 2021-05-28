@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, notification } from 'antd';
 import { Card, Spin, Popover } from 'antd';
 import { connect } from 'umi';
@@ -29,6 +29,11 @@ const TestApp = (props) => {
   const [id, setid] = useState('');
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
 
+  //获取原生echart对象
+  let echartRef;
+  let echartInstance;
+  //用highlight列表来控制点点状态
+  let highlightArr = [];
   // useEffect(() => {
   // 获取音频时长
   // if (path) {
@@ -47,6 +52,7 @@ const TestApp = (props) => {
 
   const getOption = (Type, data1, Xdata, Type2) => {
     let option = {
+      legend: {},
       title: {
         text: '特征提取',
         subtext: '调制谱',
@@ -83,6 +89,10 @@ const TestApp = (props) => {
           data: data1,
           type: Type2,
           color: 'skyblue',
+          //实现点击样式变化
+          select: {
+            itemStyle: {},
+          },
         },
       ],
     };
@@ -91,6 +101,14 @@ const TestApp = (props) => {
 
   const handleChartClick = (params) => {
     console.log(params);
+    echartInstance = echartRef.getEchartsInstance();
+    console.log(echartInstance);
+    echartInstance.dispatchAction({
+      type: 'select',
+      // 数据项的 index，如果不指定也可以通过 name 属性根据名称指定数据项
+      dataIndex: params.dataIndex,
+    });
+
     console.log('分贝(db):' + params.value.toPrecision(3));
     console.log('频率(hz)):' + params.dataIndex);
     let span_db_int = document.getElementById('db_int');
@@ -192,6 +210,9 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
+            ref={(e) => {
+              echartRef = e;
+            }}
             option={getOption(
               myType,
               Data.ydata[Data.label],
