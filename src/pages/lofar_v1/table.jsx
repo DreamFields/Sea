@@ -7,17 +7,17 @@ const LofarTable = (props) => {
 
   const columns = [
     {
-      title: 'fk',
+      title: '频率',
       key: 'fk',
       dataIndex: 'fk',
     },
     {
-      title: 'y_l',
+      title: '时间',
       dataIndex: 'y_l',
       key: 'y_l',
     },
     {
-      title: 'outdata',
+      title: '幅度',
       dataIndex: 'outdata',
       key: 'outdata',
     },
