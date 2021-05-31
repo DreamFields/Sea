@@ -152,10 +152,18 @@ const TestApp = (props) => {
       payload: {},
       callback: (state) => {
         copy_data = state.tabledata.slice();
-        copy_data.push({
-          hz: params.value.toPrecision(3),
-          db: params.dataIndex,
-        });
+        let label = true;
+        for (let i = 0; i < copy_data.length; i++) {
+          if (copy_data[i].db === params.dataIndex) {
+            label = false;
+          }
+        }
+        if (label) {
+          copy_data.push({
+            hz: params.value.toPrecision(3),
+            db: params.dataIndex,
+          });
+        }
         return { tabledata: copy_data };
       },
     });
