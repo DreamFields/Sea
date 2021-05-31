@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Form, Table } from 'antd';
+import { Spin, Input, Button, Form, Table } from 'antd';
 import request from '@/utils/request';
 
 const TestApp = (props) => {
   useEffect(() => {
     getData();
   }, []);
+  const [loading, setloading] = useState(false);
   const [picIfo, setpicIfo] = useState(undefined); //图片base64格式数据
   const [tableData, setTableData] = useState(undefined); //将之前的八个数据特征的useState整合来节省性能
   let tabledata = {};
@@ -90,6 +91,7 @@ const TestApp = (props) => {
   ];
   const { audio_id } = props;
   const getData = () => {
+    setloading(true);
     request(`/v1/feature/MCFF`, {
       method: 'POST',
       data: {
@@ -144,26 +146,29 @@ const TestApp = (props) => {
       span_va_int.innerText = (res?.var.toPrecision(3) + '').split('.')[0];
       span_va_decimal.innerText =
         '.' + (res?.var.toPrecision(3) + '').split('.')[1];
+      setloading(false);
     });
   };
   return (
-    <div
-      style={{
-        width: '100%',
-        height: 320,
-      }}
-    >
-      <img
-        alt="MCFF"
-        src={picIfo}
+    <Spin spinning={loading}>
+      <div
         style={{
-          marginTop: 20,
           width: '100%',
-          height: 300,
-          display: picIfo ? 'block' : 'none',
+          height: 320,
         }}
-        id="resImg"
-      />
+      >
+        <img
+          alt="MCFF"
+          src={picIfo}
+          style={{
+            marginTop: 20,
+            width: '100%',
+            height: 300,
+            display: picIfo ? 'block' : 'none',
+          }}
+          id="resImg"
+        />
+        {/*
       <Table
         columns={columns}
         dataSource={data}
@@ -173,8 +178,9 @@ const TestApp = (props) => {
           height: 200,
           display: picIfo ? 'block' : 'none',
         }}
-      />
-    </div>
+      />*/}
+      </div>
+    </Spin>
   );
 };
 export default TestApp;

@@ -96,10 +96,6 @@ const TestApp = (props) => {
       tooltip: {
         trigger: 'axis',
       },
-      brush: {
-        toolbox: ['rect', 'polygon', 'keep', 'clear'],
-        xAxisIndex: 0,
-      },
       toolbox: {
         left: 'center',
         feature: {
