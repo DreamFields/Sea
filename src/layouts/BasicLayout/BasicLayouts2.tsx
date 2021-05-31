@@ -1470,6 +1470,17 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           <Menu.Item key="/features" icon={<SnippetsOutlined />}>
             <Link to="/features">特征提取</Link>
           </Menu.Item>
+          <Menu.Item key="/exam" icon={<UserOutlined />}>
+            <a
+              href={
+                CookieUtil.get('role') == 3
+                  ? 'http://47.97.152.219:82/student/#/index'
+                  : 'http://47.97.152.219:82/admin/#/dashboard'
+              }
+            >
+              听音训练
+            </a>
+          </Menu.Item>
           <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
             <Link to="/targetRecognition">分类识别</Link>
           </Menu.Item>

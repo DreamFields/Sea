@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import style from './main.less';
 import { Link, connect, Dispatch } from 'umi';
 import {
@@ -9,19 +9,8 @@ import {
   SnippetsOutlined,
   EditOutlined,
 } from '@ant-design/icons';
-import {
-  Layout,
-  Input,
-  Button,
-  Tree,
-  Avatar,
-  Dropdown,
-  Menu,
-  Row,
-  Col,
-  Space,
-} from 'antd';
-import axios from 'axios';
+import { Row, Col, Space } from 'antd';
+import CookieUtil from '@/utils/cookie.js';
 import PeopleShow from '@/components/PeopleShow/index';
 
 // const ProportionAudio = React.lazy(
@@ -217,6 +206,12 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             <div
               style={{ backgroundColor: '#F79C32' }}
               className={style.featuresDiv}
+              onClick={() => {
+                window.location.href =
+                  CookieUtil.get('role') == 3
+                    ? 'http://47.97.152.219:82/student/#/index'
+                    : 'http://47.97.152.219:82/admin/#/dashboard';
+              }}
             >
               <Space
                 align="center"
@@ -237,7 +232,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
               >
                 <Space
                   align="center"
-                  style={{ height: '100%', width: '100%', paddingLeft: '6%' }}
+                  style={{ height: '100%', width: '100%', paddingLeft: '10%' }}
                 >
                   <div style={{ fontSize: 80, margin: '0 auto' }}>
                     <RobotOutlined />
