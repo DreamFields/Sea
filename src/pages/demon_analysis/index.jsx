@@ -128,7 +128,7 @@ const TestApp = (props) => {
       callback: (state) => {
         // copy_data = state.tabledata.slice();
         copy_data = [];
-        for (let i = 0; i < 7; i++)
+        for (let i = 0; i < 8; i++)
           copy_data.push({
             hz: params.dataIndex * (i + 1),
             db: params.value.toPrecision(3),
@@ -137,6 +137,84 @@ const TestApp = (props) => {
         return { tabledata: copy_data };
       },
     });
+    let label = 0;
+    let getIndex = (value, arr) => {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] * 10 === value) {
+          return i;
+        }
+      }
+      return -1;
+    };
+    let db1 = params.value;
+    let db2 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 2, Data.xdata[Data.label])
+      ];
+    let db3 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 3, Data.xdata[Data.label])
+      ];
+    let db4 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 4, Data.xdata[Data.label])
+      ];
+    let db5 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 5, Data.xdata[Data.label])
+      ];
+    let db6 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 6, Data.xdata[Data.label])
+      ];
+    let db7 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 7, Data.xdata[Data.label])
+      ];
+    let db8 =
+      Data.ydata[Data.label][
+        getIndex(params.dataIndex * 8, Data.xdata[Data.label])
+      ];
+    let dbData = [];
+    dbData.push(db1);
+    dbData.push(db2);
+    dbData.push(db3);
+    dbData.push(db4);
+    dbData.push(db5);
+    dbData.push(db6);
+    dbData.push(db7);
+    dbData.push(db8);
+    console.log(dbData);
+    console.log(params.dataIndex);
+    console.log(params.dataIndex * 2);
+    console.log(getIndex(params.dataIndex * 2, Data.xdata[Data.label]));
+    console.log(Data.ydata[Data.label]);
+    console.log(Data.xdata[Data.label]);
+    let bigger = (n, arr) => {
+      let label = true;
+      for (let i = n - 1; i < arr.length; i++) {
+        if (arr[n] < arr[i]) label = false;
+      }
+      return label;
+    };
+    if (bigger(3, dbData)) {
+      if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
+        label = 3;
+    }
+    if (bigger(4, dbData)) {
+      if (db1 > db3 && db3 > db5 && db5 > db7 && db2 > db6) label = 4;
+    }
+    if (bigger(5, dbData)) {
+      if (db2 > db3 && db3 > db7 && db7 > db8 && db1 > db4 && db4 > db6)
+        label = 5;
+    }
+    if (bigger(6, dbData)) {
+      if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
+    }
+    if (db1 > db6 && db6 > db8 && db2 > db5 && db3 > db4 && db7 > db8) {
+      label = 7;
+    }
+    alert('叶片数为：' + label);
   };
 
   const getData = () => {

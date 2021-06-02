@@ -17,6 +17,7 @@ const DemonTable = (props) => {
         else if (index === 4) return <>五倍频</>;
         else if (index === 5) return <>六倍频</>;
         else if (index === 6) return <>七倍频</>;
+        else if (index === 7) return <>八倍频</>;
       },
     },
     {
@@ -24,6 +25,7 @@ const DemonTable = (props) => {
       dataIndex: 'hz',
       key: 'hz',
     },
+    /*
     {
       title: '轴数',
       dataIndex: 'axesNum',
@@ -44,7 +46,7 @@ const DemonTable = (props) => {
       render: (text, record, index) => {
         return <Input placeholder={'请输入叶片数'} />;
       },
-    },
+    },*/
     {
       title: '操作',
       render: (text, record, index) => (
