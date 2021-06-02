@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, notification } from 'antd';
-import { Card, Spin, Popover } from 'antd';
+import { Card, Spin, Popover, message } from 'antd';
 import { connect } from 'umi';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/tooltip';
@@ -218,6 +218,9 @@ const TestApp = (props) => {
     }
     if (db1 > db6 && db6 > db8 && db2 > db5 && db3 > db4 && db7 > db8) {
       label = 7;
+    }
+    if (label === 0) {
+      message.error('无法计算叶片数，请选择正确的基频');
     }
     alert('叶片数为：' + label);
   };
