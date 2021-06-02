@@ -203,26 +203,32 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             {/* </Link> */}
           </Col>
           <Col span={8}>
-            <div
-              style={{ backgroundColor: '#F79C32' }}
-              className={style.featuresDiv}
+            <a
               onClick={() => {
-                window.location.href =
-                  CookieUtil.get('role') == 3
-                    ? 'http://47.97.152.219:82/student/#/index'
-                    : 'http://47.97.152.219:82/admin/#/dashboard';
+                return false;
               }}
             >
-              <Space
-                align="center"
-                style={{ height: '100%', width: '100%', paddingLeft: '18%' }}
+              <div
+                style={{ backgroundColor: '#F79C32' }}
+                className={style.featuresDiv}
+                onClick={() => {
+                  window.location.href =
+                    CookieUtil.get('role') == 3
+                      ? 'http://47.97.152.219:82/student/#/index'
+                      : 'http://47.97.152.219:82/admin/#/dashboard';
+                }}
               >
-                <span style={{ fontSize: 80 }}>
-                  <UserOutlined />
-                </span>
-                <span style={{ fontSize: 25 }}>听音训练</span>
-              </Space>
-            </div>
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '18%' }}
+                >
+                  <span style={{ fontSize: 80 }}>
+                    <UserOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>听音训练</span>
+                </Space>
+              </div>
+            </a>
           </Col>
           <Col span={8} style={{ height: 160 }}>
             <Link to="/targetRecognition">
