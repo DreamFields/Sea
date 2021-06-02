@@ -137,7 +137,12 @@ const TestApp = (props) => {
         return { tabledata: copy_data };
       },
     });
+    //叶片数
     let label = 0;
+    //转速
+    let rpm = params.dataIndex * 60;
+    //轴数 暂时无算法
+
     let getIndex = (value, arr) => {
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] * 10 === value) {
