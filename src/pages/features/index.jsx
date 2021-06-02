@@ -187,6 +187,17 @@ const Index = (props) => {
           >
             <PlayCircleOutlined />/<PauseOutlined />
           </Button>
+          <Button
+            type="primary"
+            style={{ fontSize: 15, float: 'left', marginLeft: '16px' }}
+            onClick={() => {
+              if (wavesurfer) {
+                wavesurfer.skip(0 - wavesurfer.getCurrentTime());
+              }
+            }}
+          >
+            复位
+          </Button>
         </div>
         <div id="wave-timeline" style={{ marginTop: 20 }}></div>
         <div id="waveform" style={{ backgroundColor: '#3D3D3D' }}>

@@ -299,6 +299,20 @@ const Index = (props) => {
             style={{ display: tab === '1' ? 'block' : 'none' }}
           ></div>
           <div style={{ marginTop: 20, float: 'left' }}>
+            <Button
+              type="primary"
+              onClick={() => {
+                if (wavesurfer) {
+                  wavesurfer.skip(0 - wavesurfer.getCurrentTime());
+                }
+              }}
+              style={{
+                float: 'left',
+                marginRight: 20,
+              }}
+            >
+              复位
+            </Button>
             <Popover
               content="将修改后的音频保存为一个版本存储，会在下方的版本记录中显示历史版本。"
               title="保存音频"
