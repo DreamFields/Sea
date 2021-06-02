@@ -31,6 +31,15 @@ const Index = (props) => {
           <Statistic title="分贝" value={data?.db} />
 
           <Statistic title="频率" value={data?.hz} />
+          <div
+            style={{
+              display: f_key === '3' ? 'block' : 'none',
+            }}
+          >
+            {/* <Statistic title="轴数" value={data?.db} /> */}
+            <Statistic title="叶数" value={data?.label} />
+            <Statistic title="转速" value={data?.rpm} />
+          </div>
         </div>
 
         <div

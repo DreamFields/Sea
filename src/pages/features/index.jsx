@@ -155,7 +155,7 @@ const Index = (props) => {
 
       4: (
         <div>
-          <MCFFApp audio_id={FeaturesInfor.audio_id} />
+          <MCFFApp audio_id={FeaturesInfor.audio_id} dispatch={dispatch} />
         </div>
       ),
       5: (
@@ -173,6 +173,7 @@ const Index = (props) => {
             audio_id={FeaturesInfor.audio_id}
             audio_name={FeaturesInfor.audio_name}
             signal_type={FeaturesInfor.signal_type}
+            dispatch={dispatch}
           />
         </div>
       ),

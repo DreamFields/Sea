@@ -1323,6 +1323,29 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 return { tabledata: copy_data };
               },
             });
+
+            dispatch({
+              type: 'basicSoundData/setdata',
+              payload: {
+                db: 0,
+                hz: 0,
+                calc: 0,
+                mean: 0,
+                va: 0,
+                sc: 0,
+                scw: 0,
+                sa: 0,
+                ss: 0,
+                sd: 0,
+                si: 0,
+                su: 0,
+                se: 0,
+                label: 0,
+                rpm: 0,
+                // 轴数
+                axle: 0,
+              },
+            });
           }}
           style={{ width: '50%' }}
         >

@@ -10,18 +10,7 @@ const TestApp = (props) => {
   const [picIfo, setpicIfo] = useState(undefined); //图片base64格式数据
   const [tableData, setTableData] = useState(undefined); //将之前的八个数据特征的useState整合来节省性能
   let tabledata = {};
-  /*
-  const [spectral_centroid, setSpectral_centroid] = useState(undefined); //谱质心
-  const [spectral_centroid_width, setSpectral_centroid_width] = useState(
-    undefined,
-  ); //谱质心带宽
-  const [spectral_area, setSpectral_area] = useState(undefined); //谱包络面积
-  const [spectral_slope, setSpectral_slope] = useState(undefined); //谱斜率
-  const [spectral_decline, setSpectral_decline] = useState(undefined); //谱下降图
-  const [spectral_Irregularity, setSpectral_Irregularity] = useState(undefined); //谱不规律性
-  const [spectral_Uneven, setSpectral_Uneven] = useState(undefined); //谱不平整性
-  const [spectral_entropy, setSpectral_entropy] = useState(undefined); //谱熵
-  */
+
   const columns = [
     {
       title: 'Name',
@@ -89,7 +78,9 @@ const TestApp = (props) => {
       value: tableData?.spectral_entropy,
     },
   ];
-  const { audio_id } = props;
+
+  const { audio_id, dispatch } = props;
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/MCFF`, {
@@ -129,23 +120,15 @@ const TestApp = (props) => {
          */
       setpicIfo(res?.picIfo);
 
-      // 修改dom信息
-      let span_calc_int = document.getElementById('calc_int');
-      let span_calc_decimal = document.getElementById('calc_decimal');
-      let span_mean_int = document.getElementById('mean_int');
-      let span_mean_decimal = document.getElementById('mean_decimal');
-      let span_va_int = document.getElementById('va_int');
-      let span_va_decimal = document.getElementById('va_decimal');
+      dispatch({
+        type: 'basicSoundData/setdata',
+        payload: {
+          calc: res?.calc.toPrecision(4),
+          mean: res?.mean.toPrecision(4),
+          va: res?.var.toPrecision(4),
+        },
+      });
 
-      span_calc_int.innerText = (res?.calc.toPrecision(3) + '').split('.')[0];
-      span_calc_decimal.innerText =
-        '.' + (res?.calc.toPrecision(3) + '').split('.')[1];
-      span_mean_int.innerText = (res?.mean.toPrecision(3) + '').split('.')[0];
-      span_mean_decimal.innerText =
-        '.' + (res?.mean.toPrecision(3) + '').split('.')[1];
-      span_va_int.innerText = (res?.var.toPrecision(3) + '').split('.')[0];
-      span_va_decimal.innerText =
-        '.' + (res?.var.toPrecision(3) + '').split('.')[1];
       setloading(false);
     });
   };

@@ -110,17 +110,6 @@ const TestApp = (props) => {
       dataIndex: params.dataIndex,
     });
 
-    console.log('分贝(db):' + params.value.toPrecision(3));
-    console.log('频率(hz)):' + params.dataIndex);
-    let span_db_int = document.getElementById('db_int');
-    let span_db_decimal = document.getElementById('db_decimal');
-    let span_hz_int = document.getElementById('hz_int');
-
-    span_db_int.innerText = (params.value.toPrecision(3) + '').split('.')[0];
-    span_db_decimal.innerText =
-      '.' + (params.value.toPrecision(3) + '').split('.')[1];
-    span_hz_int.innerText = params.dataIndex + '';
-
     let copy_data;
     dispatch({
       type: 'demonTable/setdata',
@@ -222,7 +211,16 @@ const TestApp = (props) => {
     if (label === 0) {
       message.error('无法计算叶片数，请选择正确的基频');
     }
-    alert('叶片数为：' + label);
+
+    dispatch({
+      type: 'basicSoundData/setdata',
+      payload: {
+        db: params.value.toPrecision(3),
+        hz: params.dataIndex,
+        label: label,
+        rpm: rpm,
+      },
+    });
   };
 
   const getData = () => {
