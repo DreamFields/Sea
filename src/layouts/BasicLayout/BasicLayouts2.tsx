@@ -1323,7 +1323,32 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 return { tabledata: copy_data };
               },
             });
-
+            //清楚时频图列表数据
+            dispatch({
+              type: 'MelTable/setdata',
+              payload: {},
+              callback: (state) => {
+                return {
+                  tabledata1: [
+                    {
+                      key: '1',
+                      frequency: undefined,
+                      echo_width: undefined,
+                      echo_length: undefined,
+                    },
+                  ],
+                  tabledata2: [
+                    {
+                      key: '1',
+                      frequency: undefined,
+                      signal_type: undefined,
+                      pulse_cycle: undefined,
+                      pulse_width: undefined,
+                    },
+                  ],
+                };
+              },
+            });
             dispatch({
               type: 'basicSoundData/setdata',
               payload: {
