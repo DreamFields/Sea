@@ -51,7 +51,7 @@ const Index = (props) => {
           <Menu.Item key="3">调制谱</Menu.Item>
           <Menu.Item key="4">梅尔倒谱</Menu.Item>
           <Menu.Item key="5">过零率</Menu.Item>
-          <Menu.Item key="6">语谱图</Menu.Item>
+          <Menu.Item key="6">时频图</Menu.Item>
         </Menu>
       );
     }

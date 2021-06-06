@@ -95,7 +95,7 @@ const TestApp = (props) => {
       darkMode: true,
       title: {
         text: '特征提取',
-        subtext: '语谱图',
+        subtext: '时频图',
       },
       grid: {
         height: '70%',
@@ -130,6 +130,9 @@ const TestApp = (props) => {
       dataZoom: [
         {
           type: 'inside',
+          //实现横纵坐标缩放，折线图不设置默认只缩放x轴
+          xAxisIndex: [0],
+          yAxisIndex: [0],
         },
       ],
       tooltip: {
@@ -216,7 +219,7 @@ const TestApp = (props) => {
       title: '中心频率',
       dataIndex: 'frequency',
       key: 'frequency',
-      render: (text) => (
+      /*render: (text) => (
         <Popover title="提示" content={InputTip}>
           <Input
             placeholder="frequency"
@@ -225,7 +228,7 @@ const TestApp = (props) => {
             }}
           />
         </Popover>
-      ),
+      ),*/
     },
     {
       title: '回波宽带',
@@ -259,7 +262,8 @@ const TestApp = (props) => {
       title: '中心频率',
       dataIndex: 'frequency',
       key: 'frequency',
-      render: (text) => (
+      /*
+      * render: (text) => (
         <Popover title="提示" content={InputTip}>
           <Input
             placeholder="frequency"
@@ -268,7 +272,7 @@ const TestApp = (props) => {
             }}
           />
         </Popover>
-      ),
+      ),*/
     },
     {
       title: '信号形式',
@@ -334,7 +338,7 @@ const TestApp = (props) => {
   const data2 = [
     {
       key: '1',
-      center_frequency: center_frequency,
+      frequency: center_frequency,
       signal_type: signal_type2,
       pulse_cycle: pulse_cycle,
       pulse_width: pulse_width,
@@ -365,6 +369,12 @@ const TestApp = (props) => {
   const onChange = (checkedValues) => {
     setsignal_type2(checkedValues);
     console.log('checked = ', checkedValues);
+  };
+
+  const handleClick = (params) => {
+    console.log(params);
+    console.log(Ydata[params.data[1]]);
+    setcenter_frequency(Ydata[params.data[1]]);
   };
 
   const handleBrushSelected = (params) => {
@@ -597,10 +607,11 @@ const TestApp = (props) => {
             onEvents={{
               brushselected: handleBrushSelected,
               brushEnd: calculate,
+              click: handleClick,
             }}
           />
         </Spin>
-        <Button onClick={getData}>语谱谱分析</Button>
+        <Button onClick={getData}>时频图分析</Button>
         <Popover title="提示" content={InputTip2}>
           <Input
             placeholder="请输入分辨率"
