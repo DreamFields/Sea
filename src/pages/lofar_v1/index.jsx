@@ -335,7 +335,7 @@ const TestApp = (props) => {
         <Button onClick={getData}>低频线谱分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
       </Card>
-      <LofarTable />
+      {/* <LofarTable /> */}
     </div>
   );
 };

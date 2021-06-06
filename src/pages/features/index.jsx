@@ -23,8 +23,9 @@ import LofarApp from '../lofar_v1/index';
 import ZeroApp from '../Zero_crossing/index';
 import MCFFApp from '../MCFF/index';
 import BasicSoundData from './basicSoundData';
+
 const { SubMenu } = Menu;
-const rightWidth = '22%';
+const rightWidth = '23%';
 let feature_key;
 const Index = (props) => {
   const { FeaturesInfor, dispatch } = props;

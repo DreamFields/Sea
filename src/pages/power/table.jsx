@@ -48,6 +48,7 @@ const PowerTable = (props) => {
       columns={columns}
       dataSource={table_data}
       style={{ marginTop: '1rem' }}
+      pagination={{ pageSize: 5 }}
     />
   );
 };

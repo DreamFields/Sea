@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
 import { Statistic } from 'antd';
+import PowerTable from '../power/table';
+import LofarTable from '../lofar_v1/table';
 
 const Index = (props) => {
   const { f_key, data, dispatch } = props;
@@ -8,7 +10,7 @@ const Index = (props) => {
   return (
     <>
       <div style={{ color: 'white', fontSize: 20 }}>
-        {f_key === '5' ? '过零率统计特征' : '基本听音特征'}
+        {f_key === '5' ? '过零率统计特征' : '特征提取'}
       </div>
       <div
         style={{
@@ -16,10 +18,10 @@ const Index = (props) => {
           width: '100%',
           height: 300,
           float: 'left',
-          overflowY: 'auto',
-          overflowX: 'hidden',
+          overflow: 'auto',
+          // overflowX: 'hidden',
           border: '1px solid grey',
-          padding: '20px 20px',
+          padding: '16px 16px 16px 16px',
         }}
       >
         {/* 直接看antd的statistic源码，做一个频率和分贝的数据展示 */}
@@ -40,7 +42,10 @@ const Index = (props) => {
             <Statistic title="叶数" value={data?.label} />
             <Statistic title="转速" value={data?.rpm} />
           </div>
+          {f_key === '1' ? <PowerTable /> : null}
         </div>
+
+        {f_key === '2' ? <LofarTable /> : null}
 
         <div
           style={{

@@ -384,7 +384,7 @@ const TestApp = (props) => {
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>
-      <PowerTable />
+      {/* <PowerTable /> */}
     </div>
   );
 };

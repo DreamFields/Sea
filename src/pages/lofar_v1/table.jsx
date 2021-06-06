@@ -31,7 +31,9 @@ const LofarTable = (props) => {
       dataIndex: 'center_frequency',
       key: 'center_frequency',
       render: () => {
-        return <Input placeholder={'请输入中心频率值'} />;
+        return (
+          <Input placeholder={'请输入中心频率值'} style={{ width: 100 }} />
+        );
       },
     },
 
@@ -65,7 +67,7 @@ const LofarTable = (props) => {
     <Table
       columns={columns}
       dataSource={table_data}
-      style={{ marginTop: '1rem' }}
+      style={{ marginTop: '1rem', width: 400 }}
     />
   );
 };
