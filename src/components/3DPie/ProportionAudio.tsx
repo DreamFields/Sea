@@ -37,17 +37,20 @@ const ProportionAudio = ({
     {
       value: audioPieData[0].y,
       label: 'active_pulse',
-      color: '#faebd7',
+      //color: '#faebd7',
+      color: 'rgb(8,190,156)',
     },
     {
       value: audioPieData[1].y,
       label: 'target_echo',
-      color: '#ff7f50',
+      //color: '#ff7f50',
+      color: 'rgb(8,151,156)',
     },
     {
       value: audioPieData[2].y,
       label: 'radiated_noise',
-      color: '#cd5c5c',
+      //color: '#cd5c5c',
+      color: 'rgb(0,109,100)',
     },
   ];
   return (
@@ -73,10 +76,10 @@ const ProportionAudio = ({
                   style={{
                     backgroundColor:
                       item.x === 'active_pulse'
-                        ? '#faebd7'
+                        ? 'rgb(8,190,156)'
                         : item.x === 'target_echo'
-                        ? '#ff7f50'
-                        : '#cd5c5c',
+                        ? 'rgb(8,151,156)'
+                        : 'rgb(0,109,100)',
                   }}
                 />
                 <span className={styles.legendTitle}>
