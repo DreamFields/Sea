@@ -185,22 +185,22 @@ const MainContent: React.FC<mainContentProps> = (props) => {
         </Row>
         <Row gutter={16} style={{ height: 160, marginTop: 20 }}>
           <Col span={8}>
-            {/* <Link to="/"> */}
-            <div
-              style={{ backgroundColor: '#D44444' }}
-              className={style.featuresDiv}
-            >
-              <Space
-                align="center"
-                style={{ height: '100%', width: '100%', paddingLeft: '10%' }}
+            <Link to="/qualityJudge">
+              <div
+                style={{ backgroundColor: '#D44444' }}
+                className={style.featuresDiv}
               >
-                <span style={{ fontSize: 80 }}>
-                  <EditOutlined />
-                </span>
-                <span style={{ fontSize: 25 }}>数据质量评价</span>
-              </Space>
-            </div>
-            {/* </Link> */}
+                <Space
+                  align="center"
+                  style={{ height: '100%', width: '100%', paddingLeft: '10%' }}
+                >
+                  <span style={{ fontSize: 80 }}>
+                    <EditOutlined />
+                  </span>
+                  <span style={{ fontSize: 25 }}>数据质量评价</span>
+                </Space>
+              </div>
+            </Link>
           </Col>
           <Col span={8}>
             <a

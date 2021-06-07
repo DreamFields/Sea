@@ -721,7 +721,7 @@ const Index = (props) => {
                 : JSON.parse(Pretreatment.tips).map((item, index) => {
                     console.log(item);
                     return (
-                      <Card.Grid style={gridStyle}>
+                      <Card.Grid style={gridStyle} key={index}>
                         <Row gutter={16}>
                           <Col span={2}>{index + 1}</Col>
                           <Col span={3}>{`开始时间：${item.start}s`}</Col>

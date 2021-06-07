@@ -35,6 +35,7 @@ import {
   SnippetsOutlined,
   RobotOutlined,
   UploadOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 import CookieUtil from '@/utils/cookie.js';
 import Cookies from 'js-cookie';
@@ -1235,8 +1236,16 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             audio_name: item.name,
           },
         });
+      } else if (location.pathname === '/qualityJudge') {
+        dispatch({
+          type: 'qualityJudge/setAudio',
+          payload: {
+            audio_id: item.id,
+            audio_name: item.name,
+          },
+        });
       } else {
-        message.error('请在音频编辑或者特征提取界面加载音频！');
+        message.error('请在音频整编，特征提取或质量评价界面加载音频！');
       }
     };
 
@@ -1517,6 +1526,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </Menu.Item>
           <Menu.Item key="/features" icon={<SnippetsOutlined />}>
             <Link to="/features">特征提取</Link>
+          </Menu.Item>
+          <Menu.Item key="/qualityJudge" icon={<EditOutlined />}>
+            <Link to="/qualityJudge">质量评价</Link>
           </Menu.Item>
           <Menu.Item key="/exam" icon={<UserOutlined />}>
             <a

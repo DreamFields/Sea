@@ -7,6 +7,7 @@ import { ConfigProvider } from 'antd';
 const index = (props) => {
   const { location } = props;
   const { pathname } = location;
+
   // console.log(pathname);
   if (pathname.search('/user') == -1) {
     return (

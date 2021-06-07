@@ -47,11 +47,16 @@
     "react-pie3d": "^1.0.0",
     "react-wavesurfer": "^0.8.6",
     "recorder-core": "^1.1.21021500",
+    "typescript-eslint": "0.0.1-alpha.0",
     "umi": "^3.2.3",
     "wavesurfer.js": "^4.0.1",
     "yorkie": "^2.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.28.0",
+    "eslint-plugin-react": "^7.24.0",
     "file-loader": "^6.2.0"
   }
 }
