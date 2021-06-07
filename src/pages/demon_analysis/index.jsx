@@ -10,6 +10,7 @@ import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import DemonTable from './table';
+import DemonForm from '../demon_analysis2/index';
 import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
@@ -457,6 +458,7 @@ const TestApp = (props) => {
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/demon/${id}`} />
       </Card>
       <DemonTable />
+      <DemonForm audio_id={audio_id} />
     </div>
   );
 };

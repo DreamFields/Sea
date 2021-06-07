@@ -1325,7 +1325,24 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             });
             //清除低频线谱谱列表数据
             dispatch({
-              type: 'lofarTable/setdata',
+              type: 'demon_analysis2/savedata',
+              payload: {
+                data: [],
+                // 所有横坐标数据
+                all_x_data: [],
+                //所有纵坐标数据
+                all_y_data: [],
+                //所有最大值数据
+                all_max_value: [],
+                //所有最小值数据
+                all_min_value: [],
+                // 当前帧
+                label: -2,
+              },
+            });
+            //清除调制谱2数据
+            dispatch({
+              type: 'demon_analysis2/setdata',
               payload: {},
               callback: (state) => {
                 let copy_data = [];

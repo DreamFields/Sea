@@ -17,8 +17,6 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
-import LofarTable from './table';
-import UploadPhotos from '../../components/UploadPhotos';
 const TestApp = (props) => {
   // 播放控制
   let animationValue = false;
@@ -34,7 +32,7 @@ const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name, signal_type, dispatch, Data } = props;
   const [loading, setloading] = useState(false);
-  let data_Lofar = [];
+  let dataDemon = [];
   let Y_data = [];
   let X_data = [];
   let minValue = 0;
@@ -53,7 +51,7 @@ const TestApp = (props) => {
       darkMode: true,
       title: {
         text: '特征提取',
-        subtext: '低频线谱',
+        subtext: '调制谱',
       },
       grid: {
         height: '70%',
@@ -108,7 +106,7 @@ const TestApp = (props) => {
       },
       series: [
         {
-          name: 'Lofar_V1',
+          name: 'demon_analysis2',
           type: 'heatmap',
           data: data,
           emphasis: {
@@ -124,50 +122,9 @@ const TestApp = (props) => {
     };
     return option;
   };
-  const handleChartClick = (params) => {
-    console.log(params);
-    let copy_data;
-    dispatch({
-      type: 'lofarTable/setdata',
-      payload: {},
-      callback: (state) => {
-        copy_data = state.tabledata.slice();
-        if (copy_data.length === 0) {
-          copy_data.push({
-            fk: Data.all_x_data[Data.label][params.value[0]],
-            y_l: Data.all_y_data[Data.label][params.value[1]],
-            outdata: params.value[2],
-            count: 1,
-          });
-        } else {
-          let label = true;
-          for (let i = 0; i < copy_data.length; i++) {
-            if (
-              copy_data[i].fk === Data.all_x_data[Data.label][params.value[0]]
-            )
-              label = false;
-          }
-          if (label) {
-            let curcount = copy_data[copy_data.length - 1].count;
-            copy_data.push({
-              fk: Data.all_x_data[Data.label][params.value[0]],
-              y_l: Data.all_y_data[Data.label][params.value[1]],
-              outdata: params.value[2],
-              count: curcount + 1,
-            });
-            for (let i = 0; i < copy_data.length; i++) {
-              copy_data[i].count = curcount + 1;
-            }
-          }
-        }
-        return { tabledata: copy_data };
-      },
-    });
-  };
-
   const getData = () => {
     setloading(true);
-    request(`/v1/feature/lofar_v1`, {
+    request(`/v1/feature/demon_amalysis2`, {
       method: 'POST',
       data: {
         sid: audio_id,
@@ -178,12 +135,12 @@ const TestApp = (props) => {
         let dataAll = []; //所有时间的数据集合
         let maxAll = []; //所有时间的最大值集合
         let minAll = []; //所有数据的最小值集合
-        for (let z = 1; z < res.OutputData1.length; z++) {
-          for (let i = 0; i < res.fk.length; i++) {
-            for (let j = 0; j < res.y_l.length; j++) {
+        for (let z = 1; z < res.outputData_3.length; z++) {
+          for (let i = 0; i < res.f.length; i++) {
+            for (let j = 0; j < res.t.length; j++) {
               temp.push(i);
               temp.push(j);
-              temp.push(Math.floor(res.OutputData1[z][j][i] * 100) / 100);
+              temp.push(Math.floor(res.outputData_3[z][j][i] * 100) / 100);
               //改成动态叠加之后不需要动态调节颜色映射了
               /*   if (Math.round(res.OutputData1[z][j][i]) > maxValue) {
                 maxValue = Math.round(res.OutputData1[z][j][i]);
@@ -191,45 +148,45 @@ const TestApp = (props) => {
               if (Math.round(res.OutputData1[z][j][i]) < minValue) {
                 minValue = Math.round(res.OutputData1[z][j][i]);
               }*/
-              data_Lofar.push(temp);
+              dataDemon.push(temp);
               temp = [];
             }
           }
-          dataAll.push(data_Lofar);
-          data_Lofar = [];
+          dataAll.push(dataDemon);
+          dataDemon = [];
           //maxAll.push(maxValue);
           //minAll.push(minValue);
           //minValue = 0;
           //maxValue = 0;
         }
-        for (let i = 0; i < res.fk.length; i++) {
-          for (let j = 0; j < res.y_l.length; j++) {
+        for (let i = 0; i < res.f.length; i++) {
+          for (let j = 0; j < res.t.length; j++) {
             temp.push(i);
             temp.push(j);
-            temp.push(Math.floor(res.OutputData1[0][j][i] * 100) / 100);
-            if (Math.round(res.OutputData1[0][j][i]) > maxValue) {
-              maxValue = Math.round(res.OutputData1[0][j][i]);
+            temp.push(Math.floor(res.outputData_3[0][j][i] * 100) / 100);
+            if (Math.round(res.outputData_3[0][j][i]) > maxValue) {
+              maxValue = Math.round(res.outputData_3[0][j][i]);
             }
-            if (Math.round(res.OutputData1[0][j][i]) < minValue) {
-              minValue = Math.round(res.OutputData1[0][j][i]);
+            if (Math.round(res.outputData_3[0][j][i]) < minValue) {
+              minValue = Math.round(res.outputData_3[0][j][i]);
             }
-            data_Lofar.push(temp);
+            dataDemon.push(temp);
             temp = [];
           }
         }
-        dataAll.push(data_Lofar);
-        for (let i = 0; i < res.OutputData1.length; i++) {
+        dataAll.push(dataDemon);
+        for (let i = 0; i < res.outputData_3.length; i++) {
           maxAll.push(maxValue);
           minAll.push(minValue);
         }
-        for (let i = 0; i < res.OutputData1.length; i++) {
-          X_data.push(res.fk);
+        for (let i = 0; i < res.outputData_3.length; i++) {
+          X_data.push(res.f);
         }
-        for (let i = 0; i < res.OutputData1.length; i++) {
-          Y_data.push(res.y_l);
+        for (let i = 0; i < res.outputData_3.length; i++) {
+          Y_data.push(res.t);
         }
         dispatch({
-          type: 'lofar_v1/savedata',
+          type: 'demon_analysis2/savedata',
           payload: {
             data: dataAll,
             all_x_data: X_data,
@@ -250,7 +207,7 @@ const TestApp = (props) => {
             move = setInterval(() => {
               console.log(frame_count);
               dispatch({
-                type: 'lofar_v1/savedata',
+                type: 'demon_analysis2/savedata',
                 payload: {
                   label: frame_count,
                 },
@@ -278,7 +235,7 @@ const TestApp = (props) => {
           // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
           if (frame_count === -1) {
             dispatch({
-              type: 'lofar_v1/savedata',
+              type: 'demon_analysis2/savedata',
               payload: {
                 label: frame_count,
               },
@@ -308,9 +265,7 @@ const TestApp = (props) => {
       <Card>
         <Spin spinning={loading}>
           <ReactEcharts
-            onEvents={{
-              click: handleChartClick,
-            }}
+            onEvents={{}}
             option={getOption(
               Data?.label === -2 || Data?.label === -1
                 ? []
@@ -332,16 +287,15 @@ const TestApp = (props) => {
             style={{ height: '400px' }}
           />
         </Spin>
-        <Button onClick={getData}>低频线谱分析</Button>
-        <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
+        <Button onClick={getData}>二维调制谱分析</Button>
       </Card>
       {/* <LofarTable /> */}
     </div>
   );
 };
-const mapStateToProps = ({ lofar_v1 }) => {
+const mapStateToProps = ({ demon_analysis2 }) => {
   return {
-    Data: lofar_v1,
+    Data: demon_analysis2,
   };
 };
 export default connect(mapStateToProps)(TestApp);
