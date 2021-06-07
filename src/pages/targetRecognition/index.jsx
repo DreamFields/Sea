@@ -169,7 +169,7 @@ const Index = (props) => {
     render() {
       return (
         <div style={{ backgroundColor: '#2F2F2F' }}>
-          <div style={{ marginTop: 20, marginLeft: 10 }}>
+          <div style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>
             <Button
               type="primary"
               onClick={this.start}
@@ -178,32 +178,34 @@ const Index = (props) => {
             >
               <PlayCircleOutlined />/<PauseOutlined />
             </Button>
-            <Select
-              // defaultValue="MFCC"
-              style={{ marginLeft: '60%' }}
-              onChange={this.handleChange}
-              value={mark}
-            >
-              <Select.Option key="1" value="MFCC">
-                基于MFCC的CNN模型
-              </Select.Option>
-              <Select.Option key="2" value="LOFAR">
-                基于LOFAR谱的CNN模型
-              </Select.Option>
-            </Select>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <Popover
-              content="先在左侧选择音频，然后选择模型，再点击分类"
-              title="分类"
-            >
-              <Button
-                type="primary"
-                style={{ fontSize: 15 }}
-                onClick={this.getTargetResult}
+            <div style={{ fontSize: 15, float: 'right' }}>
+              <Select
+                // defaultValue="MFCC"
+                //style={{ float: 'right' }}
+                onChange={this.handleChange}
+                value={mark}
               >
-                分类
-              </Button>
-            </Popover>
+                <Select.Option key="1" value="MFCC">
+                  基于MFCC的CNN模型
+                </Select.Option>
+                <Select.Option key="2" value="LOFAR">
+                  基于LOFAR谱的CNN模型
+                </Select.Option>
+              </Select>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Popover
+                content="先在左侧选择音频，然后选择模型，再点击分类"
+                title="分类"
+              >
+                <Button
+                  type="primary"
+                  style={{ fontSize: 15 }}
+                  onClick={this.getTargetResult}
+                >
+                  分类
+                </Button>
+              </Popover>
+            </div>
           </div>
           <div id="wave-timeline" style={{ marginTop: 20 }}></div>
           <div id="waveform" style={{ backgroundColor: 'black' }}>
