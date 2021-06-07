@@ -178,32 +178,32 @@ const TestApp = (props) => {
         let dataAll = []; //所有时间的数据集合
         let maxAll = []; //所有时间的最大值集合
         let minAll = []; //所有数据的最小值集合
-
-        for (let z = 1; z < res.fk.length; z++) {
-          for (let i = 0; i < res.fk[z].length; i++) {
-            for (let j = 0; j < res.y_l[z].length; j++) {
+        for (let z = 1; z < res.OutputData1.length; z++) {
+          for (let i = 0; i < res.fk.length; i++) {
+            for (let j = 0; j < res.y_l.length; j++) {
               temp.push(i);
               temp.push(j);
               temp.push(Math.floor(res.OutputData1[z][j][i] * 100) / 100);
-              if (Math.round(res.OutputData1[z][j][i]) > maxValue) {
+              //改成动态叠加之后不需要动态调节颜色映射了
+              /*   if (Math.round(res.OutputData1[z][j][i]) > maxValue) {
                 maxValue = Math.round(res.OutputData1[z][j][i]);
               }
               if (Math.round(res.OutputData1[z][j][i]) < minValue) {
                 minValue = Math.round(res.OutputData1[z][j][i]);
-              }
+              }*/
               data_Lofar.push(temp);
               temp = [];
             }
           }
           dataAll.push(data_Lofar);
-          maxAll.push(maxValue);
-          minAll.push(minValue);
           data_Lofar = [];
-          minValue = 0;
-          maxValue = 0;
+          //maxAll.push(maxValue);
+          //minAll.push(minValue);
+          //minValue = 0;
+          //maxValue = 0;
         }
-        for (let i = 0; i < res.fk[0].length; i++) {
-          for (let j = 0; j < res.y_l[0].length; j++) {
+        for (let i = 0; i < res.fk.length; i++) {
+          for (let j = 0; j < res.y_l.length; j++) {
             temp.push(i);
             temp.push(j);
             temp.push(Math.floor(res.OutputData1[0][j][i] * 100) / 100);
@@ -218,16 +218,16 @@ const TestApp = (props) => {
           }
         }
         dataAll.push(data_Lofar);
-        maxAll.push(maxValue);
-        minAll.push(minValue);
-        for (let i = 1; i < res.fk.length; i++) {
-          X_data.push(res.fk[i]);
+        for (let i = 0; i < res.OutputData1.length; i++) {
+          maxAll.push(maxValue);
+          minAll.push(minValue);
         }
-        X_data.push(res.fk[0]);
-        for (let i = 1; i < res.y_l.length; i++) {
-          Y_data.push(res.y_l[i]);
+        for (let i = 0; i < res.OutputData1.length; i++) {
+          X_data.push(res.fk);
         }
-        Y_data.push(res.y_l[0]);
+        for (let i = 0; i < res.OutputData1.length; i++) {
+          Y_data.push(res.y_l);
+        }
         dispatch({
           type: 'lofar_v1/savedata',
           payload: {
