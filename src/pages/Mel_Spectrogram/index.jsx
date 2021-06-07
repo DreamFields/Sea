@@ -190,11 +190,13 @@ const TestApp = (props) => {
           copy_data = state.tabledata1.slice();
           copy_data[0].frequency = Ydata[params.data[1]];
           return { tabledata1: copy_data };
-        }
-        if (signal_type === 3) {
+        } else if (signal_type === 3) {
           copy_data = state.tabledata2.slice();
           copy_data[0].frequency = Ydata[params.data[1]];
           return { tabledata2: copy_data };
+        } else {
+          copy_data = state.tabledata1.slice();
+          return { tabledata1: copy_data };
         }
       },
     });
