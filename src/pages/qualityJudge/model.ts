@@ -1,12 +1,12 @@
 import { Effect, Reducer } from 'umi';
-import { ModifyQuality } from './service';
+import { ModifyQuality, FetchLevel } from './service';
 import { message } from 'antd';
 
 export interface StateType {
   audio_id: any;
   audio_name: any;
   signal_type: any;
-  db: any;
+  level: any;
 }
 
 export interface ModelType {
@@ -15,6 +15,7 @@ export interface ModelType {
   effects: {
     setAudio: Effect;
     modifyQuality: Effect;
+    fetchLevel: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -30,7 +31,7 @@ const Model: ModelType = {
     audio_id: undefined,
     audio_name: undefined,
     signal_type: undefined,
-    db: undefined,
+    level: undefined,
   },
 
   effects: {
@@ -41,14 +42,33 @@ const Model: ModelType = {
           type: 'save',
           payload: payload,
         });
+        yield put({
+          type: 'fetchLevel',
+          payload: { sid: payload.audio_id },
+        });
       }
     },
     *modifyQuality({ payload }, { call, put }) {
       const data = yield call(ModifyQuality, payload);
       if (data) {
         message.success('提交成功！');
+        yield put({
+          type: 'fetchLevel',
+          payload: { sid: payload.sid },
+        });
       } else {
         message.error('提交失败！');
+      }
+    },
+    *fetchLevel({ payload }, { call, put }) {
+      const data = yield call(FetchLevel, payload);
+      console.log(data);
+
+      if (data) {
+        yield put({
+          type: 'save',
+          payload: { level: data },
+        });
       }
     },
   },

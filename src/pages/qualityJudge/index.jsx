@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import style from '../audioEdit/edit.less';
-import { Tabs, Button, Select, Form, message } from 'antd';
+import { Tabs, Button, Select, Form, message, Input } from 'antd';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
+import SoundsTable from './soundTable';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -126,8 +127,14 @@ const Index = (props) => {
 
   return (
     <div>
-      <div className={style.rightContent}>
-        <div className={style.rightCenter}>
+      <div
+        className={style.rightContent}
+        style={{ height: tab === '1' ? 700 : 900 }}
+      >
+        <div
+          className={style.rightCenter}
+          style={{ height: tab === '1' ? 650 : 850 }}
+        >
           <h3>质量评价</h3>
           <div
             style={{
@@ -143,11 +150,11 @@ const Index = (props) => {
             <TabPane tab="单文件" key="1">
               <div className={style.showWave}>
                 <Waveform />
-                <div style={{ display: 'flex', marginTop: '2rem' }}>
+                <div style={{ display: 'flex', marginTop: '3rem' }}>
                   <Form
                     onFinish={(values) => {
                       // console.log(values);
-                      if (values.level) {
+                      if (values.level && qj_data.audio_id) {
                         dispatch({
                           type: 'qualityJudge/modifyQuality',
                           payload: {
@@ -156,7 +163,7 @@ const Index = (props) => {
                           },
                         });
                       } else {
-                        message.error('请选择一个评级！');
+                        message.error('您还未加载一个音频或者选择一个评级！');
                       }
                     }}
                     form={form}
@@ -184,9 +191,55 @@ const Index = (props) => {
                     提交
                   </Button>
                 </div>
+
+                <div style={{ display: 'flex' }}>
+                  <Form
+                    onFinish={(values) => {
+                      console.log(values);
+                    }}
+                  >
+                    <Form.Item
+                      name="mode"
+                      label="自动检测"
+                      style={{ width: 400 }}
+                    >
+                      <Select placeholder="选择模式">
+                        <Option value="1">模式1</Option>
+                        <Option value="2">模式2</Option>
+                        <Option value="3">模式3</Option>
+                        <Option value="4">模式4</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name="result"
+                      label="检测结果"
+                      style={{ width: 400 }}
+                    >
+                      <b>{qj_data.level ? qj_data.level : '无'}</b>
+                    </Form.Item>
+                  </Form>
+                  <Button
+                    type="primary"
+                    style={{ marginLeft: '1rem' }}
+                    onClick={() => {
+                      form.submit();
+                    }}
+                  >
+                    检测
+                  </Button>
+                  <Button
+                    type="primary"
+                    style={{ marginLeft: '1rem' }}
+                    onClick={() => {}}
+                  >
+                    保存结果
+                  </Button>
+                </div>
               </div>
             </TabPane>
-            <TabPane tab="批文件" key="2"></TabPane>
+            <TabPane tab="批文件" key="2">
+              <SoundsTable />
+            </TabPane>
           </Tabs>
         </div>
       </div>

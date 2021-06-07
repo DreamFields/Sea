@@ -7,3 +7,10 @@ export async function ModifyQuality(body: any) {
     data: body,
   });
 }
+
+export async function FetchLevel(body: any) {
+  return request('/v1/evaluation/result', {
+    method: 'POST',
+    data: body,
+  });
+}
