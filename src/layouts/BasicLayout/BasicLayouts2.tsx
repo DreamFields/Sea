@@ -1493,21 +1493,23 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             renderItem={(item: any) => {
               return (
                 <List.Item>
-                  <Card
-                    hoverable={true}
-                    title={item.name}
-                    style={{
-                      width: '92%',
-                      marginLeft: '4%',
-                      borderColor: '#595959',
-                    }}
-                  >
-                    <Actions
-                      id={item.id}
-                      setvisible={setvisible}
-                      setaudioID={setaudioID}
-                    />
-                  </Card>
+                  <Tooltip title={item.name}>
+                    <Card
+                      hoverable={true}
+                      title={item.name}
+                      style={{
+                        width: '92%',
+                        marginLeft: '4%',
+                        borderColor: '#595959',
+                      }}
+                    >
+                      <Actions
+                        id={item.id}
+                        setvisible={setvisible}
+                        setaudioID={setaudioID}
+                      />
+                    </Card>
+                  </Tooltip>
                 </List.Item>
               );
             }}

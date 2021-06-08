@@ -271,16 +271,19 @@ const TestApp = (props) => {
 
         let xd = [];
         let yd = [];
-        for (let i in res?.dataIfo) {
-          yd.push(res?.dataIfo[i]);
-          xd.push(i);
+        for (let i = 1, len = res.dataIfo.length; i < len; i++) {
+          yd.push(res?.dataIfo[i][1]);
+          xd.push(res?.dataIfo[i][0]);
         }
+        yd.push(res?.dataIfo[0][1]);
+        xd.push(res?.dataIfo[0][0]);
 
         dispatch({
           type: 'power/setdata',
           payload: {
             ot_y_data: yd,
             ot_x_data: xd,
+            label: yd.length - 1,
             y_data: [],
             x_data: [],
           },
@@ -352,9 +355,11 @@ const TestApp = (props) => {
               XType,
               YType,
               Data.y_data.length === 0
-                ? Data.ot_y_data
+                ? Data.ot_y_data[Data.label]
                 : Data.y_data[Data.label],
-              Data.x_data.length === 0 ? Data.ot_x_data : Data.x_data,
+              Data.x_data.length === 0
+                ? Data.ot_x_data[Data.label]
+                : Data.x_data,
               PicType,
             )}
             theme="dark"
