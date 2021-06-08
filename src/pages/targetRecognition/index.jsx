@@ -127,6 +127,8 @@ const Index = (props) => {
     }
 
     getTargetResult() {
+      setResult1('');
+      setResult2('');
       if (!targetInfor.audio_id) {
         message.error('请先选择音频！');
         return;
@@ -138,12 +140,48 @@ const Index = (props) => {
             sound_id: targetInfor.audio_id,
           },
         }).then((res) => {
+          if (!res) {
+            message.error('分类失败！');
+            return;
+          }
           if (res.result1) {
-            setResult1(res.result1 === 'FishingBoat' ? '渔船' : res.result1);
+            setResult1(
+              res.result1 === 'FishingBoat'
+                ? '渔船'
+                : res.result1 === 'MerchantMarine'
+                ? '商船'
+                : res.result1,
+            );
             targetInfor.audio_result1 = res.result1;
           }
           if (res.result2) {
-            setResult2(res.result2 === 'FishingBoat' ? '渔船' : res.result2);
+            setResult2(res.result2);
+            targetInfor.audio_result2 = res.result2;
+          }
+        });
+      } else if (mark === 'LSTM') {
+        request(`/v1/classification/bi_lstm_process_single`, {
+          method: 'POST',
+          data: {
+            sound_id: targetInfor.audio_id,
+          },
+        }).then((res) => {
+          if (!res) {
+            message.error('分类失败！');
+            return;
+          }
+          if (res.result1) {
+            setResult1(
+              res.result1 === 'FishingBoat'
+                ? '渔船'
+                : res.result1 === 'MerchantMarine'
+                ? '商船'
+                : res.result1,
+            );
+            targetInfor.audio_result1 = res.result1;
+          }
+          if (res.result2) {
+            setResult2(res.result2);
             targetInfor.audio_result2 = res.result2;
           }
         });
@@ -154,12 +192,22 @@ const Index = (props) => {
             sound_id: targetInfor.audio_id,
           },
         }).then((res) => {
+          if (!res) {
+            message.error('分类失败！');
+            return;
+          }
           if (res.result1) {
-            setResult1(res.result1 === 'FishingBoat' ? '渔船' : res.result1);
+            setResult1(
+              res.result1 === 'FishingBoat'
+                ? '渔船'
+                : res.result1 === 'MerchantMarine'
+                ? '商船'
+                : res.result1,
+            );
             targetInfor.audio_result1 = res.result1;
           }
           if (res.result2) {
-            setResult2(res.result2 === 'FishingBoat' ? '渔船' : res.result2);
+            setResult2(res.result2);
             targetInfor.audio_result2 = res.result2;
           }
         });
@@ -191,6 +239,9 @@ const Index = (props) => {
                 <Select.Option key="2" value="LOFAR">
                   基于LOFAR谱的CNN模型
                 </Select.Option>
+                <Select.Option key="3" value="LSTM">
+                  基于MFCC的LSTM模型
+                </Select.Option>
               </Select>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Popover
@@ -208,7 +259,7 @@ const Index = (props) => {
             </div>
           </div>
           <div id="wave-timeline" style={{ marginTop: 20 }}></div>
-          <div id="waveform" style={{ backgroundColor: 'black' }}>
+          <div id="waveform" style={{ backgroundColor: '#3D3D3D' }}>
             <div className="progress progress-striped active" id="progress-bar">
               <div className="progress-bar progress-bar-info"></div>
             </div>
