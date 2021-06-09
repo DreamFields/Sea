@@ -75,7 +75,8 @@ const TestApp = (props) => {
   const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
-
+  const [picIfo, setPicIfo] = useState(undefined);
+  const [picOn, setPicOn] = useState(false);
   const SelectTip = (
     <div>
       频率选择的默认值为2048Hz
@@ -169,6 +170,7 @@ const TestApp = (props) => {
 
   const getData = () => {
     setloading(true);
+    setPicOn(false);
     request(`/v1/feature/Power`, {
       method: 'POST',
       data: {
@@ -181,6 +183,8 @@ const TestApp = (props) => {
 
         let id = res?.id;
         setid(id);
+
+        setPicIfo(res.picIfo);
 
         let xd = [];
         let allYData = [];
@@ -262,6 +266,7 @@ const TestApp = (props) => {
   const getData2 = () => {
     setloading(true);
     // console.log('send requir');
+    setPicOn(false);
     request('/v1/feature/onethree', {
       method: 'POST',
       data: { file_id: audio_id },
@@ -301,7 +306,7 @@ const TestApp = (props) => {
     });
   };
 
-  const getData3 = () => {
+  /*const getData3 = () => {
     setloading(true);
     request(`/v1/feature/Power`, {
       method: 'POST',
@@ -345,32 +350,62 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+*/
 
   return (
     <div>
       <Card>
-        <Spin spinning={loading}>
-          <ReactEcharts
-            option={getOption(
-              XType,
-              YType,
-              Data.y_data.length === 0
-                ? Data.ot_y_data[Data.label]
-                : Data.y_data[Data.label],
-              Data.x_data.length === 0
-                ? Data.ot_x_data[Data.label]
-                : Data.x_data,
-              PicType,
-            )}
-            theme="dark"
-            style={{ height: '400px' }}
-            onEvents={{
-              click: handleChartClick,
+        <div
+          style={{
+            display: !picOn ? 'block' : 'none',
+          }}
+        >
+          <Spin spinning={loading}>
+            <ReactEcharts
+              option={getOption(
+                XType,
+                YType,
+                Data.y_data.length === 0
+                  ? Data.ot_y_data[Data.label]
+                  : Data.y_data[Data.label],
+                Data.x_data.length === 0
+                  ? Data.ot_x_data[Data.label]
+                  : Data.x_data,
+                PicType,
+              )}
+              theme="dark"
+              style={{ height: '400px' }}
+              onEvents={{
+                click: handleChartClick,
+              }}
+            />
+          </Spin>
+        </div>
+        <div
+          style={{
+            display: picOn ? 'block' : 'none',
+          }}
+        >
+          <img
+            alt="MCFF"
+            src={picIfo}
+            style={{
+              //marginTop: 20,
+              width: '100%',
+              height: 400,
+              display: picIfo ? 'block' : 'none',
             }}
+            id="resImg"
           />
-        </Spin>
+        </div>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={getData3}>幅度-分贝转换</Button>
+        <Button
+          onClick={() => {
+            setPicOn(true);
+          }}
+        >
+          幅度-分贝转换
+        </Button>
         <Popover title={'提示'} content={SelectTip}>
           <Select
             defaultValue="频率选择"
@@ -389,6 +424,7 @@ const TestApp = (props) => {
         <Button onClick={getData2}>1/3频程分析</Button>
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
       </Card>
+
       {/* <PowerTable /> */}
     </div>
   );
