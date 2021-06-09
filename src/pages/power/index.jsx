@@ -202,6 +202,8 @@ const TestApp = (props) => {
             y_data: allYData,
             x_data: xd,
             label: allYData.length - 1,
+            ot_y_data: [],
+            ot_x_data: [],
           },
         });
 
@@ -256,6 +258,7 @@ const TestApp = (props) => {
         };
 
         dom.addEventListener('click', handleMove);
+        handleMove = null;
       }
       //=============================================================================================>>
 
@@ -294,8 +297,60 @@ const TestApp = (props) => {
           },
         });
 
+        //=============================================================================================>>
         let dom = document.getElementById('btnPlay');
-        dom.removeEventListener('click', handleMove);
+        duration = res.time * 1000;
+        interval = duration / yd.length;
+
+        const animationController = function () {
+          if (animationValue === true) {
+            move = setInterval(() => {
+              console.log(frame_count);
+              dispatch({
+                type: 'power/setdata',
+                payload: {
+                  label: frame_count,
+                },
+              });
+
+              frame_count++;
+              // console.log(ydata);
+              if (frame_count >= yd.length) {
+                clearInterval(move);
+                frame_count = -1;
+                animationValue = false;
+              }
+            }, interval);
+          } else {
+            clearInterval(move);
+          }
+        };
+
+        handleMove = () => {
+          if (animationValue) {
+            animationValue = false;
+          } else {
+            animationValue = true;
+          }
+          // 这里要如果frame_count是-1，直接dispatch而不是使用setInterval。
+          if (frame_count === -1) {
+            dispatch({
+              type: 'power/setdata',
+              payload: {
+                label: frame_count,
+              },
+            });
+            frame_count++;
+            animationController();
+          } else {
+            animationController();
+          }
+        };
+
+        dom.addEventListener('click', handleMove);
+
+        handleMove = null;
+        //=============================================================================================>>
 
         setXType('category');
         setYType('value');
