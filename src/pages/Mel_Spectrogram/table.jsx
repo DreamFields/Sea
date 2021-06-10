@@ -76,13 +76,14 @@ const MelTable = (props) => {
     request(`/v1/ffile/frequency/${id}`, {
       method: 'PUT',
       data: {
-        echo_length: echo_length,
-        echo_width: echo_width,
-        person_coefficient: person_coefficient,
-        signal_type: signal_type2,
-        center_frequency: center_frequency,
-        pulse_cycle: pulse_cycle,
-        pusle_width: pulse_width,
+        echo_length: table_data1.echo_length,
+        echo_width: table_data1.echo_width,
+        signal_type: table_data2.signal_type,
+        center_frequency: table_data1.center_frequency
+          ? table_data1.center_frequency
+          : table_data2.center_frequency,
+        pulse_cycle: table_data2.pulse_cycle,
+        pusle_width: table_data2.pulse_width,
       },
     }).then((res) => {
       if (res === true) {

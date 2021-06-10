@@ -12,6 +12,7 @@ import request from '@/utils/request';
 import DemonTable from './table';
 import DemonForm from '../demon_analysis2/index';
 import UploadPhotos from '../../components/UploadPhotos';
+import BladesUpload from './bladesUpload';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
@@ -38,9 +39,8 @@ const TestApp = (props) => {
   const [MaxFnum, setMaxFnum] = useState(maxFnum);
 
   const [myType, setmyType] = useState('log'); //对数还是线性
-  const [id, setid] = useState('');
+  const [id, setid] = useState(undefined);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
-
   //获取原生echart对象
   let echartRef;
   let echartInstance;
@@ -120,14 +120,13 @@ const TestApp = (props) => {
   };
   const handleChartClick = (params) => {
     if (clickController) {
-      console.log(params);
-      echartInstance = echartRef.getEchartsInstance();
-      console.log(echartInstance);
-      echartInstance.dispatchAction({
-        type: 'select',
-        // 数据项的 index，如果不指定也可以通过 name 属性根据名称指定数据项
-        dataIndex: params.dataIndex,
-      });
+      // echartInstance = echartRef.getEchartsInstance();
+      // console.log(echartInstance);
+      // echartInstance.dispatchAction({
+      //   type: 'select',
+      //   // 数据项的 index，如果不指定也可以通过 name 属性根据名称指定数据项
+      //   dataIndex: params.dataIndex,
+      // });
 
       let copy_data;
       dispatch({
@@ -221,8 +220,19 @@ const TestApp = (props) => {
       }
       if (label === 0) {
         message.error('无法计算叶片数，请选择正确的基频');
+      } else {
+        message.success('成功计算叶片数');
       }
-
+      dispatch({
+        type: 'bladesUpload/setdata',
+        payload: {},
+        callback: (state) => {
+          return {
+            shade: 'manual',
+            blades: label,
+          };
+        },
+      });
       dispatch({
         type: 'basicSoundData/setdata',
         payload: {
@@ -234,11 +244,8 @@ const TestApp = (props) => {
       });
     }
   };
+
   const autoExtract = () => {
-    console.log('maxDB' + maxDB);
-    console.log('maxF' + maxF);
-    console.log('MaxDB' + MaxDB);
-    console.log('MaxF' + MaxF);
     let copy_data;
     dispatch({
       type: 'demonTable/setdata',
@@ -312,6 +319,16 @@ const TestApp = (props) => {
     if (label === 0) {
       message.error('无法计算叶片数，请检查是否加载正确数据');
     }
+    dispatch({
+      type: 'bladesUpload/setdata',
+      payload: {},
+      callback: (state) => {
+        return {
+          shade: 'auto',
+          blades: label,
+        };
+      },
+    });
 
     dispatch({
       type: 'basicSoundData/setdata',
@@ -323,6 +340,7 @@ const TestApp = (props) => {
       },
     });
   };
+
   const getData = () => {
     setloading(true);
     request(`/v1/feature/demon_amalysis`, {
@@ -332,8 +350,9 @@ const TestApp = (props) => {
       if (res) {
         console.log('res', res);
 
-        let id = res?.id;
+        let id = res?.demon_id;
         setid(id);
+
         let ydata = [];
         let xdata = [];
         for (let i = 1, len = res.FreqV.length; i < len; i++) {
@@ -455,6 +474,7 @@ const TestApp = (props) => {
         >
           手动提取
         </Button>
+        <BladesUpload demon_id={id} />
         <UploadPhotos url={`http://47.97.152.219/v1/ffile/demon/${id}`} />
       </Card>
       <DemonTable />

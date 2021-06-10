@@ -1295,6 +1295,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                 ydata: [],
                 xdata: [],
                 label: 0,
+                shade: '',
+                blades: 0,
               },
             });
             //清除低频线谱数据
@@ -1321,6 +1323,14 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               callback: (state) => {
                 let copy_data = [];
                 return { tabledata: copy_data };
+              },
+            });
+            //清除叶片数提交数据
+            dispatch({
+              type: 'bladesUpload/setdata',
+              payload: {},
+              callback: (state) => {
+                return { blades: 0, shade: '' };
               },
             });
             //清除低频线谱谱列表数据
