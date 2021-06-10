@@ -7,9 +7,9 @@
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './edit.less';
-import { connect, Dispatch } from 'umi';
+import { connect } from 'umi';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import {
   Input,
@@ -19,7 +19,7 @@ import {
   Row,
   Col,
   Tabs,
-  Spin,
+  // Spin,
   Popover,
   message,
   Slider,

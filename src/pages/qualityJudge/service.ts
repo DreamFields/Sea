@@ -14,3 +14,10 @@ export async function FetchLevel(body: any) {
     data: body,
   });
 }
+
+export async function FetchManualLevel(body: any) {
+  return request('/v1/evaluation/manual_result', {
+    method: 'POST',
+    data: body,
+  });
+}

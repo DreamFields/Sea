@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import style from '../audioEdit/edit.less';
-import { Tabs, Button, Select, Form, message, Input } from 'antd';
+import { Tabs, Button, Select, Form, message, Alert } from 'antd';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import SoundsTable from './soundTable';
@@ -17,6 +17,14 @@ const Index = (props) => {
   const handle_type_change = (key) => {
     settab(key);
   };
+
+  useEffect(() => {
+    if (qj_data.manual_level) {
+      // console.log("manual_level", qj_data.manual_level);
+      form.setFieldsValue({ level: qj_data.manual_level });
+    }
+    return () => {};
+  }, [qj_data]);
 
   const Waveform = () => {
     var wavesurfer;
@@ -91,6 +99,12 @@ const Index = (props) => {
 
     return (
       <div style={{ backgroundColor: '#2F2F2F' }}>
+        <Alert
+          message="最终结果以手动检测为准！"
+          type="warning"
+          // showIcon
+          style={{ display: tab == '2' ? 'none' : 'block' }}
+        />
         <div style={{ marginTop: 20, overflow: 'auto' }}>
           <Button
             type="primary"
@@ -215,7 +229,7 @@ const Index = (props) => {
                       label="检测结果"
                       style={{ width: 400 }}
                     >
-                      <b>{qj_data.level ? qj_data.level : '无'}</b>
+                      <b>{qj_data.level ? qj_data.level : '暂无评价'}</b>
                     </Form.Item>
                   </Form>
                   <Button

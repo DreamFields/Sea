@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification } from 'antd';
-import {
-  Card,
-  Spin,
-  Table,
-  Popover,
-  Radio,
-  RadioGroup,
-  Space,
-  Input,
-  Select,
-} from 'antd';
+import { Button, Card, Spin, Popover, Select } from 'antd';
 import { connect } from 'umi';
 //不是按需加载的话文件太大
 //import echarts from 'echarts'
 //下面是按需加载
-import echarts from 'echarts/lib/echarts';
+// import echarts from 'echarts/lib/echarts';
 //导入折线图
 import 'echarts/lib/chart/line'; //折线图是line,饼图改为pie,柱形图改为bar
 import 'echarts/lib/component/tooltip';
@@ -24,7 +13,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
-import PowerTable from './table';
+// import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 
 const TestApp = (props) => {
@@ -50,9 +39,9 @@ const TestApp = (props) => {
     return () => {};
   }, []);
 
-  let data_Power = [];
-  let data_L = 0;
-  let x_data = [];
+  // let data_Power = [];
+  // let data_L = 0;
+  // let x_data = [];
   // 播放控制
   let animationValue = false;
   // 播放到的帧数
@@ -70,9 +59,9 @@ const TestApp = (props) => {
   const [XType, setXType] = useState('value');
   const [YType, setYType] = useState('log'); //对数还是线性
   // const [data1, setdata1] = useState(dataTest);
-  const [data, setdata] = useState(data_Power);
-  const [dataL, setdataL] = useState(data_L);
-  const [Xdata, setXdata] = useState(x_data);
+  // const [data, setdata] = useState(data_Power);
+  // const [dataL, setdataL] = useState(data_L);
+  // const [Xdata, setXdata] = useState(x_data);
   const [PicType, setPicType] = useState('line'); //柱状图还是线性图
   const [id, setid] = useState('');
   const [picIfo, setPicIfo] = useState(undefined);
