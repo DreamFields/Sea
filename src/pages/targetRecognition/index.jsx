@@ -6,7 +6,7 @@ import {
   PauseOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Statistic } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
 
@@ -46,7 +46,7 @@ const Index = (props) => {
     render() {
       return (
         <div>
-          <Typography style={{ marginLeft: '5%' }}>
+          {/* <Typography style={{ marginLeft: '5%' }}>
             <br />
             <Title key="1" level={2}>
               类型：{result1}
@@ -54,7 +54,10 @@ const Index = (props) => {
             <Title key="2" level={2}>
               置信度：{result2}
             </Title>
-          </Typography>
+          </Typography> */}
+          <Statistic title="类型" value={result1} />
+
+          <Statistic title="置信度" value={result2} />
         </div>
       );
     }
@@ -127,8 +130,8 @@ const Index = (props) => {
     }
 
     getTargetResult() {
-      setResult1('');
-      setResult2('');
+      setResult1('分类中...');
+      setResult2('计算中...');
       if (!targetInfor.audio_id) {
         message.error('请先选择音频！');
         return;
@@ -142,6 +145,8 @@ const Index = (props) => {
         }).then((res) => {
           if (!res) {
             message.error('分类失败！');
+            setResult1('');
+            setResult2('');
             return;
           }
           if (res.result1) {
@@ -344,6 +349,7 @@ const Index = (props) => {
             overflowY: 'auto',
             overflowX: 'hidden',
             border: '1px solid grey',
+            padding: '16px 16px 16px 16px',
           }}
         >
           <RightContent />
