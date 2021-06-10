@@ -1,5 +1,5 @@
 import { Effect, Reducer } from 'umi';
-import { ModifyQuality, FetchLevel } from './service';
+import { ModifyQuality, FetchLevel, FetchManualLevel } from './service';
 import { message } from 'antd';
 
 export interface StateType {
@@ -7,6 +7,7 @@ export interface StateType {
   audio_name: any;
   signal_type: any;
   level: any;
+  manual_level: any;
 }
 
 export interface ModelType {
@@ -32,6 +33,7 @@ const Model: ModelType = {
     audio_name: undefined,
     signal_type: undefined,
     level: undefined,
+    manual_level: undefined,
   },
 
   effects: {
@@ -56,19 +58,26 @@ const Model: ModelType = {
           type: 'fetchLevel',
           payload: { sid: payload.sid },
         });
+        yield put({
+          type: 'fetchManualLevel',
+          payload: { sid: payload.sid },
+        });
       } else {
         message.error('提交失败！');
       }
     },
     *fetchLevel({ payload }, { call, put }) {
-      const data = yield call(FetchLevel, payload);
-      console.log(data);
+      const data_1 = yield call(FetchLevel, payload);
+      const data_2 = yield call(FetchManualLevel, payload);
+      console.log(data_1, data_2);
 
-      if (data) {
+      if (data_1 && data_2) {
         yield put({
           type: 'save',
-          payload: { level: data },
+          payload: { level: data_1, manual_level: data_2 },
         });
+      } else {
+        message.error('获取音频评价失败！');
       }
     },
   },
