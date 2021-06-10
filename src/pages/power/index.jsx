@@ -361,52 +361,22 @@ const TestApp = (props) => {
     });
   };
 
-  /*const getData3 = () => {
+  const getDataLog = () => {
+    setPicOn(true);
     setloading(true);
-    request(`/v1/feature/Power`, {
+    request('/v1/feature/PowerPic', {
       method: 'POST',
       data: {
         file_id: audio_id,
         file_nfft: nfft,
       },
     }).then((res) => {
-      if (res) {
-        console.log('res: ', JSON.stringify(res));
-        let id = res?.id;
-        setid(id);
-
-        let xd = [];
-        let allYData = [];
-        for (let i = 0, len = res.dataIfo[0].length; i < len; i++) {
-          xd.push(i);
-        }
-        for (let i = 1, len = res.dataIfo.length; i < len; i++) {
-          allYData.push(res.dataIfo[i]);
-        }
-        allYData.push(res.dataIfo[0]);
-
-        dispatch({
-          type: 'power/setdata',
-          payload: {
-            y_data: allYData,
-            x_data: xd,
-            label: allYData.length - 1,
-          },
-        });
-
-        let dom = document.getElementById('btnPlay');
-        dom.removeEventListener('click', handleMove);
-
-        setXType('log');
-        setYType('value');
-        setPicType('line');
-      }
-
+      console.log(res);
+      console.log(JSON.stringify(res));
+      setPicIfo(res.picIfo);
       setloading(false);
     });
   };
-*/
-
   return (
     <div>
       <Card>
@@ -439,28 +409,25 @@ const TestApp = (props) => {
         <div
           style={{
             display: picOn ? 'block' : 'none',
+            height: '400px',
           }}
         >
-          <img
-            alt="MCFF"
-            src={picIfo}
-            style={{
-              //marginTop: 20,
-              width: '100%',
-              height: 400,
-              display: picIfo ? 'block' : 'none',
-            }}
-            id="resImg"
-          />
+          <Spin spinning={loading}>
+            <img
+              alt="PowerPic"
+              src={picIfo}
+              style={{
+                //marginTop: 20,
+                width: '100%',
+                height: 400,
+                display: picIfo ? 'block' : 'none',
+              }}
+              id="resImg"
+            />
+          </Spin>
         </div>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button
-          onClick={() => {
-            setPicOn(true);
-          }}
-        >
-          幅度-分贝转换
-        </Button>
+        <Button onClick={getDataLog}>幅度-分贝转换</Button>
         <Popover title={'提示'} content={SelectTip}>
           <Select
             defaultValue="频率选择"
