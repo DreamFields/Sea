@@ -16,7 +16,7 @@ const rightWidth = '22%';
 const Index = (props) => {
   const { targetInfor } = props;
   const [path, setpath] = useState(undefined);
-  const [mark, setMark] = useState('MFCC');
+  const [mark, setMark] = useState('MFCCCNN');
   const [result1, setResult1] = useState(undefined);
   const [result2, setResult2] = useState(undefined);
 
@@ -136,7 +136,7 @@ const Index = (props) => {
         message.error('请先选择音频！');
         return;
       }
-      if (mark === 'MFCC') {
+      if (mark === '"MFCCCNN') {
         request(`/v1/classification/audio_classification`, {
           method: 'POST',
           data: {
@@ -164,7 +164,33 @@ const Index = (props) => {
             targetInfor.audio_result2 = res.result2;
           }
         });
-      } else if (mark === 'LSTM') {
+      } else if (mark === 'LOFARCNN') {
+        request(`/v1/classification/lofar_classification`, {
+          method: 'POST',
+          data: {
+            sound_id: targetInfor.audio_id,
+          },
+        }).then((res) => {
+          if (!res) {
+            message.error('分类失败！');
+            return;
+          }
+          if (res.result1) {
+            setResult1(
+              res.result1 === 'FishingBoat'
+                ? '渔船'
+                : res.result1 === 'MerchantMarine'
+                ? '商船'
+                : res.result1,
+            );
+            targetInfor.audio_result1 = res.result1;
+          }
+          if (res.result2) {
+            setResult2(res.result2);
+            targetInfor.audio_result2 = res.result2;
+          }
+        });
+      } else if (mark === 'MFCCLSTM') {
         request(`/v1/classification/bi_lstm_process_single`, {
           method: 'POST',
           data: {
@@ -191,7 +217,7 @@ const Index = (props) => {
           }
         });
       } else {
-        request(`/v1/classification/lofar_classification`, {
+        request(`/v1/classification/bi_lstm_dms_predict`, {
           method: 'POST',
           data: {
             sound_id: targetInfor.audio_id,
@@ -238,14 +264,17 @@ const Index = (props) => {
                 onChange={this.handleChange}
                 value={mark}
               >
-                <Select.Option key="1" value="MFCC">
+                <Select.Option key="1" value="MFCCCNN">
                   基于MFCC的CNN模型
                 </Select.Option>
-                <Select.Option key="2" value="LOFAR">
+                <Select.Option key="2" value="LOFARCNN">
                   基于LOFAR谱的CNN模型
                 </Select.Option>
-                <Select.Option key="3" value="LSTM">
+                <Select.Option key="3" value="MFCCLSTM">
                   基于MFCC的LSTM模型
+                </Select.Option>
+                <Select.Option key="4" value="LSTM">
+                  基于调制谱的LSTM模型
                 </Select.Option>
               </Select>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
