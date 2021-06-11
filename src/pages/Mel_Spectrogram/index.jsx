@@ -32,7 +32,6 @@ const TestApp = (props) => {
   let Min = 10000;
   let Max = -10000;
   const [data, setdata] = useState(data_Mel);
-  const [id, setid] = useState('0');
   const [Xdata, setXdata] = useState(X_data);
   const [Ydata, setYdata] = useState(Y_data);
   const [time1, settime1] = useState(undefined);
@@ -43,7 +42,7 @@ const TestApp = (props) => {
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
   let xleft, xright, yleft, yright;
-
+  const [id, setid] = useState(undefined);
   const InputTip2 = (
     <div>
       分辨率需要手动输入
@@ -247,6 +246,7 @@ const TestApp = (props) => {
         resolution: resolution,
       },
     }).then((res) => {
+      setid(res.ms_id);
       settime1(res.time);
       let temp = [];
       let data = JSON.parse(res.picIfo);
@@ -330,7 +330,7 @@ const TestApp = (props) => {
           display: signal_type === 2 || signal_type === 3 ? 'block' : 'none',
         }}
       >
-        <MelTable signal_type={signal_type} />
+        <MelTable signal_type={signal_type} id={id} />
       </div>
       <div
         style={{

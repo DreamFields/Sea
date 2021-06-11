@@ -12,7 +12,7 @@ const Model = {
     ],
     tabledata2: [
       {
-        key: '1',
+        key: '2',
         frequency: undefined,
         signal_type: undefined,
         pulse_cycle: undefined,

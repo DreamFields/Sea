@@ -18,7 +18,14 @@ import {
 } from 'antd';
 
 const MelTable = (props) => {
-  const { table_data, dispatch, signal_type, table_data1, table_data2 } = props;
+  const {
+    table_data,
+    dispatch,
+    signal_type,
+    table_data1,
+    table_data2,
+    id,
+  } = props;
   const onChange = (checkedValues) => {
     let copy_data;
     dispatch({
@@ -73,27 +80,76 @@ const MelTable = (props) => {
     </div>
   );
   const dispatchEcho = () => {
-    request(`/v1/ffile/frequency/${id}`, {
-      method: 'PUT',
-      data: {
-        echo_length: table_data1.echo_length,
-        echo_width: table_data1.echo_width,
-        signal_type: table_data2.signal_type,
-        center_frequency: table_data1.center_frequency
-          ? table_data1.center_frequency
-          : table_data2.center_frequency,
-        pulse_cycle: table_data2.pulse_cycle,
-        pusle_width: table_data2.pulse_width,
-      },
-    }).then((res) => {
-      if (res === true) {
-        message.success('提交成功！');
-      } else if (res === null) {
-        message.error('提交失败，请检查图片是否加载成功！');
-      } else {
-        console.log(res.code);
-      }
-    });
+    if (table_data1 && !table_data2) {
+      request(`/v1/ffile/frequency/${id}`, {
+        method: 'PUT',
+        data: {
+          echo_length:
+            table_data1[0].echo_length !== undefined
+              ? table_data1[0].echo_length
+              : null,
+          echo_width:
+            table_data1[0].echo_width !== undefined
+              ? table_data1[0].echo_width
+              : null,
+          center_frequency: table_data1[0].frequency
+            ? table_data1[0].frequency
+            : null,
+        },
+      }).then((res) => {
+        message.success('信息提交成功');
+      });
+    } else if (!table_data1 && table_data2) {
+      request(`/v1/ffile/frequency/${id}`, {
+        method: 'PUT',
+        data: {
+          signal_type: table_data2[0].signal_type
+            ? table_data2[0].signal_type
+            : null,
+          center_frequency: table_data2[0].frequency
+            ? table_data2[0].frequency
+            : null,
+          pulse_cycle: table_data2[0].pulse_cycle
+            ? table_data2[0].pulse_cycle
+            : null,
+          pusle_width: table_data2[0].pulse_width
+            ? table_data2[0].pulse_width
+            : null,
+        },
+      }).then((res) => {
+        console.log(res);
+        message.success('信息提交成功');
+      });
+    } else if (table_data1 && table_data2) {
+      request(`/v1/ffile/frequency/${id}`, {
+        method: 'PUT',
+        data: {
+          echo_length: table_data1[0].echo_length
+            ? table_data1[0].echo_length
+            : null,
+          echo_width: table_data1[0].echo_width
+            ? table_data1[0].echo_width
+            : null,
+          signal_type: table_data2[0].signal_type
+            ? table_data2[0].signal_type
+            : null,
+          center_frequency: table_data1[0].frequency
+            ? table_data1[0].frequency
+            : table_data2[0].frequency,
+          pulse_cycle: table_data2[0].pulse_cycle
+            ? table_data2[0].pulse_cycle
+            : null,
+          pusle_width: table_data2[0].pulse_width
+            ? table_data2[0].pulse_width
+            : null,
+        },
+      }).then((res) => {
+        console.log(res);
+        message.success('信息提交成功');
+      });
+    } else {
+      message.error('没有需要提交对信息，请检查操作是否正确');
+    }
   };
   //回波的样式
   const columns1 = [
