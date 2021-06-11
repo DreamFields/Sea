@@ -416,7 +416,7 @@ const TestApp = (props) => {
           </Spin>
         </div>
         <Button onClick={getData}>功率谱分析</Button>
-        <Button onClick={getDataLog}>幅度-分贝转换</Button>
+        <Button onClick={getDataLog}>x轴对数转换转换</Button>
         <Popover title={'提示'} content={SelectTip}>
           <Select
             defaultValue="频率选择"
