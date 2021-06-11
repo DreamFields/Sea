@@ -13,6 +13,7 @@ const Index = (props) => {
   const { qj_data, dispatch } = props;
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
+  const [form_auto] = Form.useForm();
 
   const handle_type_change = (key) => {
     settab(key);
@@ -21,7 +22,7 @@ const Index = (props) => {
   useEffect(() => {
     if (qj_data.manual_level) {
       // console.log("manual_level", qj_data.manual_level);
-      form.setFieldsValue({ level: qj_data.manual_level });
+      form.setFieldsValue({ result: qj_data.manual_level });
     }
     return () => {};
   }, [qj_data]);
@@ -139,6 +140,65 @@ const Index = (props) => {
     );
   };
 
+  // 尝试自定义Form组件
+  const ManualInput = ({ value = {}, onChange }) => {
+    const [quality_level, setquality_level] = useState(undefined);
+    const [manual_quality, setmanual_quality] = useState(undefined);
+
+    const triggerChange = (changedValue) => {
+      onChange?.({
+        quality_level,
+        manual_quality,
+        ...value,
+        ...changedValue,
+      });
+    };
+
+    const onQLChange = (value) => {
+      setquality_level(value);
+
+      triggerChange({
+        quality_level: value,
+      });
+    };
+
+    const onMQChange = (value) => {
+      setmanual_quality(value);
+
+      triggerChange({
+        manual_quality: value,
+      });
+    };
+
+    return (
+      <span>
+        <Select
+          placeholder="选择评价"
+          onChange={onQLChange}
+          value={value.quality_level || quality_level}
+          // style={{width: 400}}
+        >
+          <Option value={1}>轴叶频清晰</Option>
+          <Option value={2}>轴频清晰，叶频不清晰</Option>
+          <Option value={3}>轴叶频缺失</Option>
+          <Option value={4}>轴频缺失，叶频清晰</Option>
+        </Select>
+
+        <Select
+          placeholder="选择结果"
+          value={value.manual_quality || manual_quality}
+          onChange={onMQChange}
+          style={{ marginTop: '8px' }}
+        >
+          <Option value="优">优</Option>
+          <Option value="良">良</Option>
+          <Option value="中">中</Option>
+          <Option value="劣">劣</Option>
+        </Select>
+      </span>
+    );
+  };
+
   return (
     <div>
       <div
@@ -167,13 +227,18 @@ const Index = (props) => {
                 <div style={{ display: 'flex', marginTop: '3rem' }}>
                   <Form
                     onFinish={(values) => {
-                      // console.log(values);
-                      if (values.level && qj_data.audio_id) {
+                      console.log({
+                        sid: qj_data.audio_id,
+                        ...values.result,
+                        quality: values.result.manual_quality,
+                      });
+                      if (values.result && qj_data.audio_id) {
                         dispatch({
                           type: 'qualityJudge/modifyQuality',
                           payload: {
                             sid: qj_data.audio_id,
-                            quality: values.level,
+                            ...values.result,
+                            quality: values.result.manual_quality,
                           },
                         });
                       } else {
@@ -183,16 +248,11 @@ const Index = (props) => {
                     form={form}
                   >
                     <Form.Item
-                      name="level"
+                      name="result"
                       label="手动检测"
                       style={{ width: 400 }}
                     >
-                      <Select placeholder="选择等级">
-                        <Option value="优">优</Option>
-                        <Option value="良">良</Option>
-                        <Option value="中">中</Option>
-                        <Option value="劣">劣</Option>
-                      </Select>
+                      <ManualInput />
                     </Form.Item>
                   </Form>
                   <Button
@@ -208,8 +268,20 @@ const Index = (props) => {
 
                 <div style={{ display: 'flex' }}>
                   <Form
+                    form={form_auto}
                     onFinish={(values) => {
-                      console.log(values);
+                      // console.log(values);
+                      if (values.mode && qj_data.audio_id) {
+                        dispatch({
+                          type: 'qualityJudge/fetchAutoLevel',
+                          payload: {
+                            mode: values.mode,
+                            sid: qj_data.audio_id,
+                          },
+                        });
+                      } else {
+                        message.error('您还未加载一个音频或者选择一个模式！');
+                      }
                     }}
                   >
                     <Form.Item
@@ -218,14 +290,14 @@ const Index = (props) => {
                       style={{ width: 400 }}
                     >
                       <Select placeholder="选择模式">
-                        <Option value="1">模式1</Option>
+                        <Option value="thd">THD</Option>
                         <Option value="2">模式2</Option>
                         <Option value="3">模式3</Option>
                         <Option value="4">模式4</Option>
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      name="result"
+                      // name="result"
                       label="检测结果"
                       style={{ width: 400 }}
                     >
@@ -236,15 +308,32 @@ const Index = (props) => {
                     type="primary"
                     style={{ marginLeft: '1rem' }}
                     onClick={() => {
-                      form.submit();
+                      form_auto.submit();
                     }}
                   >
                     检测
                   </Button>
+                  <Form
+                    style={{
+                      marginLeft: 8,
+                      marginRight: 8,
+                      display: qj_data.auto_level ? 'block' : 'none',
+                    }}
+                  >
+                    <Form.Item label="结果">{qj_data.auto_level}</Form.Item>
+                  </Form>
                   <Button
                     type="primary"
                     style={{ marginLeft: '1rem' }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      dispatch({
+                        type: 'qualityJudge/modifyAutoLevel',
+                        payload: {
+                          quality: qj_data.auto_level,
+                          sid: qj_data.audio_id,
+                        },
+                      });
+                    }}
                   >
                     保存结果
                   </Button>

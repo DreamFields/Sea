@@ -21,3 +21,19 @@ export async function FetchManualLevel(body: any) {
     data: body,
   });
 }
+
+export async function FetchAutoLevel(body: any) {
+  return request(`/v1/evaluation/${body.mode}`, {
+    method: 'POST',
+    data: {
+      sid: body.sid,
+    },
+  });
+}
+
+export async function ModifyAutoLevel(body: any) {
+  return request('v1/evaluation/auto', {
+    method: 'POST',
+    data: body,
+  });
+}
