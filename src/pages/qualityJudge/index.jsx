@@ -180,8 +180,8 @@ const Index = (props) => {
         >
           <Option value={1}>轴叶频清晰</Option>
           <Option value={2}>轴频清晰，叶频不清晰</Option>
-          <Option value={3}>轴叶频缺失</Option>
-          <Option value={4}>轴频缺失，叶频清晰</Option>
+          <Option value={3}>轴频缺失，叶频清晰</Option>
+          <Option value={4}>轴叶频缺失</Option>
         </Select>
 
         <Select
