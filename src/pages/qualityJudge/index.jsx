@@ -238,7 +238,7 @@ const Index = (props) => {
                           payload: {
                             sid: qj_data.audio_id,
                             ...values.result,
-                            quality: values.result.manual_quality,
+                            // quality: values.result.manual_quality,
                           },
                         });
                       } else {
