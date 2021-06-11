@@ -130,8 +130,8 @@ function custom_request(
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
     }).then((res) => {
-      console.log('res', res);
-      console.log('type res', typeof res);
+      // console.log('res', res);
+      // console.log('type res', typeof res);
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
 
