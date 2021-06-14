@@ -60,8 +60,8 @@ const Index = () => {
       </h3>
       <div>
         <AudioReactRecorder
-          canvasWidth="600"
-          canvasHeight="200"
+          // canvasWidth="100%"
+          // canvasHeight="200"
           state={recordState}
           onStop={onStop}
         />
