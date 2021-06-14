@@ -64,6 +64,8 @@ const Index = () => {
           // canvasHeight="200"
           state={recordState}
           onStop={onStop}
+          foregroundColor="#08979c"
+          backgroundColor="#434343"
         />
         <div style={{ display: 'flex', marginBottom: 16, marginTop: 16 }}>
           {
