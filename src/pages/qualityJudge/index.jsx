@@ -291,7 +291,7 @@ const Index = (props) => {
                     >
                       <Select placeholder="选择模式">
                         <Option value="thd">THD</Option>
-                        <Option value="2">模式2</Option>
+                        <Option value="se">功率谱熵</Option>
                         <Option value="3">模式3</Option>
                         <Option value="4">模式4</Option>
                       </Select>
