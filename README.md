@@ -2,13 +2,21 @@
 
 ## Getting Started
 
-Install dependencies,
+安装依赖,
+首先确保开发环境安装了node，npm，然后安装依赖时确认是管理员身份运行的终端！
 
+第一步
+```bash
+$ npm install yarn
+```
+
+第二步
 ```bash
 $ yarn
 ```
+这个过程会比较漫长，
 
-Start the dev server,
+启动服务器,
 
 ```bash
 $ yarn start
