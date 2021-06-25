@@ -323,7 +323,7 @@ const TestApp = (props) => {
             style={{ width: 120 }}
           />
         </Popover>
-        <UploadPhotos url={`http://47.97.152.219/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`https://127.0.0.1/v1/ffile/frequency/${id}`} />
       </Card>
       <div
         style={{

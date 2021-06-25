@@ -214,8 +214,8 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 onClick={() => {
                   window.location.href =
                     CookieUtil.get('role') == 3
-                      ? 'http://47.97.152.219:82/student/#/index'
-                      : 'http://47.97.152.219:82/admin/#/dashboard';
+                      ? 'https://127.0.0.1:82/student/#/index'
+                      : 'https://127.0.0.1:82/admin/#/dashboard';
                 }}
               >
                 <Space

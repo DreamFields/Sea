@@ -931,7 +931,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       const props = {
         name: 'picture',
         accept: '.jpg, .png',
-        action: `http://47.97.152.219/v1/sound/upload_picture/${sound_data.id}`,
+        action: `https://127.0.0.1/v1/sound/upload_picture/${sound_data.id}`,
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
         },

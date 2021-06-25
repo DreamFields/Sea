@@ -475,7 +475,7 @@ const TestApp = (props) => {
           手动提取
         </Button>
         <BladesUpload demon_id={id} />
-        <UploadPhotos url={`http://47.97.152.219/v1/ffile/demon/${id}`} />
+        <UploadPhotos url={`https://127.0.0.1/v1/ffile/demon/${id}`} />
       </Card>
       <DemonTable />
       <DemonForm audio_id={audio_id} />

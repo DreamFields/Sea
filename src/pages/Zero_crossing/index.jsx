@@ -238,7 +238,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>过零率分析</Button>
-        <UploadPhotos url={`http://47.97.152.219/v1/ffile/power/${id}`} />
+        <UploadPhotos url={`https://127.0.0.1/v1/ffile/power/${id}`} />
       </Card>
     </div>
   );
