@@ -30,14 +30,14 @@ const codeMessage = {
 };
 const config = {
   // mock
-  mock: 'https://127.0.0.1:3000/mock/18',
-  mock_auth: 'https://127.0.0.1:81',
+  mock: 'https://10.0.70.89:3000/mock/18',
+  mock_auth: 'https://10.0.70.89:81',
   // 测试服务器地址
-  pre: 'https://127.0.0.1',
-  pre_auth: 'https://127.0.0.1/api',
+  pre: 'https://10.0.70.89',
+  pre_auth: 'https://10.0.70.89/api',
   // 生产环境地址
-  prod: 'https://127.0.0.1',
-  prod_auth: 'https://127.0.0.1',
+  prod: 'https://10.0.70.89',
+  prod_auth: 'https://10.0.70.89',
 };
 // #endregion
 

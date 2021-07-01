@@ -1072,7 +1072,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       name: 'picture',
       accept: '.jpg, .png',
       // multiple: true,
-      action: `https://127.0.0.1/v1/sound/upload_picture/${id}`,
+      action: `https://10.0.70.89/v1/sound/upload_picture/${id}`,
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
@@ -1114,8 +1114,8 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       name: 'audio',
       accept: '.wav, .mp3',
       // multiple: true,
-      action: 'https://127.0.0.1/v1/sound/upload_sound',
-      // action: 'http://127.0.0.1:5000/v1/sound/upload_sound',
+      action: 'https://10.0.70.89/v1/sound/upload_sound',
+      // action: 'http://10.0.70.89:5000/v1/sound/upload_sound',
       // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,

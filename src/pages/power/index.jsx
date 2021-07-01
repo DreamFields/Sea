@@ -433,7 +433,7 @@ const TestApp = (props) => {
           </Select>
         </Popover>
         <Button onClick={getData2}>1/3频程分析</Button>
-        <UploadPhotos url={`https://127.0.0.1/v1/ffile/power/${id}`} />
+        <UploadPhotos url={`https://10.0.70.89/v1/ffile/power/${id}`} />
       </Card>
 
       {/* <PowerTable /> */}

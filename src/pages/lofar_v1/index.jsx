@@ -333,7 +333,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>低频线谱分析</Button>
-        <UploadPhotos url={`https://127.0.0.1/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`https://10.0.70.89/v1/ffile/frequency/${id}`} />
       </Card>
       {/* <LofarTable /> */}
     </div>

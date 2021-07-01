@@ -20,15 +20,15 @@
 export default {
   dev: {
     '/sea': {
-      target: 'https://127.0.0.1/api',
+      target: 'https://10.0.70.89/api',
       changeOrigin: true,
       pathRewrite: {
         '^/sea': '',
       },
     },
     '/api': {
-      target: 'https://127.0.0.1',
-      // target: 'http://127.0.0.1:5000',
+      target: 'https://10.0.70.89',
+      // target: 'http://10.0.70.89:5000',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
