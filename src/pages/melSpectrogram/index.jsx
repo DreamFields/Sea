@@ -19,6 +19,7 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 import MelTable from './table';
+import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name, signal_type, dispatch } = props;
@@ -323,7 +324,7 @@ const TestApp = (props) => {
             style={{ width: 120 }}
           />
         </Popover>
-        <UploadPhotos url={`https://10.0.70.89/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`${SERVICEURL}/v1/ffile/frequency/${id}`} />
       </Card>
       <div
         style={{

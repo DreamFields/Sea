@@ -32,6 +32,7 @@ import Cookies from 'js-cookie';
 import style from './style.less';
 import CookieUtil from '@/utils/cookie.js';
 import RecorderCn from '@/components/recorder_v2/index.jsx';
+import { SERVICEURL } from '@/utils/const';
 
 const { Dragger } = Upload;
 const { Option } = Select;
@@ -1072,7 +1073,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       name: 'picture',
       accept: '.jpg, .png',
       // multiple: true,
-      action: `https://10.0.70.89/v1/sound/upload_picture/${id}`,
+      action: `${SERVICEURL}/v1/sound/upload_picture/${id}`,
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
@@ -1114,7 +1115,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
       name: 'audio',
       accept: '.wav, .mp3',
       // multiple: true,
-      action: 'https://10.0.70.89/v1/sound/upload_sound',
+      action: `${SERVICEURL}/v1/sound/upload_sound`,
       // action: 'http://10.0.70.89:5000/v1/sound/upload_sound',
       // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       headers: {
@@ -1213,7 +1214,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         console.log('Failed:', errorInfo);
       }
       sumForm.submit();
-      // setCurrent(current + 1);
+      setCurrent(current + 1);
     };
 
     return (

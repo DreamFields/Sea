@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'umi';
 import { Statistic } from 'antd';
 import PowerTable from '../power/table';
-import LofarTable from '../lofar_v1/table';
+import LofarTable from '../lofarV1/table';
 
 const Index = (props) => {
   const { f_key, data, dispatch } = props;

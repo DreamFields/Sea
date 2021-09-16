@@ -10,6 +10,7 @@ import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
+import { SERVICEURL } from '../../utils/const';
 
 const TestApp = (props) => {
   const { audio_id, dispatch, Data, path } = props;
@@ -238,7 +239,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>过零率分析</Button>
-        <UploadPhotos url={`https://10.0.70.89/v1/ffile/power/${id}`} />
+        <UploadPhotos url={`${SERVICEURL}/v1/ffile/power/${id}`} />
       </Card>
     </div>
   );

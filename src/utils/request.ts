@@ -4,11 +4,11 @@
  */
 
 import { extend } from 'umi-request';
-import { history } from 'umi';
 import { notification, message } from 'antd';
 import Cookies from 'js-cookie';
 import { removeNull } from './util';
 import { string } from 'prop-types';
+import { SERVICEURL } from '@/utils/const';
 
 // #region 设置
 const codeMessage = {
@@ -30,14 +30,14 @@ const codeMessage = {
 };
 const config = {
   // mock
-  mock: 'https://10.0.70.89:3000/mock/18',
-  mock_auth: 'https://10.0.70.89:81',
+  mock: 'mock url',
+  mock_auth: 'mock auth',
   // 测试服务器地址
-  pre: 'https://10.0.70.89',
-  pre_auth: 'https://10.0.70.89/api',
+  pre: SERVICEURL,
+  pre_auth: `${SERVICEURL}/api`,
   // 生产环境地址
-  prod: 'https://10.0.70.89',
-  prod_auth: 'https://10.0.70.89',
+  prod: SERVICEURL,
+  prod_auth: SERVICEURL,
 };
 // #endregion
 
@@ -130,8 +130,6 @@ function custom_request(
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
     }).then((res) => {
-      // console.log('res', res);
-      // console.log('type res', typeof res);
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
 

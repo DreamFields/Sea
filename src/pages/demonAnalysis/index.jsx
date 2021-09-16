@@ -10,9 +10,10 @@ import 'echarts/lib/component/markPoint';
 import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import DemonTable from './table';
-import DemonForm from '../demon_analysis2/index';
+import DemonForm from '../demonAnalysis2/index';
 import UploadPhotos from '../../components/UploadPhotos';
 import BladesUpload from './bladesUpload';
+import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
@@ -475,7 +476,7 @@ const TestApp = (props) => {
           手动提取
         </Button>
         <BladesUpload demon_id={id} />
-        <UploadPhotos url={`https://10.0.70.89/v1/ffile/demon/${id}`} />
+        <UploadPhotos url={`${SERVICEURL}/v1/ffile/demon/${id}`} />
       </Card>
       <DemonTable />
       <DemonForm audio_id={audio_id} />

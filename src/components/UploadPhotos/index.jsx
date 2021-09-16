@@ -2,6 +2,7 @@ import React from 'react';
 import { Upload, Button, message, Popover } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Cookies from '../../utils/cookie';
+
 const uploadTip = (
   <div>
     上传图片之前要先下载当前图片

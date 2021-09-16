@@ -14,21 +14,18 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
-
-//mock: 'http://39.96.191.139:3000/mock/18',
-
+import { SERVICEURL } from './src/utils/const';
 export default {
   dev: {
     '/sea': {
-      target: 'https://10.0.70.89/api',
+      target: `${SERVICEURL}/api`,
       changeOrigin: true,
       pathRewrite: {
         '^/sea': '',
       },
     },
     '/api': {
-      target: 'https://10.0.70.89',
-      // target: 'http://10.0.70.89:5000',
+      target: SERVICEURL,
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

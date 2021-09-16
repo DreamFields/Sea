@@ -19,6 +19,7 @@ import ReactEcharts from 'echarts-for-react';
 import request from '@/utils/request';
 import LofarTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
+import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   // 播放控制
   let animationValue = false;
@@ -333,7 +334,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>低频线谱分析</Button>
-        <UploadPhotos url={`https://10.0.70.89/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`${SERVICEURL}/v1/ffile/frequency/${id}`} />
       </Card>
       {/* <LofarTable /> */}
     </div>

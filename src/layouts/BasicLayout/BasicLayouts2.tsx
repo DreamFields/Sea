@@ -41,6 +41,7 @@ import CookieUtil from '@/utils/cookie.js';
 import Cookies from 'js-cookie';
 import request from '@/utils/request';
 import moment from 'moment';
+import { SERVICEURL } from '@/utils/const';
 const { Header, Sider, Footer, Content } = Layout;
 
 const { Option } = Select;
@@ -938,7 +939,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       const props = {
         name: 'picture',
         accept: '.jpg, .png',
-        action: `https://10.0.70.89/v1/sound/upload_picture/${sound_data?.id}`,
+        action: `${SERVICEURL}/v1/sound/upload_picture/${sound_data?.id}`,
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
         },

@@ -36,9 +36,7 @@ export default defineConfig({
   },
   dynamicImport: {},
   dva: {},
+  devtool: 'source-map',
   proxy: proxy[REACT_APP_ENV || 'dev'],
-  // routes: [
-  //   { path: '/', component: '@/pages/index' },
-  // ],
   title: '水声数据库系统',
 });

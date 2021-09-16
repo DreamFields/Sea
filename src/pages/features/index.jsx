@@ -17,10 +17,10 @@ import { Input, Button, Form, Table } from 'antd';
 import axios from 'axios';
 import request from '@/utils/request';
 import PowerApp from '../power/index.jsx';
-import DemonApp from '../demon_analysis/index';
-import MelApp from '../Mel_Spectrogram/index';
-import LofarApp from '../lofar_v1/index';
-import ZeroApp from '../Zero_crossing/index';
+import DemonApp from '../demonAnalysis/index';
+import MelApp from '../melSpectrogram/index';
+import LofarApp from '../lofarV1/index';
+import ZeroApp from '../zeroCrossing/index';
 import MCFFApp from '../MCFF/index';
 import BasicSoundData from './basicSoundData';
 
