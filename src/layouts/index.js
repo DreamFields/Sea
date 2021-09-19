@@ -1,4 +1,4 @@
-import BasicLayouts from './BasicLayout/BasicLayouts2';
+import BasicLayouts from './BasicLayout/BasicLayouts';
 import UserLayout from './UserLayouts.js';
 import React from 'react';
 import zhCN from 'antd/lib/locale/zh_CN';

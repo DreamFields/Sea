@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import style from '../audioEdit/edit.less';
-import { Tabs, Button, Select, Form, message, Alert } from 'antd';
+import { Tabs, Button, Select, Form, message, Alert, Radio } from 'antd';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import SoundsTable from './soundTable';
@@ -154,47 +154,56 @@ const Index = (props) => {
       });
     };
 
-    const onQLChange = (value) => {
-      setquality_level(value);
+    const qlOptions = [
+      { label: "轴叶频清晰", value: 1 },
+      { label: "轴频清晰，叶频不清晰", value: 2 },
+      { label: "轴频缺失，叶频清晰", value: 3 },
+      { label: "轴叶频缺失", value: 4 },
+    ]
+
+    const mqOptions = [
+      { label: "优", value: "优"},
+      { label: "良", value: "良"},
+      { label: "中", value: "中"},
+      { label: "劣", value: "劣"},
+    ]
+
+    const onQLChange = (e) => {
+      setquality_level(e.target.value);
 
       triggerChange({
-        quality_level: value,
+        quality_level: e.target.value,
       });
     };
 
-    const onMQChange = (value) => {
-      setmanual_quality(value);
+    const onMQChange = (e) => {
+      setmanual_quality(e.target.value);
 
       triggerChange({
-        manual_quality: value,
+        manual_quality: e.target.value,
       });
     };
 
     return (
       <span>
-        <Select
-          placeholder="选择评价"
+        <Radio.Group 
           onChange={onQLChange}
           value={value.quality_level || quality_level}
-          // style={{width: 400}}
+          optionType="button"
+          buttonStyle="solid"
+          options={qlOptions}
         >
-          <Option value={1}>轴叶频清晰</Option>
-          <Option value={2}>轴频清晰，叶频不清晰</Option>
-          <Option value={3}>轴频缺失，叶频清晰</Option>
-          <Option value={4}>轴叶频缺失</Option>
-        </Select>
-
-        <Select
-          placeholder="选择结果"
-          value={value.manual_quality || manual_quality}
+        </Radio.Group>
+        <br/>
+        <Radio.Group 
           onChange={onMQChange}
+          value={value.manual_quality || manual_quality}
           style={{ marginTop: '8px' }}
+          options={mqOptions}
+          optionType="button"
+          buttonStyle="solid"
         >
-          <Option value="优">优</Option>
-          <Option value="良">良</Option>
-          <Option value="中">中</Option>
-          <Option value="劣">劣</Option>
-        </Select>
+        </Radio.Group>
       </span>
     );
   };
@@ -226,48 +235,6 @@ const Index = (props) => {
                 <Waveform />
                 <div style={{ display: 'flex', marginTop: '3rem' }}>
                   <Form
-                    onFinish={(values) => {
-                      console.log({
-                        sid: qj_data.audio_id,
-                        ...values.result,
-                        quality: values.result.manual_quality,
-                      });
-                      if (values.result && qj_data.audio_id) {
-                        dispatch({
-                          type: 'qualityJudge/modifyQuality',
-                          payload: {
-                            sid: qj_data.audio_id,
-                            ...values.result,
-                            // quality: values.result.manual_quality,
-                          },
-                        });
-                      } else {
-                        message.error('您还未加载一个音频或者选择一个评级！');
-                      }
-                    }}
-                    form={form}
-                  >
-                    <Form.Item
-                      name="result"
-                      label="手动检测"
-                      style={{ width: 400 }}
-                    >
-                      <ManualInput />
-                    </Form.Item>
-                  </Form>
-                  <Button
-                    type="primary"
-                    style={{ marginLeft: '1rem' }}
-                    onClick={() => {
-                      form.submit();
-                    }}
-                  >
-                    提交
-                  </Button>
-                </div>
-
-                <div style={{ display: 'flex' }}>
-                  <Form
                     form={form_auto}
                     onFinish={(values) => {
                       // console.log(values);
@@ -292,16 +259,7 @@ const Index = (props) => {
                       <Select placeholder="选择模式">
                         <Option value="thd">THD</Option>
                         <Option value="se">功率谱熵</Option>
-                        <Option value="3">模式3</Option>
-                        <Option value="4">模式4</Option>
                       </Select>
-                    </Form.Item>
-                    <Form.Item
-                      // name="result"
-                      label="检测结果"
-                      style={{ width: 400 }}
-                    >
-                      <b>{qj_data.level ? qj_data.level : '暂无评价'}</b>
                     </Form.Item>
                   </Form>
                   <Button
@@ -322,20 +280,54 @@ const Index = (props) => {
                   >
                     <Form.Item label="结果">{qj_data.auto_level}</Form.Item>
                   </Form>
+                </div>
+                <div style={{ display: 'flex' }}>
+                  <Form
+                    onFinish={(values) => {
+                      console.log({
+                        sid: qj_data.audio_id,
+                        ...values.result,
+                        quality: values.result.manual_quality,
+                      });
+                      if (values.result && qj_data.audio_id) {
+                        dispatch({
+                          type: 'qualityJudge/modifyQuality',
+                          payload: {
+                            sid: qj_data.audio_id,
+                            ...values.result,
+                            // quality: values.result.manual_quality,
+                          },
+                        });
+                      } else {
+                        message.error('您还未加载一个音频或者选择一个评级！');
+                      }
+                    }}
+                    form={form}
+                  >
+                    <Form.Item
+                      name="result"
+                      label="手动检测"
+                      style={{ width: 650 }}
+                    >
+                      <ManualInput />
+                    </Form.Item>
+                    <Form.Item
+                      // name="result"
+                      label="检测结果"
+                      style={{ width: 400 }}
+                    >
+                      <b>{qj_data.level ? qj_data.level : '暂无评价'}</b>
+                    </Form.Item>
+                  </Form>
+                  <br/>
                   <Button
                     type="primary"
-                    style={{ marginLeft: '1rem' }}
+                    style={{ marginLeft: '.5rem' }}
                     onClick={() => {
-                      dispatch({
-                        type: 'qualityJudge/modifyAutoLevel',
-                        payload: {
-                          quality: qj_data.auto_level,
-                          sid: qj_data.audio_id,
-                        },
-                      });
+                      form.submit();
                     }}
                   >
-                    保存结果
+                    提交
                   </Button>
                 </div>
               </div>

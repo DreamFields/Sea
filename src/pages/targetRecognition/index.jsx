@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { connect, Dispatch } from 'umi';
-import { Menu, Popover, Typography, Select, message } from 'antd';
+import { connect } from 'umi';
+import { Popover, Select, message, Button, Statistic } from 'antd';
 import {
   PlayCircleOutlined,
   PauseOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Input, Button, Form, Statistic } from 'antd';
-import axios from 'axios';
 import request from '@/utils/request';
 
-const { Title, Paragraph, Text, Link } = Typography;
 const rightWidth = '22%';
 
 const Index = (props) => {
@@ -46,17 +43,7 @@ const Index = (props) => {
     render() {
       return (
         <div>
-          {/* <Typography style={{ marginLeft: '5%' }}>
-            <br />
-            <Title key="1" level={2}>
-              类型：{result1}
-            </Title>
-            <Title key="2" level={2}>
-              置信度：{result2}
-            </Title>
-          </Typography> */}
           <Statistic title="类型" value={result1} />
-
           <Statistic title="置信度" value={result2} />
         </div>
       );
@@ -99,6 +86,7 @@ const Index = (props) => {
         wavesurfer.load(path);
       }
 
+      let btnPlay = document.getElementById('btnPlay');
       btnPlay.addEventListener('click', function () {
         wavesurfer.playPause();
       });
@@ -117,11 +105,15 @@ const Index = (props) => {
           progressDiv.style.display = 'none';
         };
 
+        hideProgress();
+
         wavesurfer.on('loading', showProgress);
         wavesurfer.on('ready', hideProgress);
         wavesurfer.on('destroy', hideProgress);
         wavesurfer.on('error', hideProgress);
       })();
+
+      return () => {};
     }
 
     handleChange(value) {
