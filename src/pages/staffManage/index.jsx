@@ -1,10 +1,10 @@
+/* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Card,
   Col,
   Row,
-  Tag,
   Tabs,
   List,
   Popconfirm,
@@ -17,7 +17,6 @@ import {
 import request from '@/utils/request';
 import {
   EditOutlined,
-  EllipsisOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 
@@ -57,7 +56,7 @@ const Index = () => {
       }
     }, [visible]);
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = (values) => {
       // console.log({...values, id: id});
       request('/v1/admin/pwadmin', {
         method: 'PUT',
@@ -168,7 +167,7 @@ const Index = () => {
               <List
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={instructors}
-                renderItem={(item: any) => (
+                renderItem={(item) => (
                   <List.Item>
                     <Card
                       bordered={false}
@@ -223,7 +222,7 @@ const Index = () => {
               <List
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={students}
-                renderItem={(item: any) => (
+                renderItem={(item) => (
                   <List.Item>
                     <Card
                       bordered={false}

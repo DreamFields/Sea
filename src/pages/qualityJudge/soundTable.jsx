@@ -1,9 +1,8 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import { connect } from 'umi';
-import { Button, Table, Form, Select } from 'antd';
-
-const { Option } = Select;
+import { Button, Table, Form, Radio, message } from 'antd';
+import request from '@/utils/request';
 
 const columns = [
   {
@@ -38,27 +37,41 @@ const Index = (props) => {
     onChange: onSelectChange,
   };
 
+  const modeOptions = [
+    {label: "THD", value: 'thd'},
+    {label: "功率谱熵", value: "se"},
+  ]
+
   return (
     <>
       <div style={{ display: 'flex', marginTop: '1rem' }}>
         <Form
-          onFinish={(values) => {
-            console.log(values);
+          onFinish={async (values) => {
+            if(!values.mode) {
+              message.error("请选择自动检测模式！");
+              return;
+            }
+            // console.log(values, selectedRowKeys);
+            const detectRes = await request(`/v1/evaluation/auto_${values.mode}`, {
+              method: 'POST',
+              data: {
+                sid: selectedRowKeys,
+              },
+            });
+            alert(JSON.stringify(detectRes));
           }}
           form={form}
         >
           <Form.Item name="mode" label="批量自动检测" style={{ width: 400 }}>
-            <Select placeholder="选择模式">
-              <Option value="1">模式1</Option>
-              <Option value="2">模式2</Option>
-              <Option value="3">模式3</Option>
-              <Option value="4">模式4</Option>
-            </Select>
+            <Radio.Group 
+              optionType="button"
+              buttonStyle="solid"
+              options={modeOptions}
+            />
           </Form.Item>
         </Form>
         <Button
           type="primary"
-          style={{ marginLeft: '1rem' }}
           onClick={() => {
             form.submit();
           }}
@@ -80,7 +93,6 @@ const Index = (props) => {
 };
 
 const mapStateToProps = ({ loading, soundList }) => {
-  // console.log(loading)
   return {
     soundListLoading: loading.effects['soundList/fetchSoundList'],
     sound_list: soundList.sound_list,

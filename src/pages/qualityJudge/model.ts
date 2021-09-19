@@ -4,7 +4,6 @@ import {
   FetchLevel,
   FetchManualLevel,
   FetchAutoLevel,
-  ModifyAutoLevel,
 } from './service';
 import { message } from 'antd';
 
@@ -25,7 +24,6 @@ export interface ModelType {
     modifyQuality: Effect;
     fetchLevel: Effect;
     fetchAutoLevel: Effect;
-    modifyAutoLevel: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -106,18 +104,6 @@ const Model: ModelType = {
         message.success('自动评价成功！');
       } else {
         message.error('自动评价失败！');
-      }
-    },
-    *modifyAutoLevel({ payload }, { call, put }) {
-      const data = yield call(ModifyAutoLevel, payload);
-      if (data) {
-        yield put({
-          type: 'fetchLevel',
-          payload: { sid: payload.sid },
-        });
-        message.success('保存自动评价结果成功！');
-      } else {
-        message.error('保存自动评价结果失败！');
       }
     },
   },

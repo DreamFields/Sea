@@ -1,30 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Popover, Select, message, Button, Statistic } from 'antd';
-import {
-  PlayCircleOutlined,
-  PauseOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
+import { Button } from 'antd';
+import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
+import style from '../audioEdit/edit.less';
 import request from '@/utils/request';
-
-const rightWidth = '22%';
+import ModeCard from './modeCard';
 
 const Index = (props) => {
   const { targetInfor } = props;
   const [path, setpath] = useState(undefined);
-  const [mark, setMark] = useState('MFCCCNN');
-  const [result1, setResult1] = useState(undefined);
-  const [result2, setResult2] = useState(undefined);
-
-  useEffect(() => {
-    console.log('targetInfor.audio_id', targetInfor);
-    targetInfor.audio_result1 = undefined;
-    setResult1(undefined);
-    setResult2(undefined);
-    targetInfor.audio_result2 = undefined;
-    return () => {};
-  }, [targetInfor.audio_id]);
 
   useEffect(() => {
     console.log('targetInfor', targetInfor);
@@ -32,26 +16,14 @@ const Index = (props) => {
       request(`/v1/file/now_version_url/${targetInfor.audio_id}`, {
         method: 'GET',
       }).then((res) => {
-        // console.log('版本文件路径', res.url);
         setpath(res?.url);
       });
     }
     return () => {};
   }, [targetInfor]);
 
-  class RightContent extends React.Component {
-    render() {
-      return (
-        <div>
-          <Statistic title="类型" value={result1} />
-          <Statistic title="置信度" value={result2} />
-        </div>
-      );
-    }
-  }
-
-  class Waveform extends React.Component {
-    componentDidMount() {
+  const Waveform = () => {
+    useEffect(() => {
       var wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: 'skyblue',
@@ -114,222 +86,49 @@ const Index = (props) => {
       })();
 
       return () => {};
-    }
+    }, []);
 
-    handleChange(value) {
-      console.log(value);
-      setMark(value);
-    }
-
-    getTargetResult() {
-      setResult1('分类中...');
-      setResult2('计算中...');
-      if (!targetInfor.audio_id) {
-        message.error('请先选择音频！');
-        return;
-      }
-      if (mark === '"MFCCCNN') {
-        request(`/v1/classification/audio_classification`, {
-          method: 'POST',
-          data: {
-            sound_id: targetInfor.audio_id,
-          },
-        }).then((res) => {
-          if (!res) {
-            message.error('分类失败！');
-            setResult1('');
-            setResult2('');
-            return;
-          }
-          if (res.result1) {
-            setResult1(
-              res.result1 === 'FishingBoat'
-                ? '渔船'
-                : res.result1 === 'MerchantMarine'
-                ? '商船'
-                : res.result1,
-            );
-            targetInfor.audio_result1 = res.result1;
-          }
-          if (res.result2) {
-            setResult2(res.result2);
-            targetInfor.audio_result2 = res.result2;
-          }
-        });
-      } else if (mark === 'LOFARCNN') {
-        request(`/v1/classification/lofar_classification`, {
-          method: 'POST',
-          data: {
-            sound_id: targetInfor.audio_id,
-          },
-        }).then((res) => {
-          if (!res) {
-            message.error('分类失败！');
-            return;
-          }
-          if (res.result1) {
-            setResult1(
-              res.result1 === 'FishingBoat'
-                ? '渔船'
-                : res.result1 === 'MerchantMarine'
-                ? '商船'
-                : res.result1,
-            );
-            targetInfor.audio_result1 = res.result1;
-          }
-          if (res.result2) {
-            setResult2(res.result2);
-            targetInfor.audio_result2 = res.result2;
-          }
-        });
-      } else if (mark === 'MFCCLSTM') {
-        request(`/v1/classification/bi_lstm_process_single`, {
-          method: 'POST',
-          data: {
-            sound_id: targetInfor.audio_id,
-          },
-        }).then((res) => {
-          if (!res) {
-            message.error('分类失败！');
-            return;
-          }
-          if (res.result1) {
-            setResult1(
-              res.result1 === 'FishingBoat'
-                ? '渔船'
-                : res.result1 === 'MerchantMarine'
-                ? '商船'
-                : res.result1,
-            );
-            targetInfor.audio_result1 = res.result1;
-          }
-          if (res.result2) {
-            setResult2(res.result2);
-            targetInfor.audio_result2 = res.result2;
-          }
-        });
-      } else {
-        request(`/v1/classification/bi_lstm_dms_predict`, {
-          method: 'POST',
-          data: {
-            sound_id: targetInfor.audio_id,
-          },
-        }).then((res) => {
-          if (!res) {
-            message.error('分类失败！');
-            return;
-          }
-          if (res.result1) {
-            setResult1(
-              res.result1 === 'FishingBoat'
-                ? '渔船'
-                : res.result1 === 'MerchantMarine'
-                ? '商船'
-                : res.result1,
-            );
-            targetInfor.audio_result1 = res.result1;
-          }
-          if (res.result2) {
-            setResult2(res.result2);
-            targetInfor.audio_result2 = res.result2;
-          }
-        });
-      }
-    }
-
-    render() {
-      return (
-        <div style={{ backgroundColor: '#2F2F2F' }}>
-          <div style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>
-            <Button
-              type="primary"
-              onClick={this.start}
-              id="btnPlay"
-              style={{ fontSize: 15 }}
-            >
-              <PlayCircleOutlined />/<PauseOutlined />
-            </Button>
-            <div style={{ fontSize: 15, float: 'right' }}>
-              <Select
-                // defaultValue="MFCC"
-                //style={{ float: 'right' }}
-                onChange={this.handleChange}
-                value={mark}
-              >
-                <Select.Option key="1" value="MFCCCNN">
-                  基于MFCC的CNN模型
-                </Select.Option>
-                <Select.Option key="2" value="LOFARCNN">
-                  基于LOFAR谱的CNN模型
-                </Select.Option>
-                <Select.Option key="3" value="MFCCLSTM">
-                  基于MFCC的LSTM模型
-                </Select.Option>
-                <Select.Option key="4" value="LSTM">
-                  基于调制谱的LSTM模型
-                </Select.Option>
-              </Select>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Popover
-                content="先在左侧选择音频，然后选择模型，再点击分类"
-                title="分类"
-              >
-                <Button
-                  type="primary"
-                  style={{ fontSize: 15 }}
-                  onClick={this.getTargetResult}
-                >
-                  分类
-                </Button>
-              </Popover>
-            </div>
-          </div>
-          <div id="wave-timeline" style={{ marginTop: 20 }}></div>
-          <div id="waveform" style={{ backgroundColor: '#3D3D3D' }}>
-            <div className="progress progress-striped active" id="progress-bar">
-              <div className="progress-bar progress-bar-info"></div>
-            </div>
-          </div>
-          <div
-            style={{ width: '100%', height: 200, display: 'block' }}
-            id="divshow_0"
-          >
-            <img
-              style={{ width: '100%', height: 200, display: 'none' }}
-              id="resImg"
-            />
-            <div style={{ fontSize: 40, display: 'none' }} id="divLoading">
-              <LoadingOutlined style={{ marginTop: 80, marginLeft: 366 }} />
-            </div>
+    return (
+      <div style={{ backgroundColor: '#2F2F2F' }}>
+        <div style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>
+          <Button type="primary" id="btnPlay" style={{ fontSize: 15 }}>
+            <PlayCircleOutlined />/<PauseOutlined />
+          </Button>
+        </div>
+        <div id="wave-timeline" style={{ marginTop: 20 }}></div>
+        <div id="waveform" style={{ backgroundColor: '#3D3D3D' }}>
+          <div className="progress progress-striped active" id="progress-bar">
+            <div className="progress-bar progress-bar-info"></div>
           </div>
         </div>
-      );
-    }
-  }
+      </div>
+    );
+  };
 
-  const MainContent = () => {
-    return (
-      <div
-        className="centerContent"
-        style={{
-          width: '74%',
-          float: 'left',
-          height: 1060,
-          backgroundColor: '#2F2F2F',
-          marginLeft: '1rem',
-          marginTop: 20,
-          borderRadius: '4px',
-        }}
-      >
-        <div
-          style={{
-            height: '96%',
-            width: '96%',
-            marginLeft: '2%',
-            marginTop: '2%',
-          }}
-        >
-          <h3 style={{ width: '100%' }}>目标自动识别</h3>
+  const infos = [
+    {
+      requestUrl: '/v1/classification/audio_classification',
+      title: '基于MFCC的CNN模型',
+    },
+    {
+      requestUrl: '/v1/classification/lofar_classification',
+      title: '基于LOFAR谱的CNN模型',
+    },
+    {
+      requestUrl: '/v1/classification/bi_lstm_process_single',
+      title: '基于MFCC的LSTM模型',
+    },
+    {
+      requestUrl: '/v1/classification/bi_lstm_dms_predict',
+      title: '基于调制谱的LSTM模型',
+    },
+  ];
+
+  return (
+    <div>
+      <div className={style.rightContent} style={{ height: 1200 }}>
+        <div className={style.rightCenter} style={{ height: 1150 }}>
+          <h3>分类识别</h3>
           <div
             style={{
               backgroundColor: 'white',
@@ -339,48 +138,27 @@ const Index = (props) => {
               marginBottom: 5,
             }}
           ></div>
-          <h4 id="fileName" style={{ width: '100%' }}>
-            从左栏选取文件
-          </h4>
           <Waveform />
+          <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+            {infos.map((item) => {
+              return (
+                <div key={item.requestUrl} style={{ width: '45%', marginRight: '5%', marginTop: 32 }}>
+                  <ModeCard
+                    sid={targetInfor.audio_id}
+                    title={item.title}
+                    requestUrl={item.requestUrl}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    );
-  };
-
-  return (
-    <>
-      <MainContent />
-      <div
-        style={{
-          width: rightWidth,
-          height: 390,
-          float: 'left',
-          marginTop: 15,
-          marginLeft: '1rem',
-        }}
-      >
-        <div style={{ color: 'white', fontSize: 20 }}>分类结果</div>
-        <div
-          style={{
-            backgroundColor: 'black',
-            width: '100%',
-            height: 340,
-            float: 'left',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            border: '1px solid grey',
-            padding: '16px 16px 16px 16px',
-          }}
-        >
-          <RightContent />
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 
-const mapStateToProps = ({ target, loading }) => {
+const mapStateToProps = ({ target }) => {
   return {
     targetInfor: target,
   };

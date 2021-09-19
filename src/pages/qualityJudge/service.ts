@@ -30,10 +30,3 @@ export async function FetchAutoLevel(body: any) {
     },
   });
 }
-
-export async function ModifyAutoLevel(body: any) {
-  return request('v1/evaluation/auto', {
-    method: 'POST',
-    data: body,
-  });
-}

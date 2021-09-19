@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import style from '../audioEdit/edit.less';
-import { Tabs, Button, Select, Form, message, Alert, Radio } from 'antd';
+import { Tabs, Button, Form, message, Alert, Radio } from 'antd';
 import { PlayCircleOutlined, PauseOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import SoundsTable from './soundTable';
+import EvaluationCard from './EvaluationCard';
 
 const { TabPane } = Tabs;
-const { Option } = Select;
 
 const Index = (props) => {
   const { qj_data, dispatch } = props;
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
-  const [form_auto] = Form.useForm();
 
   const handle_type_change = (key) => {
     settab(key);
@@ -208,15 +207,17 @@ const Index = (props) => {
     );
   };
 
+  const heights = [1000, 900];
+
   return (
     <div>
       <div
         className={style.rightContent}
-        style={{ height: tab === '1' ? 700 : 900 }}
+        style={{ height: heights[Number(tab)-1] }}
       >
         <div
           className={style.rightCenter}
-          style={{ height: tab === '1' ? 650 : 850 }}
+          style={{ height: heights[Number(tab)-1] - 50 }}
         >
           <h3>质量评价</h3>
           <div
@@ -231,57 +232,23 @@ const Index = (props) => {
 
           <Tabs activeKey={tab} onChange={handle_type_change}>
             <TabPane tab="单文件" key="1">
-              <div className={style.showWave}>
+              <div style={{ width: "100%" }}>
                 <Waveform />
-                <div style={{ display: 'flex', marginTop: '3rem' }}>
-                  <Form
-                    form={form_auto}
-                    onFinish={(values) => {
-                      // console.log(values);
-                      if (values.mode && qj_data.audio_id) {
-                        dispatch({
-                          type: 'qualityJudge/fetchAutoLevel',
-                          payload: {
-                            mode: values.mode,
-                            sid: qj_data.audio_id,
-                          },
-                        });
-                      } else {
-                        message.error('您还未加载一个音频或者选择一个模式！');
-                      }
-                    }}
-                  >
-                    <Form.Item
-                      name="mode"
-                      label="自动检测"
-                      style={{ width: 400 }}
-                    >
-                      <Select placeholder="选择模式">
-                        <Option value="thd">THD</Option>
-                        <Option value="se">功率谱熵</Option>
-                      </Select>
-                    </Form.Item>
-                  </Form>
-                  <Button
-                    type="primary"
-                    style={{ marginLeft: '1rem' }}
-                    onClick={() => {
-                      form_auto.submit();
-                    }}
-                  >
-                    检测
-                  </Button>
-                  <Form
-                    style={{
-                      marginLeft: 8,
-                      marginRight: 8,
-                      display: qj_data.auto_level ? 'block' : 'none',
-                    }}
-                  >
-                    <Form.Item label="结果">{qj_data.auto_level}</Form.Item>
-                  </Form>
+                <div style={{ display: 'flex', marginTop: '32px' }}>
+                  <p><b>自动检测：</b></p>
+                  <EvaluationCard
+                    sid={qj_data.audio_id}
+                    mode="thd"
+                    title="THD"
+                  />
+                  <EvaluationCard
+                    sid={qj_data.audio_id}
+                    mode="se"
+                    title="功率谱熵"
+                  />
                 </div>
-                <div style={{ display: 'flex' }}>
+
+                <div style={{ display: 'flex', marginTop: '32px' }}>
                   <Form
                     onFinish={(values) => {
                       console.log({
@@ -319,10 +286,8 @@ const Index = (props) => {
                       <b>{qj_data.level ? qj_data.level : '暂无评价'}</b>
                     </Form.Item>
                   </Form>
-                  <br/>
                   <Button
                     type="primary"
-                    style={{ marginLeft: '.5rem' }}
                     onClick={() => {
                       form.submit();
                     }}
