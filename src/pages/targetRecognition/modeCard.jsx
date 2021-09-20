@@ -47,11 +47,11 @@ const Index = (props) => {
   return (
     <Spin spinning={loading}>
       <Card title={title}>
-        <div style={{ minHeight: 200, width: 380, overflowY: "auto" }}>
+        <div style={{ height: 300, width: 380, overflowY: "auto" }}>
           <div
             style={{
               width: 370,
-              height: 150,
+              minHeight: 150,
               background: '#3D3D3D',
               marginBottom: '32px'
             }}
