@@ -50,13 +50,13 @@ const Index = (props) => {
         <div style={{ minHeight: 200, width: 380, overflowY: "auto" }}>
           <div
             style={{
-              width: '100%',
+              width: 370,
               height: 150,
               background: '#3D3D3D',
               marginBottom: '32px'
             }}
           >
-            <img src={imgSrc} style={{width: 380}} />
+            <img src={imgSrc} style={{width: 370}} />
           </div>
           <div>
           <Popover

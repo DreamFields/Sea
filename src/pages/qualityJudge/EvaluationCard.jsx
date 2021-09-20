@@ -22,27 +22,30 @@ const Index = (props) => {
     });
     console.log("detectRes", detectRes);
     setLoading(false);
-    setResult(detectRes);
+    setResult(detectRes.result);
+    setImgSrc(detectRes.picinfo)
   };
 
   return (
     <Spin spinning={loading}>
       <Card title={title}>
-        <div style={{ height: 200, width: 380, overflowY: "auto" }}>
+        <div style={{ height: 220, width: 380, overflowY: "auto" }}>
           <div
             style={{
-              width: '100%',
-              height: 150,
+              width: 370,
+              minHeight: 150,
               background: '#3D3D3D',
               marginBottom: '32px'
             }}
           >
-            <img src={imgSrc} style={{width: 380}} />
+            <img src={imgSrc} style={{width: 370}} />
           </div>
-          <span>
-            <Button type="primary" onClick={fetchLevel}>检测</Button>
-            <span style={{ marginLeft: 16 }}>检测结果：{result}</span>
-          </span>
+          <div>
+            <span>
+              <Button type="primary" onClick={fetchLevel}>检测</Button>
+              <span style={{ marginLeft: 16 }}>检测结果：{result}</span>
+            </span>
+          </div>
         </div>
       </Card>
     </Spin>
