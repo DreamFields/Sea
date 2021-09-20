@@ -16,7 +16,7 @@ export async function FetchLevel(body: any) {
 }
 
 export async function FetchManualLevel(body: any) {
-  return request('/v1/evaluation/manual_result', {
+  return request('/v1/evaluation/result', {
     method: 'POST',
     data: body,
   });

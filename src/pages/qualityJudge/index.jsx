@@ -10,13 +10,26 @@ import EvaluationCard from './EvaluationCard';
 const { TabPane } = Tabs;
 
 const Index = (props) => {
-  const { qj_data, dispatch } = props;
+  const { qj_data, dispatch, location } = props;
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
 
   const handle_type_change = (key) => {
     settab(key);
   };
+
+  useEffect(() => {
+    dispatch({
+      type: "qualityJudge/save",
+      payload: {
+        audio_id: undefined,
+        audio_name: undefined,
+        signal_type: undefined,
+        level: undefined,
+        manual_level: undefined,
+      }
+    });
+  }, [location]);
 
   useEffect(() => {
     if (qj_data.manual_level) {
@@ -251,23 +264,23 @@ const Index = (props) => {
                 <div style={{ display: 'flex', marginTop: '32px' }}>
                   <Form
                     onFinish={(values) => {
+                      if(!values.result || !qj_data.audio_id) {
+                        message.error('您还未加载一个音频或者选择一个评级！');
+                        return;
+                      }
                       console.log({
                         sid: qj_data.audio_id,
                         ...values.result,
                         quality: values.result.manual_quality,
                       });
-                      if (values.result && qj_data.audio_id) {
-                        dispatch({
-                          type: 'qualityJudge/modifyQuality',
-                          payload: {
-                            sid: qj_data.audio_id,
-                            ...values.result,
-                            // quality: values.result.manual_quality,
-                          },
-                        });
-                      } else {
-                        message.error('您还未加载一个音频或者选择一个评级！');
-                      }
+                      dispatch({
+                        type: 'qualityJudge/modifyQuality',
+                        payload: {
+                          sid: qj_data.audio_id,
+                          ...values.result,
+                          // quality: values.result.manual_quality,
+                        },
+                      });
                     }}
                     form={form}
                   >
@@ -293,6 +306,15 @@ const Index = (props) => {
                     }}
                   >
                     提交
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      form.resetFields()
+                    }}
+                    style={{marginLeft: 16}}
+                  >
+                    重置
                   </Button>
                 </div>
               </div>

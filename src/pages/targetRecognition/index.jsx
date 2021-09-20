@@ -114,6 +114,10 @@ const Index = (props) => {
       requestUrl: '/v1/classification/lofar_classification',
       title: '基于LOFAR谱的CNN模型',
     },
+    // {
+    //   requestUrl: '/v1/classification/frequency_domain',
+    //   title: '频域分析',
+    // },
     {
       requestUrl: '/v1/classification/bi_lstm_process_single',
       title: '基于MFCC的LSTM模型',
@@ -123,11 +127,12 @@ const Index = (props) => {
       title: '基于调制谱的LSTM模型',
     },
   ];
+  const contentHeight = 332 + Math.ceil(infos.length/2)*420;
 
   return (
     <div>
-      <div className={style.rightContent} style={{ height: 1200 }}>
-        <div className={style.rightCenter} style={{ height: 1150 }}>
+      <div className={style.rightContent} style={{ height: contentHeight }}>
+        <div className={style.rightCenter} style={{ height: contentHeight - 50 }}>
           <h3>分类识别</h3>
           <div
             style={{

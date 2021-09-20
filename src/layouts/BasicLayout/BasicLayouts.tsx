@@ -1810,7 +1810,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           onChange={handleChange}
         >
           {Object.keys(alltype).map((item) => (
-            <Option value={item}>{alltype[item]}</Option>
+            <Option value={item} key={item}>{alltype[item]}</Option>
           ))}
         </Select>
         <Popover title="提示" content={searchTip}>
