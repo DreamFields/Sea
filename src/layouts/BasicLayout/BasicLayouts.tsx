@@ -1561,15 +1561,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <Link to="/qualityJudge">质量评价</Link>
           </Menu.Item>
           <Menu.Item key="/exam" icon={<UserOutlined />}>
-            <a
-              href={
-                CookieUtil.get('role') == 3
-                  ? 'http://10.0.70.89:82/student/#/index'
-                  : 'http://10.0.70.89:82/admin/#/dashboard'
-              }
-            >
-              听音训练
-            </a>
+            <Link to="/listenTraining">听音训练</Link>
           </Menu.Item>
           <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
             <Link to="/targetRecognition">分类识别</Link>
@@ -1810,7 +1802,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           onChange={handleChange}
         >
           {Object.keys(alltype).map((item) => (
-            <Option value={item} key={item}>{alltype[item]}</Option>
+            <Option value={item} key={item}>
+              {alltype[item]}
+            </Option>
           ))}
         </Select>
         <Popover title="提示" content={searchTip}>

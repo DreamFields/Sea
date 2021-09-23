@@ -203,20 +203,10 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             </Link>
           </Col>
           <Col span={8}>
-            <a
-              onClick={() => {
-                return false;
-              }}
-            >
+            <Link to="/listenTraining">
               <div
                 style={{ backgroundColor: '#F79C32' }}
                 className={style.featuresDiv}
-                onClick={() => {
-                  window.location.href =
-                    CookieUtil.get('role') == 3
-                      ? 'http://10.0.70.89:82/student/#/index'
-                      : 'http://10.0.70.89:82/admin/#/dashboard';
-                }}
               >
                 <Space
                   align="center"
@@ -228,7 +218,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                   <span style={{ fontSize: 25 }}>听音训练</span>
                 </Space>
               </div>
-            </a>
+            </Link>
           </Col>
           <Col span={8} style={{ height: 160 }}>
             <Link to="/targetRecognition">
