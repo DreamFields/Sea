@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import style from './style.less';
-import { Input, Space, Form, Button, Checkbox, message, Row, Col } from 'antd';
-import { Link, history, connect } from 'umi';
-// import Cookies from 'js-cookie';
+import { connect, history } from 'umi';
 
 const Index = (props: any) => {
   const [unlockState, setUnlockState] = useState([
@@ -22,11 +20,23 @@ const Index = (props: any) => {
       }}
     >
       {unlockState.map((state, idx) => {
-        return (
-          <div className={state ? style.difficulty : style.difficultyBlock}>
-            难度{idx + 1}
-          </div>
-        );
+        if (state) {
+          return (
+            <div
+              className={style.difficulty}
+              key={idx}
+              onClick={() => history.push('/answerQuestion')}
+            >
+              难度{idx + 1}
+            </div>
+          );
+        } else {
+          return (
+            <div className={style.difficultyBlock} key={idx}>
+              难度{idx + 1}
+            </div>
+          );
+        }
       })}
     </div>
   );
