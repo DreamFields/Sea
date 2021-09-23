@@ -1,10 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import style from './style.less';
 import { Input, Space, Form, Button, Checkbox, message, Row, Col } from 'antd';
 import { Link, history, connect } from 'umi';
 // import Cookies from 'js-cookie';
 
 const Index = (props: any) => {
+  const [unlockState, setUnlockState] = useState([
+    true,
+    false,
+    false,
+    false,
+    false,
+  ]);
+
   return (
     <div
       style={{
@@ -13,11 +21,13 @@ const Index = (props: any) => {
         flexGrow: 0,
       }}
     >
-      <div className={style.difficulty}>难度1</div>
-      <div className={style.difficulty}>难度2</div>
-      <div className={style.difficulty}>难度3</div>
-      <div className={style.difficulty}>难度4</div>
-      <div className={style.difficulty}>难度5</div>
+      {unlockState.map((state, idx) => {
+        return (
+          <div className={state ? style.difficulty : style.difficultyBlock}>
+            难度{idx + 1}
+          </div>
+        );
+      })}
     </div>
   );
 };
