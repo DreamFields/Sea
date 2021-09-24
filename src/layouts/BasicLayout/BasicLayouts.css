@@ -27,13 +27,9 @@
 
 .logo {
   float: left;
-  width: 140px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: #252525;
-  line-height: 31px;
-  text-align: center;
-  color: #08979c;
+  width: 60px;
+  margin-left: 16px;
+  margin-right: 48px;
 }
 
 .info {
