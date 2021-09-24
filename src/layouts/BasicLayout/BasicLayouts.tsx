@@ -41,7 +41,10 @@ import CookieUtil from '@/utils/cookie.js';
 import Cookies from 'js-cookie';
 import request from '@/utils/request';
 import moment from 'moment';
+import topLogo from '@/assets/top-logo.png';
+import bottomLogo from '@/assets/bottom-logo.png';
 import { SERVICEURL } from '@/utils/const';
+
 const { Header, Sider, Footer, Content } = Layout;
 
 const { Option } = Select;
@@ -1825,7 +1828,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       <Layout>
         <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999, height: 66 }}>
           <div className="logo">
-            <b>水声数据整编分析系统</b>
+            <img src={topLogo} alt="水声系统" style={{width: 60}} />
+            <b>水声工程</b>
           </div>
 
           <TopMenu />
@@ -1866,8 +1870,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           <Content className="main-content">{props.children}</Content>
         </Layout>
 
-        <Footer style={{ backgroundColor: '#292929', textAlign: 'center' }}>
-          水声数据整编分析系统
+        <Footer style={{ backgroundColor: '#292929', textAlign: 'center', padding: "12px 50px" }}>
+          <div style={{margin: "0 auto", width: 240, fontSize: 20}}>
+            <img src={bottomLogo} alt="海军工程大学" style={{width: 70, marginRight: 16}} />
+            <b>海军工程大学</b>
+          </div>
         </Footer>
       </Layout>
     </div>

@@ -27,12 +27,8 @@
 
 .logo {
   float: left;
-  width: 140px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: #252525;
-  line-height: 31px;
-  text-align: center;
+  width: 120px;
+  margin-right: 48px;
   color: #08979c;
 }
 
