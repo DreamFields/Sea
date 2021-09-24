@@ -40,7 +40,7 @@ const TestApp = (props) => {
   let X_data = [];
   let minValue = 0;
   let maxValue = 0;
-  const [id, setid] = useState('0');
+  const [id, setId] = useState('0');
   /*
   const [data, setdata] = useState(data_Lofar);
   const [Xdata, setXdata] = useState(X_data);
@@ -175,6 +175,7 @@ const TestApp = (props) => {
       },
     }).then((res) => {
       if (res) {
+        setId(res?.id);
         let temp = [];
         let dataAll = []; //所有时间的数据集合
         let maxAll = []; //所有时间的最大值集合
@@ -334,7 +335,7 @@ const TestApp = (props) => {
           />
         </Spin>
         <Button onClick={getData}>低频线谱分析</Button>
-        <UploadPhotos url={`${SERVICEURL}/v1/ffile/frequency/${id}`} />
+        <UploadPhotos url={`${SERVICEURL}/v1/ffile/lofar/${id}`} />
       </Card>
       {/* <LofarTable /> */}
     </div>
