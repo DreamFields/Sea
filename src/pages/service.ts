@@ -31,3 +31,8 @@ export async function GetPeople(body: any) {
     method: 'GET',
   });
 }
+export async function GetExportList() {
+  return request('/v1/ffile/export_count', {
+    method: 'POST',
+  });
+}
