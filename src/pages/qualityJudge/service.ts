@@ -8,13 +8,6 @@ export async function ModifyQuality(body: any) {
   });
 }
 
-export async function FetchLevel(body: any) {
-  return request('/v1/evaluation/result', {
-    method: 'POST',
-    data: body,
-  });
-}
-
 export async function FetchManualLevel(body: any) {
   return request('/v1/evaluation/result', {
     method: 'POST',

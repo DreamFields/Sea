@@ -1,10 +1,5 @@
 import { Effect, Reducer } from 'umi';
-import {
-  ModifyQuality,
-  FetchLevel,
-  FetchManualLevel,
-  FetchAutoLevel,
-} from './service';
+import { ModifyQuality, FetchManualLevel, FetchAutoLevel } from './service';
 import { message } from 'antd';
 
 export interface StateType {
@@ -66,28 +61,22 @@ const Model: ModelType = {
           type: 'fetchLevel',
           payload: { sid: payload.sid },
         });
-        yield put({
-          type: 'fetchManualLevel',
-          payload: { sid: payload.sid },
-        });
       } else {
         message.error('提交失败！');
       }
     },
     *fetchLevel({ payload }, { call, put }) {
-      // 获取最终结果
-      const data_1 = yield call(FetchLevel, payload);
       // 获取手动评价结果
-      const data_2 = yield call(FetchManualLevel, payload);
+      const data = yield call(FetchManualLevel, payload);
 
-      console.log(data_1, data_2);
+      console.log(data);
 
-      if (data_1 && data_2) {
+      if (data) {
         yield put({
           type: 'save',
           payload: {
-            level: data_1,
-            manual_level: typeof data_2 === 'object' ? data_2 : null,
+            level: data.manual_quality,
+            manual_level: data,
           },
         });
       } else {

@@ -20,14 +20,14 @@ const Index = (props) => {
 
   useEffect(() => {
     dispatch({
-      type: "qualityJudge/save",
+      type: 'qualityJudge/save',
       payload: {
         audio_id: undefined,
         audio_name: undefined,
         signal_type: undefined,
         level: undefined,
         manual_level: undefined,
-      }
+      },
     });
   }, [location]);
 
@@ -36,6 +36,7 @@ const Index = (props) => {
       // console.log("manual_level", qj_data.manual_level);
       form.setFieldsValue({ result: qj_data.manual_level });
     }
+    console.log('qj_data', qj_data);
     return () => {};
   }, [qj_data]);
 
@@ -167,18 +168,18 @@ const Index = (props) => {
     };
 
     const qlOptions = [
-      { label: "轴叶频清晰", value: 1 },
-      { label: "轴频清晰，叶频不清晰", value: 2 },
-      { label: "轴频缺失，叶频清晰", value: 3 },
-      { label: "轴叶频缺失", value: 4 },
-    ]
+      { label: '轴叶频清晰', value: 1 },
+      { label: '轴频清晰，叶频不清晰', value: 2 },
+      { label: '轴频缺失，叶频清晰', value: 3 },
+      { label: '轴叶频缺失', value: 4 },
+    ];
 
     const mqOptions = [
-      { label: "优", value: "优"},
-      { label: "良", value: "良"},
-      { label: "中", value: "中"},
-      { label: "劣", value: "劣"},
-    ]
+      { label: '优', value: '优' },
+      { label: '良', value: '良' },
+      { label: '中', value: '中' },
+      { label: '劣', value: '劣' },
+    ];
 
     const onQLChange = (e) => {
       setquality_level(e.target.value);
@@ -198,24 +199,22 @@ const Index = (props) => {
 
     return (
       <span>
-        <Radio.Group 
+        <Radio.Group
           onChange={onQLChange}
           value={value.quality_level || quality_level}
           optionType="button"
           buttonStyle="solid"
           options={qlOptions}
-        >
-        </Radio.Group>
-        <br/>
-        <Radio.Group 
+        ></Radio.Group>
+        <br />
+        <Radio.Group
           onChange={onMQChange}
           value={value.manual_quality || manual_quality}
           style={{ marginTop: '8px' }}
           options={mqOptions}
           optionType="button"
           buttonStyle="solid"
-        >
-        </Radio.Group>
+        ></Radio.Group>
       </span>
     );
   };
@@ -226,11 +225,11 @@ const Index = (props) => {
     <div>
       <div
         className={style.rightContent}
-        style={{ height: heights[Number(tab)-1] }}
+        style={{ height: heights[Number(tab) - 1] }}
       >
         <div
           className={style.rightCenter}
-          style={{ height: heights[Number(tab)-1] - 50 }}
+          style={{ height: heights[Number(tab) - 1] - 50 }}
         >
           <h3>质量评价</h3>
           <div
@@ -245,10 +244,12 @@ const Index = (props) => {
 
           <Tabs activeKey={tab} onChange={handle_type_change}>
             <TabPane tab="单文件" key="1">
-              <div style={{ width: "100%" }}>
+              <div style={{ width: '100%' }}>
                 <Waveform />
                 <div style={{ display: 'flex', marginTop: '32px' }}>
-                  <p><b>自动检测：</b></p>
+                  <p>
+                    <b>自动检测：</b>
+                  </p>
                   <EvaluationCard
                     sid={qj_data.audio_id}
                     mode="thd"
@@ -264,7 +265,7 @@ const Index = (props) => {
                 <div style={{ display: 'flex', marginTop: '32px' }}>
                   <Form
                     onFinish={(values) => {
-                      if(!values.result || !qj_data.audio_id) {
+                      if (!values.result || !qj_data.audio_id) {
                         message.error('您还未加载一个音频或者选择一个评级！');
                         return;
                       }
@@ -310,9 +311,9 @@ const Index = (props) => {
                   <Button
                     type="primary"
                     onClick={() => {
-                      form.resetFields()
+                      form.resetFields();
                     }}
-                    style={{marginLeft: 16}}
+                    style={{ marginLeft: 16 }}
                   >
                     重置
                   </Button>

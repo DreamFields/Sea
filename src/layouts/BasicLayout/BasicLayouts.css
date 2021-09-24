@@ -28,7 +28,7 @@
 .logo {
   float: left;
   width: 120px;
-  margin-right: 48px;
+  margin-right: 8px;
   color: #08979c;
 }
 
@@ -36,7 +36,7 @@
   float: right;
   width: 160px;
   height: 31px;
-  margin: 16px 24px 16px 0px;
+  margin: 16px 8px 16px 0px;
   background: #2d2d2d;
   line-height: 31px;
   text-align: center;
