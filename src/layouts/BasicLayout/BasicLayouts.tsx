@@ -1828,7 +1828,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
       <Layout>
         <Header style={{ backgroundColor: '#2D2D2D', zIndex: 999, height: 66 }}>
           <div className="logo">
-            <img src={topLogo} alt="水声数据整编系统" style={{width: 60}} />
+            <img src={topLogo} alt="水声系统" style={{width: 60}} />
+            <b>水声工程</b>
           </div>
 
           <TopMenu />
@@ -1870,8 +1871,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         </Layout>
 
         <Footer style={{ backgroundColor: '#292929', textAlign: 'center', padding: "12px 50px" }}>
-          <div style={{margin: "0 auto", width: 70}}>
-            <img src={bottomLogo} alt="海军工程大学" style={{width: 70}} />
+          <div style={{margin: "0 auto", width: 240, fontSize: 20}}>
+            <img src={bottomLogo} alt="海军工程大学" style={{width: 70, marginRight: 16}} />
+            <b>海军工程大学</b>
           </div>
         </Footer>
       </Layout>
