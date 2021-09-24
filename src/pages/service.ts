@@ -44,10 +44,10 @@ export async function GetExportList() {
     method: 'POST',
   });
 }
-export async function UploadExportList(sids: any[], signal_type: number) {
+export async function UploadExportList(sids: string, signal_type: number) {
   return request('/v1/file/export', {
     method: 'POST',
-    params: {
+    data: {
       sids: sids,
       signal_type: signal_type,
     },

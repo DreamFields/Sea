@@ -8,7 +8,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { GetExportList, UploadExportList } from '../service';
-import { Radio, Table, Button } from 'antd';
+import { Radio, Table, Button, message } from 'antd';
 import styles from './index.less';
 export default () => {
   const signalType = {
@@ -59,6 +59,7 @@ export default () => {
     });
   }, []);
   const onRadioChange = (e) => {
+    setSelectedIDList([]);
     setSignal_type(e.target.value);
     switch (signal_type) {
       case signalType.RadiatedNoise:
@@ -74,14 +75,20 @@ export default () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys: any, selectedRows: any[]) => {
-      console.log(selectedRowKeys);
       setSelectedIDList(selectedRowKeys);
     },
+    selectedRowKeys: selectedIDList,
   };
   const onClick = () => {
     setLoading(true);
-    UploadExportList(selectedIDList, signal_type).then((res) => {
-      console.log(res);
+    if (!selectedIDList.length) {
+      message.error('请先选择！');
+      setLoading(false);
+      return;
+    }
+    UploadExportList(selectedIDList.join(','), signal_type).then((res) => {
+      if (res) message.success('导出成功');
+      else message.error('导出失败，请检查后重试');
       setLoading(false);
     });
   };
