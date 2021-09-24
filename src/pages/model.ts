@@ -93,6 +93,10 @@ const Model: ModelType = {
             radiated_noiseData: data.radiated_count,
             target_echoData: data.target_count,
             active_pulseData: data.active_count,
+            excellent: data.count1,
+            good: data.count2,
+            medium: data.count3,
+            poor: data.count4,
           },
         });
       }

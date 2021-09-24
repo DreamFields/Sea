@@ -29,7 +29,9 @@ const MainContent: React.FC<mainContentProps> = (props) => {
   let active_pulseData = MainPage.active_pulseData;
   let target_echoData = MainPage.target_echoData;
   let radiated_noiseData = MainPage.radiated_noiseData;
+  const { excellent, good, medium, poor } = MainPage;
   let audioPieData;
+  let qualityPieData;
   if (
     active_pulseData !== undefined &&
     target_echoData !== undefined &&
@@ -62,6 +64,51 @@ const MainContent: React.FC<mainContentProps> = (props) => {
       {
         x: 'radiated_noise',
         y: 7,
+      },
+    ];
+  }
+  if (
+    excellent !== undefined &&
+    good !== undefined &&
+    medium !== undefined &&
+    poor !== undefined
+  ) {
+    console.log('true');
+    qualityPieData = [
+      {
+        x: 'excellent',
+        y: excellent,
+      },
+      {
+        x: 'good',
+        y: good,
+      },
+      {
+        x: 'medium',
+        y: medium,
+      },
+      {
+        x: 'poor',
+        y: poor,
+      },
+    ];
+  } else {
+    qualityPieData = [
+      {
+        x: 'excellent',
+        y: 3,
+      },
+      {
+        x: 'good',
+        y: 3,
+      },
+      {
+        x: 'medium',
+        y: 7,
+      },
+      {
+        x: 'poor',
+        y: 3,
       },
     ];
   }
@@ -100,10 +147,16 @@ const MainContent: React.FC<mainContentProps> = (props) => {
                 backgroundColor: '#292929',
                 float: 'left',
                 borderRadius: 5,
+                display: 'flex',
               }}
             >
               <Suspense fallback={null}>
-                <ProportionAudio audioPieData={audioPieData} />
+                <div style={{ height: '100%', width: '50%' }}>
+                  <ProportionAudio audioPieData={audioPieData} />
+                </div>
+                <div style={{ height: '100%', width: '50%', float: 'right' }}>
+                  <ProportionAudio qualityPieData={qualityPieData} />
+                </div>
               </Suspense>
             </div>
           </Col>
