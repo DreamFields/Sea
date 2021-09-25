@@ -73,6 +73,26 @@ const Index = (props: any) => {
         </div>
         <h4>题目解析</h4>
         <div>{questionState[id].explain}</div>
+        {id !== 0 && (
+          <div
+            className={style.btn}
+            onClick={() => {
+              setId(id - 1);
+            }}
+          >
+            上一题
+          </div>
+        )}
+        {id !== questionState.length - 1 && (
+          <div
+            className={style.btn}
+            onClick={() => {
+              setId(id + 1);
+            }}
+          >
+            下一题
+          </div>
+        )}
       </div>
     </div>
   );
