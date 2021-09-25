@@ -44,7 +44,7 @@ const Index = (props: any) => {
               }
               onClick={() => setId(idx)}
             >
-              T{idx + 1}
+              {idx + 1}
             </div>
           ))}
         </div>
