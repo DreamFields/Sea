@@ -12,13 +12,7 @@ const Index = (props: any) => {
   ]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-around',
-        flexGrow: 0,
-      }}
-    >
+    <div className={style.container}>
       {unlockState.map((state, idx) => {
         if (state) {
           return (
