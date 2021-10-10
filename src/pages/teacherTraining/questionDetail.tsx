@@ -16,6 +16,8 @@ const Component = (props: any) => {
     });
     setData(res);
   };
+
+  console.log(data);
   return (
     <div>
       <Input
@@ -26,7 +28,7 @@ const Component = (props: any) => {
       <Button onClick={submit}>查询</Button>
 
       {data && (
-        <QuestionComponent data={data} setData={setData} readOnly={false} />
+        <QuestionComponent data={data} setData={setData} readOnly={true} />
       )}
     </div>
   );
