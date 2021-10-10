@@ -80,7 +80,7 @@ let COOKIE_CONFIRM = true;
 
 function custom_request(
   url: string,
-  { method = 'GET', params = {}, data = {} },
+  { method = 'GET', params = {}, data = {} } = {},
 ) {
   let prefix: string;
 
@@ -160,3 +160,20 @@ function custom_request(
 }
 
 export default custom_request;
+
+export const requestAsPromise = async <R>(
+  ...args: Parameters<typeof custom_request>
+) => {
+  const promise = custom_request(args[0], args[1] || {}) as Promise<R>;
+  if (promise) {
+    return await promise;
+  } else {
+    throw new Error('bad request');
+  }
+};
+
+export const post = <R>(url, params = {}) =>
+  requestAsPromise<R>(url, { ...params, method: 'POST' });
+
+export const get = <R>(url, params = {}) =>
+  requestAsPromise<R>(url, { ...params, method: 'GET' });

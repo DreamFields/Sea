@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { connect, useParams, useModel, history } from 'umi';
 import { Radio, Input, Space } from 'antd';
-import request from '@/utils/request';
+import { post } from '@/utils/request';
 import { IQuestionListResp, Question, QuestionType } from './types';
 import { useCallback } from '@umijs/renderer-react/node_modules/@types/react';
 
-const fetchQuestionList = (level: number) => {
-  const promise = request('/v1/student/question_list', {
-    method: 'POST',
+const fetchQuestionList = (level: number) =>
+  post<IQuestionListResp>('/v1/student/question_list', {
     data: { level },
   });
-  if (promise) return promise as Promise<IQuestionListResp>;
-};
 
 const Index = (props: any) => {
   const { level, unblockNextLevel } = useModel('useDifficulties');
@@ -73,7 +70,7 @@ const Index = (props: any) => {
         <h4>问题</h4>
         <div>{questions[id].info_text_content.question_info}</div>
         <h4>你的选择</h4>
-        <Radio.Group onChange={handleChange} value={value}>
+        <Radio.Group onChange={handleChange} value={questions[id].userAnswer}>
           <Space direction="vertical">
             <Radio value={1}>A</Radio>
             <Radio value={2}>B</Radio>

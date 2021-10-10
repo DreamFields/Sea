@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import request from '@/utils/request';
+import { post, get } from '@/utils/request';
 
 export default function useDifficulties(maxLevel = 5) {
   const [level, setLevel] = useState(1);
   useEffect(() => {
-    const promise = request('v1/student/student_level', { method: 'POST' });
-    if (promise) {
-      promise.then((res) => setLevel(level));
-    }
+    post<number>('v1/student/student_level').then((res) => setLevel(res));
   }, []);
   const unblockNextLevel = () =>
     setLevel((lv) => (lv < maxLevel ? lv + 1 : lv));
