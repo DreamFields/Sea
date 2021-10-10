@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
 import style from './style.less';
 import AddQuestion from './addQuestion';
 import AddKnowledge from './addKnowledge';
@@ -40,26 +42,17 @@ const NAVIGATION = [
 ];
 
 const Index = (props: any) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const Component = NAVIGATION[currentPage].component;
-
   return (
-    <div>
+    <Tabs defaultActiveKey="0">
       {NAVIGATION.map((item, idx) => {
+        const Component = item.component;
         return (
-          <button
-            style={{ color: idx === currentPage ? 'red' : 'black' }}
-            onClick={() => setCurrentPage(idx)}
-            key={item.text}
-          >
-            {item.text}
-          </button>
+          <TabPane tab={item.text} key={idx.toString()}>
+            <Component />
+          </TabPane>
         );
       })}
-      <div>
-        <Component />
-      </div>
-    </div>
+    </Tabs>
   );
 };
 
