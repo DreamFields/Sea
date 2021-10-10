@@ -28,7 +28,12 @@ const Index = (props: any) => {
       );
     });
 
-  return <div className={style.container}>{Levels}</div>;
+  return (
+    <div>
+      <Link to="/teacherTraining">教师端</Link>
+      <div className={style.container}>{Levels}</div>
+    </div>
+  );
 };
 
 export default Index;
