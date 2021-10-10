@@ -16,7 +16,7 @@ interface IWrongAnswer extends IBaseAnswer {
 }
 
 export interface IQuestionListResp {
-  not_judge_list: IBaseAnswer[];
+  not_judje_list: IBaseAnswer[];
   right_list: IRightAnswer[];
   wrong_list: IWrongAnswer[];
 }
@@ -30,4 +30,11 @@ export enum QuestionType {
 export type Question = (IRightAnswer | IWrongAnswer | IBaseAnswer) & {
   type: QuestionType;
   userAnswer?: string;
+};
+
+export type QuestionDetail = IBaseAnswer & {
+  pic_url: string;
+  question_type: any;
+  score: any;
+  sound_url: string;
 };
