@@ -1,43 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import style from './style.less';
-import { connect, history } from 'umi';
+// import { useDifficulties } from './models';
+
+import { connect, history, Link, useModel } from 'umi';
+
+const MAX_LEVEL = 5;
 
 const Index = (props: any) => {
-  const [unlockState, setUnlockState] = useState([
-    true,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const { level, unblockNextLevel } = useModel('useDifficulties');
 
-  return (
-    <div className={style.container}>
-      {unlockState.map((state, idx) => {
-        if (state) {
-          return (
-            <div
-              className={style.difficulty}
-              key={idx}
-              onClick={() => history.push('/answerQuestion')}
-            >
-              难度{idx + 1}
-            </div>
-          );
-        } else {
-          return (
-            <div className={style.difficultyBlock} key={idx}>
-              难度{idx + 1}
-            </div>
-          );
-        }
-      })}
-    </div>
-  );
+  const Levels = Array(5)
+    .fill(null)
+    .map((_, idx) => {
+      const currentLevel = idx + 1;
+      const blocked = currentLevel > level;
+      const handleClick = blocked
+        ? undefined
+        : () => history.push(`/answerQuestion/${currentLevel}`);
+      return (
+        <div
+          className={blocked ? style.difficultyBlock : style.difficulty}
+          key={`level_${currentLevel}`}
+          onClick={handleClick}
+        >
+          难度{currentLevel}
+        </div>
+      );
+    });
+
+  return <div className={style.container}>{Levels}</div>;
 };
 
-function mapStateToProps(state: any) {
-  return {};
-}
-
-export default connect(mapStateToProps)(Index);
+export default Index;
