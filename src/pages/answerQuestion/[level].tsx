@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import style from './style.less';
 import { connect, useParams, useModel, history } from 'umi';
 import { Radio, Input, Space } from 'antd';
 import { post } from '@/utils/request';
 import { IQuestionListResp, Question, QuestionType } from './types';
-import { useCallback } from '@umijs/renderer-react/node_modules/@types/react';
 
 const fetchQuestionList = (level: number) =>
   post<IQuestionListResp>('/v1/student/question_list', {
