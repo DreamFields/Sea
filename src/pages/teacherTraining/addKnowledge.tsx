@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import style from './style.less';
-import { Input, Button } from 'antd';
+import { Input, Button, message } from 'antd';
+import { post } from '@/utils/request';
 
 const Component = (props: any) => {
   const [content, setContent] = useState('');
-  const submit = () => {
+  const submit = async () => {
     const data = { content };
-    console.log(data);
+    try {
+      const res = await post('/v1/teacher/add_knowledge', { data });
+      console.log('add knowledge', res);
+      message.success('添加知识点成功');
+    } catch (e: any) {
+      message.error(e.toString());
+    }
   };
   return (
     <div>
