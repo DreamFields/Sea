@@ -16,7 +16,7 @@ interface IWrongAnswer extends IBaseAnswer {
 }
 
 export interface IQuestionListResp {
-  not_judje_list: IBaseAnswer[];
+  not_judge_list: IBaseAnswer[];
   right_list: IRightAnswer[];
   wrong_list: IWrongAnswer[];
 }

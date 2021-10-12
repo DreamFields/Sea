@@ -34,7 +34,7 @@ const Index = (props: any) => {
 
   const updateQuestionList = useCallback((currentLevel) => {
     fetchQuestionList(currentLevel)?.then(
-      ({ not_judje_list: not_judge_list, right_list, wrong_list }) => {
+      ({ not_judge_list, right_list, wrong_list }) => {
         const questions: Question[] = [];
         console.log(not_judge_list, right_list, wrong_list);
         for (const list of [not_judge_list, right_list, wrong_list]) {
