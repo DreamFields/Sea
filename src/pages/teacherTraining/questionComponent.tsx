@@ -5,7 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const CommonComponent = ({ data, setData, readOnly }: any) => {
+const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   return (
     <Form labelCol={{ span: 2 }} wrapperCol={{ span: 16 }} autoComplete="off">
       <Form.Item label="题目内容" name="qi">
@@ -14,7 +14,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.info_text_content.question_info}
           onChange={(e) => {
             data.info_text_content.question_info = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -28,7 +28,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.info_text_content.A}
           onChange={(e) => {
             data.info_text_content.A = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -42,7 +42,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.info_text_content.B}
           onChange={(e) => {
             data.info_text_content.B = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -57,7 +57,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.info_text_content.C}
           onChange={(e) => {
             data.info_text_content.C = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -72,7 +72,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.info_text_content.D}
           onChange={(e) => {
             data.info_text_content.D = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -87,7 +87,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.analysis}
           onChange={(e) => {
             data.analysis = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -102,7 +102,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           defaultValue={data.knowledge_id}
           onChange={(e) => {
             data.knowledge_id = e.target.value;
-            setData({
+            onDataChange({
               ...data,
             });
           }}
@@ -120,7 +120,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           }}
           onChange={(e) => {
             data.difficult = e;
-            setData(data);
+            onDataChange(data);
           }}
           disabled={readOnly}
         >
@@ -141,7 +141,7 @@ const CommonComponent = ({ data, setData, readOnly }: any) => {
           }}
           onChange={(e) => {
             data.correct = e;
-            setData(data);
+            onDataChange(data);
           }}
           disabled={readOnly}
         >

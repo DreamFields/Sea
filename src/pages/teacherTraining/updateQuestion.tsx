@@ -38,7 +38,8 @@ const Component = (props: any) => {
         question_id: +id,
       },
     });
-    setData(res);
+    setData(null);
+    setData({ ...res });
   };
 
   return (
@@ -49,7 +50,6 @@ const Component = (props: any) => {
         onChange={(e) => setId(e.target.value)}
       ></Input>
       <Button onClick={query}>开始修改</Button>
-      <hr />
       {data && (
         <>
           <QuestionComponent data={data} setData={setData} readOnly={false} />

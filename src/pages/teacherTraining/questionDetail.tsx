@@ -14,7 +14,8 @@ const Component = (props: any) => {
         question_id: +id,
       },
     });
-    setData(res);
+    setData(null);
+    setData({ ...res });
   };
 
   console.log(data);
@@ -28,7 +29,11 @@ const Component = (props: any) => {
       <Button onClick={submit}>查询</Button>
 
       {data && (
-        <QuestionComponent data={data} setData={setData} readOnly={true} />
+        <QuestionComponent
+          data={data}
+          setData={(newData: any) => setData(newData)}
+          readOnly={true}
+        />
       )}
     </div>
   );
