@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import style from './style.less';
 import { connect, useParams, useModel, history } from 'umi';
-import { Radio, Input, Image, Space, RadioChangeEvent, Button } from 'antd';
+import { Radio, Input, Image, Row, RadioChangeEvent, Button, Col } from 'antd';
 import { post } from '@/utils/request';
 import {
   IQuestionListResp,
@@ -99,13 +99,18 @@ const Index = (props: any) => {
   const { pic_url, sound_url } = currentQuestionDetails;
 
   const renderOptions = ({ disabled }: { disabled: boolean }) => (
-    <Space direction="vertical">
+    <>
       {['A', 'B', 'C', 'D'].map((option) => (
-        <Radio id={`option-${option}`} value={option} disabled={disabled}>
+        <Radio
+          style={{ display: 'block' }}
+          id={`option-${option}`}
+          value={option}
+          disabled={disabled}
+        >
           {option}: {currentQuestionDetails.info_text_content[option]}
         </Radio>
       ))}
-    </Space>
+    </>
   );
 
   return (
@@ -131,6 +136,7 @@ const Index = (props: any) => {
         <div>{currentQuestionDetails.info_text_content.question_info}</div>
         {pic_url && (
           <Image
+            style={{ display: 'block' }}
             width={200}
             height={200}
             src={pic_url}
@@ -168,31 +174,38 @@ const Index = (props: any) => {
         )}
 
         {currentQuestion.type !== QuestionType.Right && (
-          <Button onClick={handleSubmit}>提交该题</Button>
+          <Row>
+            <Button onClick={handleSubmit}>提交该题</Button>
+          </Row>
         )}
 
         {'analysis' in currentQuestion && <></>}
-
-        {id !== 0 && (
-          <div
-            className={style.btn}
-            onClick={() => {
-              setId(id - 1);
-            }}
-          >
-            上一题
-          </div>
-        )}
-        {id !== questions.length - 1 && (
-          <div
-            className={style.btn}
-            onClick={() => {
-              setId(id + 1);
-            }}
-          >
-            下一题
-          </div>
-        )}
+        <Row>
+          {id !== 0 && (
+            <Col xs={6}>
+              <div
+                className={style.btn}
+                onClick={() => {
+                  setId(id - 1);
+                }}
+              >
+                上一题
+              </div>
+            </Col>
+          )}
+          {id !== questions.length - 1 && (
+            <Col xs={6}>
+              <div
+                className={style.btn}
+                onClick={() => {
+                  setId(id + 1);
+                }}
+              >
+                下一题
+              </div>
+            </Col>
+          )}
+        </Row>
       </div>
     </div>
   );

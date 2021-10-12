@@ -1,11 +1,71 @@
-import React from 'react';
+import React, { Validator, useCallback } from 'react';
 import style from './style.less';
 import { Input, Button, Select, Upload, Form } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { post } from '@/utils/request';
+
 const { TextArea } = Input;
 const { Option } = Select;
 
+type CustomRequest = Exclude<
+  Exclude<
+    Exclude<typeof Upload['propTypes'], undefined>['customRequest'],
+    undefined
+  > extends Validator<infer U>
+    ? U
+    : never,
+  null | undefined
+>;
+
+const a = (b: number): string => ({} as any);
+
+const makeUploader =
+  ({
+    api,
+    fileFieldName,
+    id,
+  }: {
+    api: string;
+    fileFieldName: string;
+    id: number;
+  }): CustomRequest =>
+  ({ file, onSuccess, onError }) => {
+    const body = new FormData();
+    body.append('id', `${id ?? ''}`);
+    body.append(fileFieldName, file);
+    post(api, {
+      // headers: {
+      //   // 这里的request的header不能加在extend创建实例里
+      //   // 'Content-Type': 'application/x-www-form-urlencode',
+      // },
+      body,
+    })
+      .then(() => {
+        console.debug.bind(null, 'uploader:');
+        // @ts-ignore
+        onSuccess?.({});
+      })
+      .catch(onError);
+  };
+
 const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
+  const handleAudioUpload = useCallback<CustomRequest>(
+    makeUploader({
+      api: '/v1/teacher/upload_sound',
+      id: data.question_id,
+      fileFieldName: 'audio',
+    }),
+    [],
+  );
+  const handlePictureUpload = useCallback<CustomRequest>(
+    makeUploader({
+      api: '/v1/teacher/upload_picture',
+      id: data.question_id,
+      fileFieldName: 'picture',
+    }),
+    [],
+  );
+
   return (
     <Form labelCol={{ span: 2 }} wrapperCol={{ span: 16 }} autoComplete="off">
       <Form.Item label="题目内容" name="qi">
@@ -155,19 +215,8 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       <Form.Item label="上传音频" name="uploadaudio">
         <Upload
           name="file"
-          action="http://www.baidu.com"
-          headers={{ authorization: '' }}
-          onChange={(info) => {
-            if (info.file.status !== 'uploading') {
-              console.log(info.file, info.fileList);
-            }
-            if (info.file.status === 'done') {
-              console.log(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === 'error') {
-              console.error(`${info.file.name} file upload failed.`);
-            }
-          }}
           disabled={readOnly}
+          customRequest={handleAudioUpload}
         >
           <Button icon={<UploadOutlined />}>上传音频</Button>
         </Upload>
@@ -176,18 +225,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       <Form.Item label="上传图片" name="uploadimg">
         <Upload
           name="file"
-          action="http://www.baidu.com"
-          headers={{ authorization: '' }}
-          onChange={(info) => {
-            if (info.file.status !== 'uploading') {
-              console.log(info.file, info.fileList);
-            }
-            if (info.file.status === 'done') {
-              console.log(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === 'error') {
-              console.error(`${info.file.name} file upload failed.`);
-            }
-          }}
+          customRequest={handlePictureUpload}
           disabled={readOnly}
         >
           <Button icon={<UploadOutlined />}>上传图片</Button>

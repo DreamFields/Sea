@@ -80,9 +80,10 @@ let COOKIE_CONFIRM = true;
 
 function custom_request(
   url: string,
-  { method = 'GET', params = {}, data = {} } = {},
+  options: Parameters<typeof request>[1] = {},
 ) {
   let prefix: string;
+  const { method = 'GET', params = {}, data, headers = {}, body } = options;
 
   if (/sea/.test(url)) {
     // 权限管理请求
@@ -122,12 +123,14 @@ function custom_request(
     request(prefix + url, {
       method,
       params: removeNull(params),
-      data: removeNull(data),
+      data,
+      body,
       credentials: 'omit',
       headers: {
         // 这里的request的header不能加在extend创建实例里
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${Cookies.get('token')}`,
+        ...headers,
       },
     }).then((res) => {
       if (res && res.code === 200) {
@@ -168,6 +171,7 @@ export const requestAsPromise = async <R>(
   if (promise) {
     return await promise;
   } else {
+    return await Promise.resolve(null);
     throw new Error('bad request');
   }
 };
