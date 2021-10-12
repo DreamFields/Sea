@@ -1,33 +1,46 @@
 import React, { useState } from 'react';
 import style from './style.less';
 import QuestionComponent from './questionComponent';
-import { Button, Input } from 'antd';
+import { Button, Input, message } from 'antd';
+import { post } from '@/utils/request';
 
 const Component = (props: any) => {
-  const [data, setData] = useState({
-    difficult: '1',
-    correct: 'A',
-    info_text_content: {
-      question_info: '',
-      A: '',
-      B: '',
-      C: '',
-      D: '',
-    },
-    analysis: '',
-    knowledge_id: '',
-  });
+  const [data, setData] = useState<any>(null);
   const [id, setId] = useState('');
 
-  const submit = () => {
+  const submit = async () => {
+    console.log('knowledge_id', data.knowledge_id);
     const postData = {
-      ...data,
-      id,
+      id: +id,
       difficult: +data.difficult,
-      knowledge_id: +data.knowledge_id,
+      knowledge_id: +data.knowledge_id ?? 1,
+      correct: data.correct,
+      info_text_content: {
+        question_info: data.info_text_content.question_info,
+        A: data.info_text_content.A.toString(),
+        B: data.info_text_content.B.toString(),
+        C: data.info_text_content.C.toString(),
+        D: data.info_text_content.D.toString(),
+      },
+      analysis: data.analysis,
     };
-    console.log(postData);
+
+    const res = await post<any>('/v1/teacher/update_question', {
+      data: postData,
+    });
+    console.log('update_question success', res);
+    message.success('更新成功');
   };
+
+  const query = async () => {
+    const res = await post<any>('/v1/teacher/question_detail', {
+      data: {
+        question_id: +id,
+      },
+    });
+    setData(res);
+  };
+
   return (
     <div>
       <Input
@@ -35,8 +48,14 @@ const Component = (props: any) => {
         value={id}
         onChange={(e) => setId(e.target.value)}
       ></Input>
-      <QuestionComponent data={data} setData={setData} readOnly={false} />
-      <Button onClick={submit}>提交</Button>
+      <Button onClick={query}>查询</Button>
+      <hr />
+      {data && (
+        <>
+          <QuestionComponent data={data} setData={setData} readOnly={false} />
+          <Button onClick={submit}>提交</Button>
+        </>
+      )}
     </div>
   );
 };
