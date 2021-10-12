@@ -28,7 +28,7 @@ const Component = (props: any) => {
     const res = await post<any>('/v1/teacher/update_question', {
       data: postData,
     });
-    console.log('update_question success', res);
+    console.log('update_question', res);
     message.success('更新成功');
   };
 
@@ -48,7 +48,7 @@ const Component = (props: any) => {
         value={id}
         onChange={(e) => setId(e.target.value)}
       ></Input>
-      <Button onClick={query}>查询</Button>
+      <Button onClick={query}>开始修改</Button>
       <hr />
       {data && (
         <>

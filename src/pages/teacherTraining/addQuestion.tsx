@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import style from './style.less';
 import QuestionComponent from './questionComponent';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
+import { post } from '@/utils/request';
 
 const Component = (props: any) => {
   const [data, setData] = useState({
@@ -18,13 +19,26 @@ const Component = (props: any) => {
     knowledge_id: '',
   });
 
-  const submit = () => {
+  const submit = async () => {
     const postData = {
-      ...data,
       difficult: +data.difficult,
-      knowledge_id: +data.knowledge_id,
+      knowledge_id: +data.knowledge_id ?? 1,
+      correct: data.correct,
+      info_text_content: {
+        question_info: data.info_text_content.question_info,
+        A: data.info_text_content.A.toString(),
+        B: data.info_text_content.B.toString(),
+        C: data.info_text_content.C.toString(),
+        D: data.info_text_content.D.toString(),
+      },
+      analysis: data.analysis,
     };
-    console.log(postData);
+
+    const res = await post<any>('/v1/teacher/add_question', {
+      data: postData,
+    });
+    console.log('add_question', res);
+    message.success('添加成功');
   };
   return (
     <div>
