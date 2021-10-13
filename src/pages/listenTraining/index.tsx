@@ -32,7 +32,6 @@ const StudentIndex = (props: any) => {
 
   return (
     <div>
-      <Link to="/teacherTraining">教师端 [debug only]</Link>
       <div className={style.container}>{Levels}</div>
     </div>
   );
