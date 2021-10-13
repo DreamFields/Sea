@@ -17,6 +17,7 @@ const Component = (props: any) => {
     },
     analysis: '',
     knowledge_id: '',
+    question_id: '',
   });
 
   const submit = async () => {
@@ -32,11 +33,18 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
+      id: data.question_id,
     };
 
-    const res = await post<any>('/v1/teacher/add_question', {
-      data: postData,
-    });
+    console.log(data.question_id);
+    const res = await post<any>(
+      data.question_id
+        ? '/v1/teacher/update_question'
+        : '/v1/teacher/add_question',
+      {
+        data: postData,
+      },
+    );
     console.log('add_question', res);
     message.success('添加成功');
   };
