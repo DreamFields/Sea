@@ -46,7 +46,7 @@ const config = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log('response', response);
+  console.log('response', response, error);
   if (response && response.status) {
     //   const { code ,msg, request } = response;
     //   const errorText = msg;
@@ -66,9 +66,11 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 配置request请求时的默认参数
  */
+
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'omit', // 默认请求是否带上cookie
+  mode: 'cors',
 });
 
 const { NODE_ENV } = process.env;
@@ -80,9 +82,10 @@ let COOKIE_CONFIRM = true;
 
 function custom_request(
   url: string,
-  { method = 'GET', params = {}, data = {} },
+  options: Parameters<typeof request>[1] = {},
 ) {
   let prefix: string;
+  const { method = 'GET', params = {}, data, headers = {}, body } = options;
 
   if (/sea/.test(url)) {
     // 权限管理请求
@@ -122,12 +125,14 @@ function custom_request(
     request(prefix + url, {
       method,
       params: removeNull(params),
-      data: removeNull(data),
+      data,
+      body,
       credentials: 'omit',
       headers: {
         // 这里的request的header不能加在extend创建实例里
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${Cookies.get('token')}`,
+        ...headers,
       },
     }).then((res) => {
       if (res && res.code === 200) {
@@ -160,3 +165,23 @@ function custom_request(
 }
 
 export default custom_request;
+
+export const requestAsPromise = async <R>(
+  ...args: Parameters<typeof custom_request>
+) => {
+  const promise = custom_request(args[0], args[1] || {}) as Promise<R>;
+  if (promise) {
+    return await promise;
+  } else {
+    return await Promise.resolve(null);
+    throw new Error('bad request');
+  }
+};
+
+export const post = <R>(url, params = {}) =>
+  requestAsPromise<R>(url, { ...params, method: 'POST' });
+
+export const get = <R>(url, params = {}) =>
+  requestAsPromise<R>(url, { ...params, method: 'GET' });
+
+globalThis.request = custom_request;

@@ -14,7 +14,7 @@ import { MultipleChoiceDataType } from '@/models/data';
  * @return data: any
  */
 export function removeNull(data: any) {
-  if (Object.prototype.toString.call(data) !== '[object Object]') {
+  if (typeof data !== 'object') {
     throw new Error('request data is not a object.');
   }
   // 两层去掉null 和 空对象
@@ -104,7 +104,8 @@ export const getMultipleChoiceGet = ({
     return multipleChoice;
   }
   // 如果为字符串，将它转换
-  if (typeof multipleChoice === 'string') multipleChoice = JSON.parse(multipleChoice);
+  if (typeof multipleChoice === 'string')
+    multipleChoice = JSON.parse(multipleChoice);
   if (multipleChoice.other === null) {
     // 不存在其他
     if (setOther) {

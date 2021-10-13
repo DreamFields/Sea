@@ -1,43 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import style from './style.less';
-import { connect, history } from 'umi';
+import TeacherIndex from '../teacherTraining/index';
+import CookieUtil from '@/utils/cookie.js';
+// import { useDifficulties } from './models';
 
-const Index = (props: any) => {
-  const [unlockState, setUnlockState] = useState([
-    true,
-    false,
-    false,
-    false,
-    false,
-  ]);
+import { connect, history, Link, useModel } from 'umi';
+
+const MAX_LEVEL = 5;
+
+const StudentIndex = (props: any) => {
+  const { level, unblockNextLevel } = useModel('useDifficulties');
+
+  const Levels = Array(5)
+    .fill(null)
+    .map((_, idx) => {
+      const currentLevel = idx + 1;
+      const blocked = currentLevel > level;
+      const handleClick = blocked
+        ? undefined
+        : () => history.push(`/answerQuestion/${currentLevel}`);
+      return (
+        <div
+          className={blocked ? style.difficultyBlock : style.difficulty}
+          key={`level_${currentLevel}`}
+          onClick={handleClick}
+        >
+          难度{currentLevel}
+        </div>
+      );
+    });
 
   return (
-    <div className={style.container}>
-      {unlockState.map((state, idx) => {
-        if (state) {
-          return (
-            <div
-              className={style.difficulty}
-              key={idx}
-              onClick={() => history.push('/answerQuestion')}
-            >
-              难度{idx + 1}
-            </div>
-          );
-        } else {
-          return (
-            <div className={style.difficultyBlock} key={idx}>
-              难度{idx + 1}
-            </div>
-          );
-        }
-      })}
+    <div>
+      <div className={style.container}>{Levels}</div>
     </div>
   );
 };
 
-function mapStateToProps(state: any) {
-  return {};
-}
+const roles = ['管理员', '教员', '学员'];
 
-export default connect(mapStateToProps)(Index);
+const Index = () => {
+  const role = CookieUtil.get('role')
+    ? roles[CookieUtil.get('role') - 1]
+    : 'null';
+
+  if (role === '学员') return <StudentIndex />;
+  else return <TeacherIndex />;
+};
+
+export default Index;
