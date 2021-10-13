@@ -21,7 +21,7 @@ const submitAnswer = (question_id: number, answer: string) =>
   post<{
     customer_level: number;
     do_right: number;
-  }>('v1/student/answer_submit', { data: { question_id, answer } });
+  }>('/v1/student/answer_submit', { data: { question_id, answer } });
 
 const Index = (props: any) => {
   const { level, unblockNextLevel } = useModel('useDifficulties');
@@ -61,7 +61,7 @@ const Index = (props: any) => {
   useEffect(() => {
     const { question_id } = questions[id] ?? {};
     if (!question_id) return;
-    post<QuestionDetail>('v1/student/question_detail', {
+    post<QuestionDetail>('/v1/student/question_detail', {
       data: { question_id },
     }).then(setCurrentQuestionDetails);
   }, [id, questions]);
@@ -103,6 +103,7 @@ const Index = (props: any) => {
         <Radio
           style={{ display: 'block' }}
           id={`option-${option}`}
+          key={`option-${option}`}
           value={option}
           disabled={disabled}
         >

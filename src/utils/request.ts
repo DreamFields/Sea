@@ -46,7 +46,7 @@ const config = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log('response', response);
+  console.log('response', response, error);
   if (response && response.status) {
     //   const { code ,msg, request } = response;
     //   const errorText = msg;
@@ -66,9 +66,11 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 配置request请求时的默认参数
  */
+
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'omit', // 默认请求是否带上cookie
+  mode: 'cors',
 });
 
 const { NODE_ENV } = process.env;
@@ -181,3 +183,5 @@ export const post = <R>(url, params = {}) =>
 
 export const get = <R>(url, params = {}) =>
   requestAsPromise<R>(url, { ...params, method: 'GET' });
+
+globalThis.request = custom_request;
