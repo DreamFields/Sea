@@ -52,7 +52,11 @@ const Component = (props: any) => {
       <Button onClick={query}>开始修改</Button>
       {data && (
         <>
-          <QuestionComponent data={data} setData={setData} readOnly={false} />
+          <QuestionComponent
+            data={data}
+            onDataChange={setData}
+            readOnly={false}
+          />
           <Button onClick={submit}>提交</Button>
         </>
       )}

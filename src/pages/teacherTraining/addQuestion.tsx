@@ -42,7 +42,7 @@ const Component = (props: any) => {
   };
   return (
     <div>
-      <QuestionComponent data={data} setData={setData} readOnly={false} />
+      <QuestionComponent data={data} onDataChange={setData} readOnly={false} />
       <Button onClick={submit}>提交</Button>
     </div>
   );
