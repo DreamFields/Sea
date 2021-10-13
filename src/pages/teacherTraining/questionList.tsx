@@ -14,6 +14,11 @@ const Component = (props: any) => {
 
   const columns = [
     {
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
       title: '内容',
       dataIndex: ['info_text_content', 'question_info'],
       key: 'content',
