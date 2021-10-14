@@ -1,7 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 import style from './style.less';
 import { connect, useParams, useModel, history } from 'umi';
-import { Radio, Input, Image, Row, RadioChangeEvent, Button, Col } from 'antd';
+import {
+  Radio,
+  Input,
+  Image,
+  Row,
+  RadioChangeEvent,
+  Button,
+  Col,
+  Tag,
+  TagProps,
+} from 'antd';
 import { post } from '@/utils/request';
 import {
   IQuestionListResp,
@@ -22,6 +32,40 @@ const submitAnswer = (question_id: number, answer: string) =>
     customer_level: number;
     do_right: number;
   }>('/v1/student/answer_submit', { data: { question_id, answer } });
+
+interface IQuestionTagProps extends Pick<TagProps, 'onClick' | 'children'> {
+  question: Question;
+  checked: boolean;
+}
+
+const QuestionTag: FC<IQuestionTagProps> = ({
+  question,
+  checked,
+  onClick,
+  children,
+}) => {
+  let color: TagProps['color'];
+  switch (question?.type) {
+    case QuestionType.Right:
+      color = 'green';
+      break;
+    case QuestionType.Wrong:
+      color = 'red';
+      break;
+    default:
+      color = 'default';
+      break;
+  }
+  return (
+    <Tag
+      color={color}
+      onClick={onClick}
+      className={checked ? style.currentQuestion : style.otherQuestion}
+    >
+      {children}
+    </Tag>
+  );
+};
 
 const Index = (props: any) => {
   const { level, unblockNextLevel } = useModel('useDifficulties');
@@ -112,24 +156,23 @@ const Index = (props: any) => {
       ))}
     </>
   );
-
+  console.log('questions.length', questions.length, id);
   return (
     <div className={style.container}>
       <div>
         <h4>题目列表</h4>
-        <div className={style.questionNameContainer}>
+        <Row className="questionNameContainer">
           {questions.map((item, idx) => (
-            <div
+            <QuestionTag
+              question={item}
+              checked={idx === id}
               key={idx}
-              className={
-                idx === id ? style.currentQuestion : style.otherQuestion
-              }
               onClick={() => setId(idx)}
             >
               {idx + 1}
-            </div>
+            </QuestionTag>
           ))}
-        </div>
+        </Row>
       </div>
       <div>
         <h4>问题</h4>
@@ -173,37 +216,32 @@ const Index = (props: any) => {
           </>
         )}
 
-        {currentQuestion.type !== QuestionType.Right && (
-          <Row>
-            <Button onClick={handleSubmit}>提交该题</Button>
-          </Row>
-        )}
-
         {'analysis' in currentQuestion && <></>}
         <Row>
           {id !== 0 && (
-            <Col xs={6}>
-              <div
-                className={style.btn}
-                onClick={() => {
-                  setId(id - 1);
-                }}
-              >
-                上一题
-              </div>
-            </Col>
+            <div
+              className={style.btn}
+              onClick={() => {
+                setId(id - 1);
+              }}
+            >
+              上一题
+            </div>
           )}
+
+          {currentQuestion.type !== QuestionType.Right && (
+            <Button onClick={handleSubmit}>提交该题</Button>
+          )}
+
           {id !== questions.length - 1 && (
-            <Col xs={6}>
-              <div
-                className={style.btn}
-                onClick={() => {
-                  setId(id + 1);
-                }}
-              >
-                下一题
-              </div>
-            </Col>
+            <div
+              className={style.btn}
+              onClick={() => {
+                setId(id + 1);
+              }}
+            >
+              下一题
+            </div>
           )}
         </Row>
       </div>

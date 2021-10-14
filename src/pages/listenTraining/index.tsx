@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import style from './style.less';
 import TeacherIndex from '../teacherTraining/index';
 import CookieUtil from '@/utils/cookie.js';
-// import { useDifficulties } from './models';
 
-import { connect, history, Link, useModel } from 'umi';
+import { history, useModel } from 'umi';
 
 const MAX_LEVEL = 5;
 
 const StudentIndex = (props: any) => {
-  const { level, unblockNextLevel } = useModel('useDifficulties');
-
+  const { level, unblockNextLevel, refreshLevel } = useModel('useDifficulties');
+  console.log(props);
+  useEffect(refreshLevel, []);
   const Levels = Array(5)
     .fill(null)
     .map((_, idx) => {
