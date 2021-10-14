@@ -5,6 +5,8 @@ import { Button, message } from 'antd';
 import { post } from '@/utils/request';
 
 const Component = (props: any) => {
+  const { onDone } = props;
+
   const [data, setData] = useState({
     difficult: '1',
     correct: 'A',
@@ -21,7 +23,7 @@ const Component = (props: any) => {
   });
 
   const submit = async () => {
-    const postData = {
+    const postData: any = {
       difficult: +data.difficult,
       knowledge_id: +data.knowledge_id ?? 1,
       correct: data.correct,
@@ -33,8 +35,11 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
-      id: data.question_id,
     };
+
+    if (data.question_id) {
+      postData.id = data.question_id;
+    }
 
     console.log(data.question_id);
     const res = await post<any>(
@@ -47,7 +52,9 @@ const Component = (props: any) => {
     );
     console.log('add_question', res);
     message.success('添加成功');
+    onDone && onDone();
   };
+
   return (
     <div>
       <QuestionComponent data={data} onDataChange={setData} readOnly={false} />

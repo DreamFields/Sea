@@ -4,6 +4,7 @@ import { Input, Button, message } from 'antd';
 import { post } from '@/utils/request';
 
 const Component = (props: any) => {
+  const { onDone } = props;
   const [content, setContent] = useState('');
   const submit = async () => {
     const data = { content };
@@ -11,6 +12,7 @@ const Component = (props: any) => {
       const res = await post('/v1/teacher/add_knowledge', { data });
       console.log('add knowledge', res);
       message.success('添加知识点成功');
+      onDone && onDone();
     } catch (e: any) {
       message.error(e.toString());
     }

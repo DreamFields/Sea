@@ -1,52 +1,26 @@
 import { post } from '@/utils/request';
-import { Table } from 'antd';
+import { Table, Button, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
+import AddQuestion from './addQuestion';
+import UpdateQuestion from './updateQuestion';
 import style from './style.less';
 
 const Component = (props: any) => {
   const [dataSource, setDataSource] = useState([]);
+  const [state, setState] = useState(0);
+  const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
+
   useEffect(() => {
-    (async () => {
-      const res = await post<any>('/v1/teacher/question_list');
+    post<any>('/v1/teacher/question_list').then((res) => {
       setDataSource(res);
-    })();
-  }, []);
+    });
+  }, [state]);
 
   const columns = [
     {
-      title: 'id',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: '内容',
-      dataIndex: ['info_text_content', 'question_info'],
+      title: '题干',
+      dataIndex: ['question_info_text_content', 'question_info'],
       key: 'content',
-    },
-    {
-      title: 'A',
-      dataIndex: ['info_text_content', 'A'],
-      key: 'A',
-    },
-    {
-      title: 'B',
-      dataIndex: ['info_text_content', 'B'],
-      key: 'B',
-    },
-    {
-      title: 'C',
-      dataIndex: ['info_text_content', 'C'],
-      key: 'C',
-    },
-    {
-      title: 'D',
-      dataIndex: ['info_text_content', 'D'],
-      key: 'D',
-    },
-    {
-      title: '正答',
-      dataIndex: 'correct',
-      key: 'correct',
     },
     {
       title: '创建时间',
@@ -59,23 +33,47 @@ const Component = (props: any) => {
       key: 'difficult',
     },
     {
-      title: '用户ID',
-      dataIndex: 'user_id',
-      key: 'user_id',
+      title: '用户名',
+      dataIndex: 'nickname',
+      key: 'nickname',
     },
     {
-      title: '题目类型',
-      dataIndex: 'question_type',
-      key: 'question_type',
-    },
-    {
-      title: '分数',
-      dataIndex: 'score',
-      key: 'score',
+      title: '查看题目',
+      key: 'actions',
+      render(_, data: any) {
+        return (
+          <Space size="middle">
+            <Button
+              onClick={() => {
+                setState(2);
+                setUpdateQuestionId(data.id);
+              }}
+            >
+              查看题目
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 
-  return <Table dataSource={dataSource} columns={columns} />;
+  return (
+    <div>
+      {state === 0 && (
+        <>
+          <Button onClick={() => setState(1)}>添加题目</Button>
+          <Table dataSource={dataSource} columns={columns} />
+        </>
+      )}
+
+      {state > 0 && <Button onClick={() => setState(0)}>返回题目列表</Button>}
+
+      {state === 1 && <AddQuestion onDone={() => setState(0)} />}
+      {state === 2 && (
+        <UpdateQuestion onDone={() => setState(0)} id={updateQuestionId} />
+      )}
+    </div>
+  );
 };
 
 export default Component;
