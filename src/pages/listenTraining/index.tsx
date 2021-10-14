@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import style from './style.less';
 import TeacherIndex from '../teacherTraining/index';
 import CookieUtil from '@/utils/cookie.js';

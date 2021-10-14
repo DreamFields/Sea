@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import QuestionComponent from './questionComponent';
-import { Button, Input, message } from 'antd';
+import { Button, message } from 'antd';
 import { post } from '@/utils/request';
 
 const Component = (props: any) => {
   const [data, setData] = useState<any>(null);
-  const [id, setId] = useState('');
+  const { id, onDone } = props;
 
   const submit = async () => {
+    if (data === null) {
+      console.log('submit updatequestion null');
+      return;
+    }
+
     console.log('knowledge_id', data.knowledge_id);
     const postData = {
       id: +id,
@@ -29,27 +34,29 @@ const Component = (props: any) => {
       data: postData,
     });
     console.log('update_question', res);
-    message.success('更新成功');
+    message.success('修改成功！');
+    onDone && onDone();
   };
 
-  const query = async () => {
-    const res = await post<any>('/v1/teacher/question_detail', {
+  useEffect(() => {
+    if (id === undefined) {
+      return;
+    }
+
+    post<any>('/v1/teacher/question_detail', {
       data: {
         question_id: +id,
       },
+    }).then((res1) => {
+      console.log('/v1/teacher/question_detail res', res1);
+      if (res1.info_text_content === null) res1.info_text_content = {} as any;
+      setData({ ...res1 });
     });
-    setData(null);
-    setData({ ...res });
-  };
+  }, [id]);
 
+  console.log('data', data);
   return (
     <div>
-      <Input
-        placeholder="题目id"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      ></Input>
-      <Button onClick={query}>开始修改</Button>
       {data && (
         <>
           <QuestionComponent

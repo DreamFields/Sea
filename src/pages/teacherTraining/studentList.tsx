@@ -27,12 +27,12 @@ const Component = (props: any) => {
   ];
   for (let idx = 0; idx < 5; idx++) {
     columns.push({
-      title: `问题${idx + 1}作答`,
+      title: `难度${idx + 1}作答`,
       dataIndex: ['question_count', (idx + 1).toString()],
       key: `question_count_${idx}`,
     });
     columns.push({
-      title: `问题${idx + 1}正答`,
+      title: `难度${idx + 1}正答`,
       dataIndex: ['question_correct', (idx + 1).toString()],
       key: `question_correct_${idx}`,
     });
