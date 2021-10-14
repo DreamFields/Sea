@@ -19,50 +19,47 @@ type CustomRequest = Exclude<
 
 const a = (b: number): string => ({} as any);
 
-const makeUploader =
-  ({
-    api,
-    fileFieldName,
-    id,
-    cb,
-    previewCb,
-  }: {
-    api: string;
-    fileFieldName: string;
-    id: number;
-    cb: any;
-    previewCb: any;
-  }): CustomRequest =>
-  ({ file, onSuccess, onError }) => {
-    previewCb && previewCb(file);
-
-    const body = new FormData();
-    body.append('id', `${id ?? ''}`);
-    body.append(fileFieldName, file);
-    post(api, {
-      // headers: {
-      //   // 这里的request的header不能加在extend创建实例里
-      //   // 'Content-Type': 'application/x-www-form-urlencode',
-      // },
-      body,
-    })
-      .then((res: any) => {
-        console.debug.bind(null, 'uploader:');
-        // @ts-ignore
-        onSuccess?.({});
-
-        cb && cb(res.id);
-      })
-      .catch(onError);
-  };
-
 const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   console.log('question component', data);
   const { question_pic: pic_url, question_sound_url: sound_url } = data;
 
+  const makeUploader =
+    ({
+      api,
+      fileFieldName,
+      cb,
+      previewCb,
+    }: {
+      api: string;
+      fileFieldName: string;
+      cb: any;
+      previewCb: any;
+    }): CustomRequest =>
+    ({ file, onSuccess, onError }) => {
+      previewCb && previewCb(file);
+
+      const body = new FormData();
+      body.append('id', `${data.question_id ?? ''}`);
+      body.append(fileFieldName, file);
+      post(api, {
+        // headers: {
+        //   // 这里的request的header不能加在extend创建实例里
+        //   // 'Content-Type': 'application/x-www-form-urlencode',
+        // },
+        body,
+      })
+        .then((res: any) => {
+          console.debug.bind(null, 'uploader:');
+          // @ts-ignore
+          onSuccess?.({});
+
+          cb && cb(res.id);
+        })
+        .catch(onError);
+    };
+
   const handleAudioUpload = makeUploader({
     api: '/v1/teacher/upload_sound',
-    id: data.question_id,
     fileFieldName: 'audio',
     cb(id) {
       console.log('audio cb', id);
@@ -70,13 +67,13 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
     },
     previewCb(blob) {
       const blobUrl = URL.createObjectURL(blob);
+      data.question_sound_url = blobUrl;
       onDataChange({ ...data, question_sound_url: blobUrl });
       console.log('blob audio', blob);
     },
   });
   const handlePictureUpload = makeUploader({
     api: '/v1/teacher/upload_picture',
-    id: data.question_id,
     fileFieldName: 'picture',
     cb(id) {
       console.log('img cb', id);
@@ -84,6 +81,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
     },
     previewCb(blob) {
       const blobUrl = URL.createObjectURL(blob);
+      data.question_pic = blobUrl;
       onDataChange({ ...data, question_pic: blobUrl });
       console.log('blob img', blob);
     },
