@@ -60,7 +60,7 @@ const Component = (props: any) => {
       {data && (
         <>
           <QuestionComponent
-            data={data}
+            data={{ ...data, question_id: id }}
             onDataChange={setData}
             readOnly={false}
           />

@@ -23,23 +23,25 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   console.log('question component', data);
   const { question_pic: pic_url, question_sound_url: sound_url } = data;
 
-  const makeUploader =
-    ({
-      api,
-      fileFieldName,
-      cb,
-      previewCb,
-    }: {
-      api: string;
-      fileFieldName: string;
-      cb: any;
-      previewCb: any;
-    }): CustomRequest =>
-    ({ file, onSuccess, onError }) => {
+  const makeUploader = ({
+    api,
+    fileFieldName,
+    cb,
+    previewCb,
+  }: {
+    api: string;
+    fileFieldName: string;
+    cb: any;
+    previewCb: any;
+  }): CustomRequest => {
+    const id = data.question_id;
+    console.log('make uploader question_id', id, data);
+
+    return ({ file, onSuccess, onError }) => {
       previewCb && previewCb(file);
 
       const body = new FormData();
-      body.append('id', `${data.question_id ?? ''}`);
+      body.append('id', `${id ?? ''}`);
       body.append(fileFieldName, file);
       post(api, {
         // headers: {
@@ -57,6 +59,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         })
         .catch(onError);
     };
+  };
 
   const handleAudioUpload = makeUploader({
     api: '/v1/teacher/upload_sound',
