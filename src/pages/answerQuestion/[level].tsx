@@ -125,10 +125,9 @@ const Index = (props: any) => {
       submitAnswer(question_id, userAnswer).then((res) => {
         const { do_right, customer_level } = res || {};
         if (!do_right || !customer_level) return;
-        // if (do_right)
-        //   setQuestions((draft) => {
-        //     draft[id].type = do_right as QuestionType;
-        //   });
+        // setQuestions((draft) => {
+        //   draft[id].type = do_right as QuestionType;
+        // });
         updateQuestionList(currentLevel);
         if (customer_level > currentLevel) unblockNextLevel();
       });
@@ -141,21 +140,29 @@ const Index = (props: any) => {
 
   const { pic_url, sound_url } = currentQuestionDetails;
 
-  const renderOptions = ({ disabled }: { disabled: boolean }) => (
-    <>
-      {['A', 'B', 'C', 'D'].map((option) => (
-        <Radio
-          style={{ display: 'block' }}
-          id={`option-${option}`}
-          key={`option-${option}`}
-          value={option}
-          disabled={disabled}
-        >
-          {option}: {currentQuestionDetails.info_text_content[option]}
-        </Radio>
-      ))}
-    </>
-  );
+  const renderOptions = ({ disabled }: { disabled: boolean }) => {
+    return (
+      <>
+        {['A', 'B', 'C', 'D'].map((option) => {
+          const shouldDisable =
+            disabled ||
+            ('customer_answer' in currentQuestion &&
+              option === currentQuestion?.customer_answer);
+          return (
+            <Radio
+              style={{ display: 'block' }}
+              id={`option-${option}`}
+              key={`option-${option}`}
+              value={option}
+              disabled={shouldDisable}
+            >
+              {option}: {currentQuestionDetails.info_text_content[option]}
+            </Radio>
+          );
+        })}
+      </>
+    );
+  };
   console.log('questions.length', questions.length, id);
   return (
     <div className={style.container}>
