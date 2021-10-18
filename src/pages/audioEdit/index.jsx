@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-27 18:17:58
+ * @LastEditTime: 2021-10-18 22:14:56
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -29,6 +29,8 @@ import {
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
 import CookieUtil from '@/utils/cookie.js';
+// import WaveSurfer from 'wavesurfer.js';
+// import WaveSurfer from 'react-wavesurfer';
 
 let region_now;
 let audio_id_dup = undefined;
@@ -133,6 +135,26 @@ const Index = (props) => {
       }
     }
 
+    function setCurrentRegion(regions) {
+      let _regions = undefined;
+      if (regions && regions.length !== 0) {
+        _regions = JSON.parse(regions);
+      }
+      if (tab === '2' && _regions) {
+        console.log('_regions', tip_region);
+        _regions.forEach(function (region) {
+          region.color = 'rgba(100,149,237,0.3)';
+          wavesurfer.addRegion(region);
+        });
+      } else if (tab === '1' && tip_region) {
+        console.log('tip_region', tip_region);
+        tip_region.forEach(function (region) {
+          region.color = 'rgba(100,149,237,0.3)';
+          wavesurfer.addRegion(region);
+        });
+      }
+    }
+
     useEffect(() => {
       var menu = document.getElementById('editMenu');
       document.onclick = function () {
@@ -146,7 +168,7 @@ const Index = (props) => {
         progressColor: '#1e90ff',
         splitChannels: true,
         cursorColor: '#bdc3c7',
-        cursorWidth: 1,
+        cursorWidth: 1, // 鼠标点击的竖线宽度
         // barWidth: 1,
         // barHeight: 1, // the height of the wave
         barRadius: 3,
@@ -183,12 +205,19 @@ const Index = (props) => {
 
       wavesurfer.on('ready', function () {
         wavesurfer.enableDragSelection({
-          color: 'rgba(100,149,237,0.3)',
+          color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
+          // waveColor: 'red',
         });
         wavesurfer.clearRegions();
         loadRegions(Pretreatment.tips);
       });
       wavesurfer.on('region-click', function (region, e) {
+        // wavesurfer.params.container.style.opacity = 0.9;
+        console.log('点击了区域', region);
+        console.log('e', e);
+        region.color = 'rgba(10,149,237,0.3)';
+        // wavesurfer.addRegion(region)
+        setCurrentRegion(Pretreatment.tips);
         e.stopPropagation();
         e.shiftKey ? region.playLoop() : region.play();
       });
