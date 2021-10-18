@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-17 10:33:56
+ * @LastEditTime: 2021-10-18 13:35:35
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
@@ -153,16 +153,17 @@ const Index = (props: any) => {
 
   return (
     <div className={style.loginDiv}>
-      <img src={logo} style={{ height: 45, width: 45, marginLeft: '20%' }} />
+      <img src={logo} style={{ height: 45, width: 45, marginLeft: '10%' }} />
       <h2
         style={{
-          marginLeft: '34%',
+          marginLeft: '28%',
           marginTop: -40,
           marginBottom: 30,
+          width: '500px',
           color: 'white',
         }}
       >
-        水声数据库系统
+        水声数据整编分析系统
       </h2>
       <Login />
     </div>
