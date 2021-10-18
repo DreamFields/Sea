@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Recorder from 'recorder-core';
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder';
 import { LoadingOutlined } from '@ant-design/icons';
 import './index.less';
@@ -6,6 +7,7 @@ import './index.less';
 import PLAY from './play.png';
 import PAUSE from './pause.png';
 import END from './end.png';
+import { message } from 'antd';
 
 const Index = () => {
   const [recordState, setrecordState] = useState(null);
@@ -16,6 +18,32 @@ const Index = () => {
 
   const recorderPlay = () => {
     console.log(play, url);
+    // 尝试用recorder-core库来进行是否有录音设备判断
+    let record;
+    record = Recorder({
+      type: 'wav',
+      sampleRate: 16000,
+      bitRate: 16,
+      onProcess: function (
+        buffers,
+        powerLevel,
+        bufferDuration,
+        bufferSampleRate,
+        newBufferIdx,
+        asyncEnd,
+      ) {},
+    });
+    record.open(
+      () => {
+        record.start();
+      },
+      (msg, isUserNotAllow) => {
+        console.log('isUserNotAllow', isUserNotAllow, 'msg', msg);
+        message.warning(msg + '，请重试！');
+        return;
+      },
+    );
+    // console.log('录音成功')
     if (play === 'start') {
       setrecordState(RecordState.PAUSE);
       setplay(RecordState.PAUSE);
