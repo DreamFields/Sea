@@ -17,45 +17,33 @@ const Index = () => {
   const [loading, setloading] = useState(false);
 
   const recorderPlay = () => {
-    console.log(play, url);
-    // 尝试用recorder-core库来进行是否有录音设备判断
-    let record;
-    record = Recorder({
-      type: 'wav',
-      sampleRate: 16000,
-      bitRate: 16,
-      onProcess: function (
-        buffers,
-        powerLevel,
-        bufferDuration,
-        bufferSampleRate,
-        newBufferIdx,
-        asyncEnd,
-      ) {},
-    });
-    record.open(
-      () => {
-        record.start();
-      },
-      (msg, isUserNotAllow) => {
-        console.log('isUserNotAllow', isUserNotAllow, 'msg', msg);
-        message.warning(msg + '，请重试！');
-        return;
-      },
-    );
-    // console.log('录音成功')
-    if (play === 'start') {
-      setrecordState(RecordState.PAUSE);
-      setplay(RecordState.PAUSE);
-      setloading(false);
-    } else {
-      console.log('reacoedState', RecordState);
-      setrecordState(RecordState.START);
-      setplay(RecordState.START);
-      seturl(null);
-      setvisible(false);
-      setloading(true);
-    }
+    console.log('object');
+    //调用开启麦克风
+    let constraints = {
+      audio: true,
+      video: false,
+    };
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(() => {
+        // console.log('有麦克风')
+        if (play === 'start') {
+          setrecordState(RecordState.PAUSE);
+          setplay(RecordState.PAUSE);
+          setloading(false);
+        } else {
+          console.log('reacoedState', RecordState);
+          setrecordState(RecordState.START);
+          setplay(RecordState.START);
+          seturl(null);
+          setvisible(false);
+          setloading(true);
+        }
+      })
+      .catch((e) => {
+        // console.log('e',e)
+        message.warning('请检查设备是否有麦克风！');
+      });
   };
 
   const stop = () => {
@@ -81,21 +69,22 @@ const Index = () => {
   return (
     <div>
       <h3>
-        {loading ? '正在录音...' : '录音机：'}{' '}
+        {loading ? '正在录音...' : '录音机'}{' '}
         <LoadingOutlined
           style={{ visibility: loading ? 'visible' : 'hidden' }}
         />
       </h3>
       <div>
-        <AudioReactRecorder
-          // canvasWidth="100%"
-          // canvasHeight="200"
-          state={recordState}
-          onStop={onStop}
-          foregroundColor="#08979c"
-          backgroundColor="#434343"
-        />
-        <div style={{ display: 'flex', marginBottom: 16, marginTop: 16 }}>
+        <div
+          style={{
+            display: 'flex',
+            marginBottom: 16,
+            marginTop: 16,
+            justifyContent: 'flex-end',
+            top: '-45px',
+            position: 'relative',
+          }}
+        >
           {
             <div className="recorder">
               {play === 'start' ? (
@@ -108,12 +97,21 @@ const Index = () => {
           }
           {url && visible ? (
             <audio
+              id="audio"
               src={url}
               /* ref={c => audio1 = c} */ controls={true}
               style={{ display: 'block' }}
             ></audio>
           ) : null}
         </div>
+        <AudioReactRecorder
+          // canvasWidth="100%"
+          // canvasHeight="200"
+          state={recordState}
+          onStop={onStop}
+          foregroundColor="#08979c"
+          backgroundColor="#434343"
+        />
       </div>
     </div>
   );
