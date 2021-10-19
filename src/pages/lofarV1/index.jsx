@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   notification,
@@ -95,7 +95,7 @@ const TestApp = (props) => {
         },
       ],
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
       },
       toolbox: {
         left: 'center',
