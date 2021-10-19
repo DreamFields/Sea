@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-19 11:23:44
+ * @LastEditTime: 2021-10-19 15:29:20
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -25,6 +25,7 @@ import {
   Slider,
   Alert,
   Card,
+  Tooltip,
 } from 'antd';
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
@@ -36,8 +37,13 @@ let region_now;
 let audio_id_dup = undefined;
 const alert_message_1 =
   '对一个区域进行操作前请务必先左键单击对应的区域；您可以通过点击一个标签后，在上方的开始时间和结束时间输入栏修改当前选择标签的起始时间和结束时间，修改后记得右键单击标签点击设置标签！';
-const alert_message_2 =
-  '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
+const alert_message_2_1 =
+  '操作方式一：①选中某个区域 ②进行拖动操作 ③单击鼠标左键（音频起止时间可自动更新） ④单击鼠标右键-保存该标签。';
+const alert_message_2_2 =
+  '操作方式二：①选中某个区域 ②在输入框中填入新的起止时间 ③单击鼠标右键-保存该标签。';
+
+// const alert_message_2 =
+//   '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
 
 //定义音频可视化组件
 let wavesurfer;
@@ -121,20 +127,24 @@ const Index = (props) => {
     }
   }, [tab, Pretreatment.audio_id]);
 
+  function editAnnotation(region) {
+    console.log('保存的region', region);
+    // const newNote=form.getFieldsValue().note
+    form.getFieldsValue();
+    console.log('editAnnotation()');
+    form.setFieldsValue({
+      start: region.start.toFixed(3),
+      end: region.end.toFixed(3),
+      // note: newNote===undefined?region.data.note:newNote || '',
+      note: region.data.note || '',
+    });
+    // console.log('region.list',region.list)
+
+    region_now = region;
+    console.log('点击后的region_now', region_now);
+  }
+
   const Waveform = () => {
-    function editAnnotation(region) {
-      console.log('editAnnotation()');
-      form.setFieldsValue({
-        start: region.start.toFixed(3),
-        end: region.end.toFixed(3),
-        note: region.data.note || '',
-      });
-      // console.log('region.list',region.list)
-
-      region_now = region;
-      console.log('点击后的region_now', region_now);
-    }
-
     /**
      * Load regions.
      */
@@ -206,7 +216,7 @@ const Index = (props) => {
         wavesurfer.load(path);
       }
 
-      wavesurfer.on('ready', function (regions) {
+      wavesurfer.on('ready', function () {
         // console.log('regions',regions)
         wavesurfer.enableDragSelection({
           color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
@@ -215,6 +225,8 @@ const Index = (props) => {
         wavesurfer.clearRegions();
         loadRegions(Pretreatment.tips);
       });
+
+      // 鼠标在region中点击时触发
       wavesurfer.on('region-click', function (region, e) {
         chooseCurrentRegion(region);
         wavesurfer.enableDragSelection({
@@ -225,11 +237,10 @@ const Index = (props) => {
         e.stopPropagation();
         e.shiftKey ? region.playLoop() : region.play();
       });
+
+      // 鼠标在region中点击时触发
       wavesurfer.on('region-click', editAnnotation);
       wavesurfer.on('region-in', showNote);
-      wavesurfer.on('region-in', function (params) {
-        console.log('params', params);
-      });
 
       /**
        * Display annotation.
@@ -379,7 +390,7 @@ const Index = (props) => {
             >
               导出当前音频
             </Button>
-            <Popover content="将所有设置过的标签保存。" title="保存所有标签">
+            <Popover content="将所有鼠标拖动过的标签保存。">
               <Button
                 type="primary"
                 onClick={handle_save_regions}
@@ -442,7 +453,7 @@ const Index = (props) => {
 
   //保存某个区域到wavesurfer的regions数组里
   // 修改，使其点击后能够将标签直接保存到下面的列表中
-  const handle_save_region = () => {
+  const handle_save_region_tag = () => {
     // console.log(form.getFieldsValue())
     if (region_now != undefined) {
       region_now.update({
@@ -460,7 +471,26 @@ const Index = (props) => {
         note: form.getFieldsValue().note,
       },
     }); */
-    // handle_save_regions();
+    // 同时保存所有标签（因为只有一个保存所有标签的接口）
+    handle_save_regions();
+    form.setFieldsValue({
+      start: null,
+      end: null,
+      note: null,
+    });
+  };
+
+  const handle_save_region_edit = () => {
+    // console.log(form.getFieldsValue())
+    if (region_now != undefined) {
+      region_now.update({
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        data: {
+          note: form.getFieldsValue().note,
+        },
+      });
+    }
   };
 
   const handle_copy = () => {
@@ -710,7 +740,13 @@ const Index = (props) => {
             style={{ display: tab == '2' ? 'none' : 'block' }}
           />
           <Alert
-            message={alert_message_2}
+            message={alert_message_2_1}
+            type="warning"
+            showIcon
+            style={{ display: tab == '1' ? 'none' : 'block' }}
+          />
+          <Alert
+            message={alert_message_2_2}
             type="warning"
             showIcon
             style={{ display: tab == '1' ? 'none' : 'block' }}
@@ -736,9 +772,11 @@ const Index = (props) => {
                 span={12}
                 style={{ display: tab === '2' ? 'block' : 'none' }}
               >
-                <Form.Item name="note" label="备注">
-                  <Input id="regionNote" name="note" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改完备注请及时单击右键-保存该标签">
+                  <Form.Item name="note" label="备注">
+                    <Input id="regionNote" name="note" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
             </Row>
           </Form>
@@ -789,6 +827,7 @@ const Index = (props) => {
                                   item.start - wavesurfer.getCurrentTime(),
                                 );
                                 console.log('item', item);
+                                editAnnotation(item);
                                 Object.keys(wavesurfer.regions.list).map(
                                   function (id) {
                                     if (
@@ -834,9 +873,11 @@ const Index = (props) => {
           type="button"
           className="btn btn-default"
           id="saveRegion"
-          onClick={handle_save_region}
+          onClick={
+            tab === '1' ? handle_save_region_edit : handle_save_region_tag
+          }
         >
-          {tab === '1' ? '设置区域' : '设置标签'}
+          {tab === '1' ? '设置区域' : '保存该标签'}
         </button>
         <button
           type="button"
@@ -844,7 +885,7 @@ const Index = (props) => {
           id="deleteRegion"
           onClick={handle_remove_region}
         >
-          {tab === '1' ? '删除区域' : '删除标签'}
+          {tab === '1' ? '删除区域' : '删除该标签'}
         </button>
         <button
           type="button"
