@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-27 18:17:10
+ * @LastEditTime: 2021-10-19 11:44:46
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -66,14 +66,15 @@ const Index = (props) => {
       // 初始化wavesurfer组件
       wavesurfer = WaveSurfer.create({
         container: '#waveform',
-        waveColor: 'skyblue',
+        waveColor: 'grey', // 修改配色
+        // waveColor: 'rgba(2，68,187,0.65)',
         progressColor: '#1e90ff',
-        // splitChannels: true,
+        splitChannels: true,
         cursorColor: '#bdc37',
         cursorWidth: 1,
-        barWidth: 2,
-        barHeight: 1, // the height of the wave
-        barGap: 2, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
+        // barWidth: 2,
+        // barHeight: 1, // the height of the wave
+        // barGap: 2, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
         barRadius: 3,
         plugins: [
           WaveSurfer.cursor.create({
