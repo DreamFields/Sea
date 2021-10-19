@@ -1,3 +1,8 @@
+/*
+ * @Author: Meng Tian
+ * @Date: 2021-10-18 15:09:08
+ * @Description: 时频图组件
+ */
 import React, { useState } from 'react';
 import {
   Button,
@@ -59,6 +64,7 @@ const TestApp = (props) => {
   );
   const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
+      backgroundColor: '#1b1b1b', //背景色
       darkMode: true,
       title: {
         text: '特征提取',
@@ -305,7 +311,7 @@ const TestApp = (props) => {
           <ReactEcharts
             option={getOption(data, Xdata, Ydata, min, max)}
             theme="dark"
-            style={{ height: '400px' }}
+            style={{ height: '400px', backgroundColor: '#000000' }}
             onEvents={{
               brushselected: handleBrushSelected,
               brushEnd: calculate,

@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-19 15:29:20
+ * @LastEditTime: 2021-10-19 16:16:44
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -40,7 +40,7 @@ const alert_message_1 =
 const alert_message_2_1 =
   '操作方式一：①选中某个区域 ②进行拖动操作 ③单击鼠标左键（音频起止时间可自动更新） ④单击鼠标右键-保存该标签。';
 const alert_message_2_2 =
-  '操作方式二：①选中某个区域 ②在输入框中填入新的起止时间 ③单击鼠标右键-保存该标签。';
+  '操作方式二：①选中某个区域 ②在输入框中更新信息 ③单击鼠标右键-保存该标签。';
 
 // const alert_message_2 =
 //   '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
@@ -449,6 +449,11 @@ const Index = (props) => {
         regions: JSON.stringify(regions),
       },
     });
+    form.setFieldsValue({
+      start: null,
+      end: null,
+      note: null,
+    });
   };
 
   //保存某个区域到wavesurfer的regions数组里
@@ -473,11 +478,6 @@ const Index = (props) => {
     }); */
     // 同时保存所有标签（因为只有一个保存所有标签的接口）
     handle_save_regions();
-    form.setFieldsValue({
-      start: null,
-      end: null,
-      note: null,
-    });
   };
 
   const handle_save_region_edit = () => {
@@ -705,12 +705,21 @@ const Index = (props) => {
     settab(key);
   };
 
-  const handle_remove_region = () => {
+  const handle_remove_region_tag = () => {
     if (!region_now) {
       message.warning('请先通过点击以选择一片区域！');
     } else {
       region_now.remove();
     }
+    handle_save_regions();
+  };
+  const handle_remove_region_edit = () => {
+    if (!region_now) {
+      message.warning('请先通过点击以选择一片区域！');
+    } else {
+      region_now.remove();
+    }
+    // handle_save_regions();
   };
 
   return (
@@ -759,20 +768,24 @@ const Index = (props) => {
           >
             <Row gutter={16}>
               <Col span={6}>
-                <Form.Item name="start" label="开始时间">
-                  <Input id="regionStart" name="start" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改后请及时单击右键-保存该标签">
+                  <Form.Item name="start" label="开始时间">
+                    <Input id="regionStart" name="start" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
               <Col span={6}>
-                <Form.Item name="end" label="结束时间">
-                  <Input id="regionEnd" name="end" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改后请及时单击右键-保存该标签">
+                  <Form.Item name="end" label="结束时间">
+                    <Input id="regionEnd" name="end" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
               <Col
                 span={12}
                 style={{ display: tab === '2' ? 'block' : 'none' }}
               >
-                <Tooltip title="修改完备注请及时单击右键-保存该标签">
+                <Tooltip title="修改后请及时单击右键-保存该标签">
                   <Form.Item name="note" label="备注">
                     <Input id="regionNote" name="note" autoComplete="off" />
                   </Form.Item>
@@ -883,7 +896,9 @@ const Index = (props) => {
           type="button"
           className="btn btn-default"
           id="deleteRegion"
-          onClick={handle_remove_region}
+          onClick={
+            tab === '1' ? handle_remove_region_edit : handle_remove_region_tag
+          }
         >
           {tab === '1' ? '删除区域' : '删除该标签'}
         </button>
