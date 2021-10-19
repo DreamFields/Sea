@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-18 22:14:56
+ * @LastEditTime: 2021-10-19 11:23:44
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -57,6 +57,25 @@ const Index = (props) => {
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
 
+  function chooseCurrentRegion(region) {
+    console.log('wavesurfer.regions.list', wavesurfer.regions.list);
+    // 设置点击的region为其它颜色，方便交互
+    Object.keys(wavesurfer.regions.list).map(function (id) {
+      console.log('id', id);
+      if (id === region.id) {
+        wavesurfer.regions.list[id].update({
+          color: 'rgba(242,136,57,0.4)',
+        });
+      } else {
+        wavesurfer.regions.list[id].update({
+          color: 'rgba(100,149,237,0.3)',
+        });
+      }
+    });
+    const newData = wavesurfer.regions.list;
+    console.log('new wavesurfer.regions.list', newData);
+  }
+
   useEffect(() => {
     console.log('pretreatment', Pretreatment);
     if (Pretreatment.audio_id !== audio_id_dup) {
@@ -104,12 +123,16 @@ const Index = (props) => {
 
   const Waveform = () => {
     function editAnnotation(region) {
+      console.log('editAnnotation()');
       form.setFieldsValue({
         start: region.start.toFixed(3),
         end: region.end.toFixed(3),
         note: region.data.note || '',
       });
+      // console.log('region.list',region.list)
+
       region_now = region;
+      console.log('点击后的region_now', region_now);
     }
 
     /**
@@ -128,26 +151,6 @@ const Index = (props) => {
         });
       } else if (tab === '1' && tip_region) {
         // console.log(tip_region);
-        tip_region.forEach(function (region) {
-          region.color = 'rgba(100,149,237,0.3)';
-          wavesurfer.addRegion(region);
-        });
-      }
-    }
-
-    function setCurrentRegion(regions) {
-      let _regions = undefined;
-      if (regions && regions.length !== 0) {
-        _regions = JSON.parse(regions);
-      }
-      if (tab === '2' && _regions) {
-        console.log('_regions', tip_region);
-        _regions.forEach(function (region) {
-          region.color = 'rgba(100,149,237,0.3)';
-          wavesurfer.addRegion(region);
-        });
-      } else if (tab === '1' && tip_region) {
-        console.log('tip_region', tip_region);
         tip_region.forEach(function (region) {
           region.color = 'rgba(100,149,237,0.3)';
           wavesurfer.addRegion(region);
@@ -203,7 +206,8 @@ const Index = (props) => {
         wavesurfer.load(path);
       }
 
-      wavesurfer.on('ready', function () {
+      wavesurfer.on('ready', function (regions) {
+        // console.log('regions',regions)
         wavesurfer.enableDragSelection({
           color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
           // waveColor: 'red',
@@ -212,22 +216,26 @@ const Index = (props) => {
         loadRegions(Pretreatment.tips);
       });
       wavesurfer.on('region-click', function (region, e) {
-        // wavesurfer.params.container.style.opacity = 0.9;
-        console.log('点击了区域', region);
-        console.log('e', e);
-        region.color = 'rgba(10,149,237,0.3)';
-        // wavesurfer.addRegion(region)
-        setCurrentRegion(Pretreatment.tips);
+        chooseCurrentRegion(region);
+        wavesurfer.enableDragSelection({
+          color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
+        });
+        // console.log('点击的区域', region);
+        // console.log('e', e);
         e.stopPropagation();
         e.shiftKey ? region.playLoop() : region.play();
       });
       wavesurfer.on('region-click', editAnnotation);
       wavesurfer.on('region-in', showNote);
+      wavesurfer.on('region-in', function (params) {
+        console.log('params', params);
+      });
 
       /**
        * Display annotation.
        */
       function showNote(region) {
+        console.log('region-in方法');
         if (!showNote.el) {
           showNote.el = document.querySelector('#subtitle');
         }
@@ -285,25 +293,6 @@ const Index = (props) => {
       }).then(() => {
         const _path = path + '?ran=' + randomString(true, 5, 15);
         setpath(_path);
-      });
-    };
-
-    const handle_save_regions = () => {
-      var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
-        var region = wavesurfer.regions.list[id];
-        return {
-          start: region.start,
-          end: region.end,
-          data: region.data,
-        };
-      });
-      console.log(JSON.stringify(regions));
-      dispatch({
-        type: 'pretreatment/saveTips',
-        payload: {
-          audio_id: Pretreatment.audio_id,
-          regions: JSON.stringify(regions),
-        },
       });
     };
 
@@ -427,8 +416,32 @@ const Index = (props) => {
       </>
     );
   };
+  /**
+   * @description: 保存所有标签
+   * @param {*}
+   * @return {*}
+   */
+  const handle_save_regions = () => {
+    var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
+      var region = wavesurfer.regions.list[id];
+      return {
+        start: region.start,
+        end: region.end,
+        data: region.data,
+      };
+    });
+    console.log(JSON.stringify(regions));
+    dispatch({
+      type: 'pretreatment/saveTips',
+      payload: {
+        audio_id: Pretreatment.audio_id,
+        regions: JSON.stringify(regions),
+      },
+    });
+  };
 
   //保存某个区域到wavesurfer的regions数组里
+  // 修改，使其点击后能够将标签直接保存到下面的列表中
   const handle_save_region = () => {
     // console.log(form.getFieldsValue())
     if (region_now != undefined) {
@@ -440,6 +453,14 @@ const Index = (props) => {
         },
       });
     }
+    /* wavesurfer.regions.list[region_now.id].update({
+      start: form.getFieldsValue().start,
+      end: form.getFieldsValue().end,
+      data: {
+        note: form.getFieldsValue().note,
+      },
+    }); */
+    // handle_save_regions();
   };
 
   const handle_copy = () => {
@@ -760,9 +781,25 @@ const Index = (props) => {
                             <Button
                               type="primary"
                               onClick={() => {
-                                console.log(wavesurfer.getCurrentTime());
+                                console.log(
+                                  'wavesurfer.getCurrentTime()',
+                                  wavesurfer.getCurrentTime(),
+                                );
                                 wavesurfer.skip(
                                   item.start - wavesurfer.getCurrentTime(),
+                                );
+                                console.log('item', item);
+                                Object.keys(wavesurfer.regions.list).map(
+                                  function (id) {
+                                    if (
+                                      wavesurfer.regions.list[id].start ===
+                                      item.start
+                                    ) {
+                                      chooseCurrentRegion(
+                                        wavesurfer.regions.list[id],
+                                      );
+                                    }
+                                  },
                                 );
                               }}
                             >
