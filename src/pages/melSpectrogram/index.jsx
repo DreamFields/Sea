@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   notification,
@@ -297,6 +297,12 @@ const TestApp = (props) => {
       });
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
 
   return (
     <div>

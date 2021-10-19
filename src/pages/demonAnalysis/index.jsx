@@ -17,6 +17,9 @@ import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
+  useEffect(() => {
+    console.log('Data', Data);
+  }, [Data]);
 
   // 播放控制
   let animationValue = false;
@@ -367,6 +370,7 @@ const TestApp = (props) => {
             maxFnum = i;
           }
         }
+        console.log('maxFnum', maxFnum);
         maxDB = res.outputData_2[0][maxFnum];
         maxF = res.FreqV[0][maxFnum];
         setMaxFnum(maxFnum);
@@ -438,6 +442,13 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
+
   return (
     <div>
       <Card>

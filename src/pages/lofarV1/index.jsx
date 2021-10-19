@@ -305,6 +305,13 @@ const TestApp = (props) => {
       }
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
+
   return (
     <div>
       <Card>
