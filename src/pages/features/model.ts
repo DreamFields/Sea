@@ -17,6 +17,7 @@ export interface StateType {
   audio_name: any;
   signal_type: any;
   db: any;
+  menu_key: any;
 }
 
 export interface ModelType {
@@ -25,6 +26,7 @@ export interface ModelType {
   effects: {
     setAudio: Effect;
     setInfo: Effect;
+    setMenuKey: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -41,6 +43,7 @@ const Model: ModelType = {
     audio_name: undefined,
     signal_type: undefined,
     db: undefined,
+    menu_key: undefined, // 右菜单选取的key
   },
 
   effects: {
@@ -54,6 +57,15 @@ const Model: ModelType = {
       }
     },
     *setInfo({ payload }, { call, put }) {
+      // console.log(payload);
+      if (payload) {
+        yield put({
+          type: 'save',
+          payload: payload,
+        });
+      }
+    },
+    *setMenuKey({ payload }, { call, put }) {
       // console.log(payload);
       if (payload) {
         yield put({

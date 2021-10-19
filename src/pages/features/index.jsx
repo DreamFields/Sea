@@ -23,41 +23,14 @@ import LofarApp from '../lofarV1/index';
 import ZeroApp from '../zeroCrossing/index';
 import MCFFApp from '../MCFF/index';
 import BasicSoundData from './basicSoundData';
+import FeatureRightMenu from './FeatureRightMenu';
+import FeatureMainContent from './FeatureMainContent';
 
-const { SubMenu } = Menu;
-const rightWidth = '23%';
-let feature_key;
 const Index = (props) => {
-  const { FeaturesInfor, dispatch } = props;
+  const { audio_id, dispatch } = props;
   const [path, setpath] = useState(undefined);
-  const [f_key, setfkey] = useState(undefined);
-  class RightSidermenu extends React.Component {
-    handleClick = (e) => {
-      feature_key = e.key;
-      setfkey(e.key);
-    };
-    render() {
-      return (
-        <Menu
-          onClick={this.handleClick}
-          style={{ width: '100%', backgroundColor: 'black' }}
-          defaultSelectedKeys={[]}
-          selectedKeys={[f_key]}
-          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
-          mode="inline"
-        >
-          <Menu.Item key="1">功率谱</Menu.Item>
-          <Menu.Item key="2">低频线谱</Menu.Item>
-          <Menu.Item key="3">调制谱</Menu.Item>
-          <Menu.Item key="4">梅尔倒谱</Menu.Item>
-          <Menu.Item key="5">过零率</Menu.Item>
-          <Menu.Item key="6">时频图</Menu.Item>
-        </Menu>
-      );
-    }
-  }
 
-  const Waveform = () => {
+  const Waveform = (props) => {
     var wavesurfer;
 
     useEffect(() => {
@@ -94,9 +67,9 @@ const Index = (props) => {
           }),
         ],
       });
-      btnPlay.addEventListener('click', function () {
-        wavesurfer.playPause();
-      });
+      // btnPlay.addEventListener('click', function () {
+      // wavesurfer.playPause();
+      // });
       // Progress bar
       (function () {
         var progressDiv = document.querySelector('#progress-bar');
@@ -114,8 +87,8 @@ const Index = (props) => {
         wavesurfer.on('error', hideProgress);
       })();
       // 初始化完成
-      if (FeaturesInfor.audio_id) {
-        request(`/v1/file/now_version_url/${FeaturesInfor.audio_id}`, {
+      if (audio_id) {
+        request(`/v1/file/now_version_url/${audio_id}`, {
           method: 'GET',
         }).then((res) => {
           // console.log('版本文件路径', res?.url);
@@ -126,68 +99,18 @@ const Index = (props) => {
         });
       }
       return () => {};
-    }, [FeaturesInfor]);
-
-    const FeatureMainDiv = {
-      1: (
-        <div>
-          <PowerApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-          />
-        </div>
-      ),
-      2: (
-        <div>
-          <LofarApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-          />
-        </div>
-      ),
-      3: (
-        <div>
-          <DemonApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            path={path}
-          />
-        </div>
-      ),
-
-      4: (
-        <div>
-          <MCFFApp audio_id={FeaturesInfor.audio_id} dispatch={dispatch} />
-        </div>
-      ),
-      5: (
-        <div>
-          <ZeroApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            path={path}
-          />
-        </div>
-      ),
-      6: (
-        <div>
-          <MelApp
-            audio_id={FeaturesInfor.audio_id}
-            audio_name={FeaturesInfor.audio_name}
-            signal_type={FeaturesInfor.signal_type}
-            dispatch={dispatch}
-          />
-        </div>
-      ),
-    };
+    }, [audio_id]);
 
     return (
-      <div style={{ backgroundColor: '#2F2F2F' }}>
+      <>
         <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
           <Button
             type="primary"
             id="btnPlay"
             style={{ fontSize: 15, float: 'left' }}
+            onClick={() => {
+              wavesurfer.playPause();
+            }}
           >
             <PlayCircleOutlined />/<PauseOutlined />
           </Button>
@@ -213,9 +136,7 @@ const Index = (props) => {
             <div className="progress-bar progress-bar-info"></div>
           </div>
         </div>
-
-        {FeatureMainDiv[f_key]}
-      </div>
+      </>
     );
   };
 
@@ -255,7 +176,10 @@ const Index = (props) => {
           <h4 id="fileName" style={{ width: '100%' }}>
             从左栏选取文件
           </h4>
-          <Waveform />
+          <div style={{ backgroundColor: '#2F2F2F' }}>
+            <Waveform />
+            <FeatureMainContent path={path} />
+          </div>
         </div>
       </div>
     );
@@ -263,48 +187,16 @@ const Index = (props) => {
   return (
     <>
       <MainContent />
-      <div
-        style={{
-          width: rightWidth,
-          height: 390,
-          float: 'left',
-          marginTop: 15,
-          marginLeft: '1rem',
-        }}
-      >
-        <div style={{ color: 'white', fontSize: 20 }}>特征选择</div>
-        <div
-          style={{
-            backgroundColor: 'black',
-            width: '100%',
-            height: 340,
-            float: 'left',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            border: '1px solid grey',
-          }}
-        >
-          <RightSidermenu />
-        </div>
-      </div>
-      <div
-        style={{
-          width: rightWidth,
-          height: 360,
-          float: 'left',
-          marginTop: 10,
-          marginLeft: '1rem',
-        }}
-      >
-        <BasicSoundData f_key={f_key} />
-      </div>
+      <FeatureRightMenu />
     </>
   );
 };
 
 const mapStateToProps = ({ features, loading }) => {
   return {
-    FeaturesInfor: features,
+    audio_id: features.audio_id,
+    // f_key: features.menu_key,
+    // FeaturesInfor: features,
   };
 };
 

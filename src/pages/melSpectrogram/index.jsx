@@ -109,7 +109,7 @@ const TestApp = (props) => {
         },
       ],
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
       },
       brush: {
         toolbox: ['rect', 'polygon', 'keep', 'clear'],
