@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-19 16:16:44
+ * @LastEditTime: 2021-10-19 21:41:08
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -127,6 +127,17 @@ const Index = (props) => {
     }
   }, [tab, Pretreatment.audio_id]);
 
+  /**
+   * Display annotation.
+   */
+  function showNote(region) {
+    console.log('region-in方法');
+    if (!showNote.el) {
+      showNote.el = document.querySelector('#subtitle');
+    }
+    showNote.el.textContent = region.data.note || '–';
+  }
+
   function editAnnotation(region) {
     console.log('保存的region', region);
     // const newNote=form.getFieldsValue().note
@@ -241,17 +252,6 @@ const Index = (props) => {
       // 鼠标在region中点击时触发
       wavesurfer.on('region-click', editAnnotation);
       wavesurfer.on('region-in', showNote);
-
-      /**
-       * Display annotation.
-       */
-      function showNote(region) {
-        console.log('region-in方法');
-        if (!showNote.el) {
-          showNote.el = document.querySelector('#subtitle');
-        }
-        showNote.el.textContent = region.data.note || '–';
-      }
 
       // Progress bar
       (function () {
@@ -850,6 +850,7 @@ const Index = (props) => {
                                       chooseCurrentRegion(
                                         wavesurfer.regions.list[id],
                                       );
+                                      showNote(wavesurfer.regions.list[id]);
                                     }
                                   },
                                 );

@@ -65,11 +65,8 @@ const TestApp = (props) => {
         data: Xdata,
         splitArea: {
           show: true,
-          splitArea: {
-            show: true,
-            areaStyle: {
-              color: ['#333333'],
-            },
+          areaStyle: {
+            color: ['#333333'],
           },
         },
       },
@@ -78,11 +75,8 @@ const TestApp = (props) => {
         data: Ydata,
         splitArea: {
           show: true,
-          splitArea: {
-            show: true,
-            areaStyle: {
-              color: ['#333333'],
-            },
+          areaStyle: {
+            color: ['#333333'],
           },
         },
       },
