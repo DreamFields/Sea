@@ -64,21 +64,27 @@ const TestApp = (props) => {
   );
   const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
-      backgroundColor: '#1b1b1b', //背景色
+      // backgroundColor: '#000', //背景色
       darkMode: true,
       title: {
         text: '特征提取',
         subtext: '时频图',
       },
       grid: {
+        show: true,
         height: '70%',
         top: '10%',
+        backgroundColor: '#000',
       },
       xAxis: {
         type: 'category',
         data: Xdata,
+        // dark主题的背景默认是白色#eee，在此覆盖其变为背景色
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       yAxis: {
@@ -86,6 +92,9 @@ const TestApp = (props) => {
         data: Ydata,
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       visualMap: {
@@ -93,6 +102,7 @@ const TestApp = (props) => {
         max: Max,
         calculable: true,
         orient: 'horizontal',
+        // orient: 'vertical',
         inRange: {
           color: ['#080707', '#261379', '#9708a4', '#c94f2d', '#eaea5e'],
         },
@@ -102,10 +112,12 @@ const TestApp = (props) => {
       },
       dataZoom: [
         {
+          // dataBackgroundColor:'rgba(47,69,84,1)',
           type: 'inside',
           //实现横纵坐标缩放，折线图不设置默认只缩放x轴
           xAxisIndex: [0],
           yAxisIndex: [0],
+          data,
         },
       ],
       tooltip: {
@@ -317,7 +329,7 @@ const TestApp = (props) => {
           <ReactEcharts
             option={getOption(data, Xdata, Ydata, min, max)}
             theme="dark"
-            style={{ height: '400px', backgroundColor: '#000000' }}
+            style={{ height: '400px' }}
             onEvents={{
               brushselected: handleBrushSelected,
               brushEnd: calculate,

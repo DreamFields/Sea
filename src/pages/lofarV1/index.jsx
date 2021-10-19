@@ -65,6 +65,12 @@ const TestApp = (props) => {
         data: Xdata,
         splitArea: {
           show: true,
+          splitArea: {
+            show: true,
+            areaStyle: {
+              color: ['#333333'],
+            },
+          },
         },
       },
       yAxis: {
@@ -72,6 +78,12 @@ const TestApp = (props) => {
         data: Ydata,
         splitArea: {
           show: true,
+          splitArea: {
+            show: true,
+            areaStyle: {
+              color: ['#333333'],
+            },
+          },
         },
       },
       visualMap: {

@@ -82,7 +82,12 @@ const TestApp = (props) => {
     let option = {
       title: {
         text: '特征提取',
-        subtext: '功率谱(默认1000hz)，1/3频谱分析（默认20000hz）',
+        align: 'center',
+        subtext:
+          '                                               功率谱(默认1000hz)，1/3频谱分析（默认20000hz）',
+        subtextStyle: {
+          align: 'center',
+        },
       },
       animation: true,
       xAxis: {
@@ -92,6 +97,7 @@ const TestApp = (props) => {
       yAxis: {
         type: YType,
         scale: true,
+        name: 'db',
       },
       dataZoom: [
         {
