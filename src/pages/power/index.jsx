@@ -20,6 +20,7 @@ import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   const { audio_id, dispatch, Data } = props;
   const [nfft, setNFFT] = useState(2048);
+  const [ret_file_nfft, setret_file_nfft] = useState(2048);
   const { Option } = Select;
 
   useEffect(() => {
@@ -89,6 +90,13 @@ const TestApp = (props) => {
       xAxis: {
         type: XType,
         data: Xdata,
+        axisLabel: {
+          formatter: function (value) {
+            // console.log('获取到的value',value)
+            console.log('file_nfft', ret_file_nfft);
+            return (value * ret_file_nfft) / Xdata.length;
+          },
+        },
       },
       yAxis: {
         type: YType,
@@ -104,6 +112,15 @@ const TestApp = (props) => {
       ],
       tooltip: {
         trigger: 'axis',
+
+        axisPointer: {
+          label: {
+            formatter: function (value) {
+              console.log('value', value);
+              return (value.value * ret_file_nfft) / Xdata.length;
+            },
+          },
+        },
       },
       toolbox: {
         left: 'center',
@@ -179,6 +196,8 @@ const TestApp = (props) => {
         setid(id);
 
         setPicIfo(res.picIfo);
+
+        setret_file_nfft(res.file_nfft);
 
         let xd = [];
         let allYData = [];

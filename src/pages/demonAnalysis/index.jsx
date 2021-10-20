@@ -51,16 +51,36 @@ const TestApp = (props) => {
   let echartInstance;
   //用highlight列表来控制点点状态
   let highlightArr = [];
-  // useEffect(() => {
-  // 获取音频时长
-  // if (path) {
-  //   let audioElement = new Audio(path);
-  //   audioElement.addEventListener('loadedmetadata', function (_event) {
-  //     duration = audioElement.duration * 1000;
-  //     // console.log('视频的时长为(ms):', duration);
-  //   });
-  // }
-  // }, []);
+
+  /**
+   * @description: 得到基频value*n正负10%区间内的最大y值作为dbn
+   * @param {*}
+   * @return {*}
+   */
+  let getMaxIndexInRange = (value) => {
+    let maxYval = -1;
+    let retIndex = 0;
+    let retVal = 0;
+    /* console.log('基频的10%=', Math.ceil(MaxFnum * 0.1));
+    console.log('最小值：', value - Math.ceil(MaxFnum * 0.1));
+    console.log('最大值：', value + Math.ceil(MaxFnum * 0.1)); */
+    for (
+      let xVal = value - Math.ceil(MaxFnum * 0.1);
+      xVal <= value + Math.ceil(MaxFnum * 0.1);
+      xVal++
+    ) {
+      let temp = Data.ydata[Data.label][getIndex(xVal, Data.xdata[Data.label])];
+      if (maxYval < temp) {
+        maxYval = temp;
+        retIndex = getIndex(xVal, Data.xdata[Data.label]);
+        retVal = xVal;
+      }
+    }
+    /* console.log('计算得到的下标值：', retIndex);
+    console.log('计算得到的基频值：', retVal);
+    console.log('计算得到的y值：', maxYval); */
+    return { maxYval, retVal };
+  };
 
   useEffect(() => {
     setmyType('value');
@@ -144,9 +164,13 @@ const TestApp = (props) => {
           copy_data = [];
           for (let i = 0; i < 8; i++)
             copy_data.push({
-              hz: params.dataIndex * (i + 1),
-              db: params.value.toPrecision(3),
-              rpm: params.dataIndex * 60 * (i + 1),
+              // hz: Math.floor(MaxF * (i + 1) * 10),
+              // 展示的时候不能*10
+              hz:
+                i === 0
+                  ? MaxF
+                  : getMaxIndexInRange(MaxFnum * (i + 1)).retVal / 10,
+              db: MaxDB.toPrecision(3),
             });
           return { tabledata: copy_data };
         },
@@ -282,38 +306,11 @@ const TestApp = (props) => {
       }
       
     } */
-    /**
-     * @description: 得到基频value*n正负10%区间内的最大y值作为dbn
-     * @param {*}
-     * @return {*}
-     */
-    let getMaxIndexInRange = (value) => {
-      let maxYval = -1;
-      let retIndex = 0;
-      let retVal = 0;
-      console.log('基频的10%=', Math.ceil(MaxFnum * 0.1));
-      console.log('最小值：', value - Math.ceil(MaxFnum * 0.1));
-      console.log('最大值：', value + Math.ceil(MaxFnum * 0.1));
-      for (
-        let xVal = value - Math.ceil(MaxFnum * 0.1);
-        xVal <= value + Math.ceil(MaxFnum * 0.1);
-        xVal++
-      ) {
-        let temp =
-          Data.ydata[Data.label][getIndex(xVal, Data.xdata[Data.label])];
-        if (maxYval < temp) {
-          maxYval = temp;
-          retIndex = getIndex(xVal, Data.xdata[Data.label]);
-          retVal = xVal;
-        }
-      }
-      console.log('计算得到的下标值：', retIndex);
-      console.log('计算得到的基频值：', retVal);
-      console.log('计算得到的y值：', maxYval);
-      return { maxYval, retVal };
-    };
-    let db1 = MaxDB;
 
+    console.log('MaxFnum', MaxFnum);
+    let db1 = Data.ydata[Data.label][getIndex(MaxFnum, Data.xdata[Data.label])];
+    console.log('db1', db1);
+    console.log('MaxDB', MaxDB);
     let db2 = getMaxIndexInRange(MaxFnum * 2).maxYval;
     let db3 = getMaxIndexInRange(MaxFnum * 3).maxYval;
     let db4 = getMaxIndexInRange(MaxFnum * 4).maxYval;
@@ -321,6 +318,15 @@ const TestApp = (props) => {
     let db6 = getMaxIndexInRange(MaxFnum * 6).maxYval;
     let db7 = getMaxIndexInRange(MaxFnum * 7).maxYval;
     let db8 = getMaxIndexInRange(MaxFnum * 8).maxYval;
+
+    for (let i = 0; i < 7; i++) {
+      console.log(
+        '倍频数',
+        i + 2,
+        '结果：',
+        getMaxIndexInRange(MaxFnum * (i + 2)),
+      );
+    }
     /* let db1 = MaxDB;
 
     let db2 =
@@ -347,7 +353,7 @@ const TestApp = (props) => {
     dbData.push(db7);
     dbData.push(db8);
 
-    for (let cnt = 1; cnt <= 8; cnt++) {
+    /* for (let cnt = 1; cnt <= 8; cnt++) {
       console.log(
         '原来算法得到的下标值：',
         getIndex(MaxFnum * cnt, Data.xdata[Data.label]),
@@ -362,7 +368,7 @@ const TestApp = (props) => {
           ];
         dbData.push(dbn);
       }
-    }
+    } */
     dispatch({
       type: 'demonTable/setdata',
       payload: {},
@@ -383,15 +389,16 @@ const TestApp = (props) => {
       },
     });
 
+    console.log('dbData', dbData);
 
     let bigger = (n, arr) => {
       let label = true;
-      for (let i = n - 1; i < arr.length; i++) {
-        if (arr[n] < arr[i]) label = false;
+      for (let i = n; i < arr.length; i++) {
+        if (arr[n - 1] < arr[i]) label = false;
       }
       return label;
     };
-    if (bigger(3, dbData)) {
+    /* if (bigger(3, dbData)) {
       if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
         label = 3;
     }
@@ -401,6 +408,27 @@ const TestApp = (props) => {
     if (bigger(5, dbData)) {
       if (db2 > db3 && db3 > db7 && db7 > db8 && db1 > db4 && db4 > db6)
         label = 5;
+    }
+    if (bigger(6, dbData)) {
+      if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
+    }
+    if (db1 > db6 && db6 > db8 && db2 > db5 && db3 > db4 && db7 > db8) {
+      label = 7;
+    } */
+
+    // ===================================
+    // 省略>n倍频判断条件的新算法
+    // ===================================
+    if (bigger(3, dbData)) {
+      if (db1 > db2 && db2 > db4) label = 3;
+    }
+    if (bigger(4, dbData)) {
+      if (db1 > db3 && db3 > db5 && db2 > db6) {
+        label = 4;
+      }
+    }
+    if (bigger(5, dbData)) {
+      if (db2 > db3 && db3 > db7 && db1 > db4 && db4 > db6) label = 5;
     }
     if (bigger(6, dbData)) {
       if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
@@ -455,7 +483,6 @@ const TestApp = (props) => {
         ydata.push(res.outputData_2[0]);
 
         for (let i = throwNum + 1; i < res.FreqV[0].length; i++) {
-
           if (res.outputData_2[0][maxFnum] < res.outputData_2[0][i]) {
             maxFnum = i;
           }
