@@ -114,6 +114,8 @@ const TestApp = (props) => {
     };
     return option;
   };
+
+  // 获取value对应在数组中的下标（该代码中对value本身进行了*10处理）
   const getIndex = (value, arr) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] * 10 === value) {
@@ -155,6 +157,7 @@ const TestApp = (props) => {
       //轴数 暂时无算法
 
       let db1 = params.value;
+      console.log('此时的Data', Data);
       let db2 =
         Data.ydata[Data.label][
           getIndex(params.dataIndex * 2, Data.xdata[Data.label])
@@ -192,10 +195,13 @@ const TestApp = (props) => {
       dbData.push(db6);
       dbData.push(db7);
       dbData.push(db8);
-      console.log(dbData);
-      console.log(params.dataIndex);
+      console.log('计算得到的dbData', dbData);
+      console.log('params.dataIndex', params.dataIndex);
       console.log(params.dataIndex * 2);
-      console.log(getIndex(params.dataIndex * 2, Data.xdata[Data.label]));
+      console.log(
+        'getIndex(params.dataIndex * 2, Data.xdata[Data.label])',
+        getIndex(params.dataIndex * 2, Data.xdata[Data.label]),
+      );
       console.log(Data.ydata[Data.label]);
       console.log(Data.xdata[Data.label]);
       let bigger = (n, arr) => {
@@ -272,6 +278,9 @@ const TestApp = (props) => {
     //轴数 暂时无算法
 
     let db1 = MaxDB;
+    console.log('MaxDB', MaxDB);
+    console.log('Data', Data);
+    console.log('Data.label', Data.label);
     let db2 =
       Data.ydata[Data.label][getIndex(MaxFnum * 2, Data.xdata[Data.label])];
     let db3 =
@@ -295,7 +304,13 @@ const TestApp = (props) => {
     dbData.push(db6);
     dbData.push(db7);
     dbData.push(db8);
-    console.log(dbData);
+    console.log('db1=', db1);
+    console.log('db2=', db2);
+    // console.log(dbData);
+    console.log('计算得到的精确n倍基频的y值', dbData);
+
+    let maxDb = (startIndex, endIndex);
+
     let bigger = (n, arr) => {
       let label = true;
       for (let i = n - 1; i < arr.length; i++) {
@@ -365,7 +380,8 @@ const TestApp = (props) => {
         }
         xdata.push(res.FreqV[0]);
         ydata.push(res.outputData_2[0]);
-        for (let i = 0; i < res.FreqV[0].length; i++) {
+        // 舍弃前5个值，从第6个值开始查找最大值
+        for (let i = 5; i < res.FreqV[0].length; i++) {
           if (res.outputData_2[0][maxFnum] < res.outputData_2[0][i]) {
             maxFnum = i;
           }
