@@ -5,6 +5,8 @@ import { Table, Input } from 'antd';
 const DemonTable = (props) => {
   const { table_data, dispatch } = props;
 
+  console.log('table_data', table_data);
+
   const columns = [
     {
       title: 'n倍频',
