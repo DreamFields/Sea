@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-18 13:35:35
+ * @LastEditTime: 2021-10-21 10:30:35
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
@@ -81,10 +81,10 @@ const Index = (props: any) => {
               required: true,
               message: '请输入用户名!',
             },
-            {
+            /* {
               pattern: /^[a-zA-Z0-9_-]{4,16}$/,
               message: '用户名包含4到16位（字母，数字，下划线，减号）!',
-            },
+            }, */
           ]}
         >
           <Input size="large" className={style.user} id="user" />
