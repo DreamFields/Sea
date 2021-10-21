@@ -53,6 +53,19 @@ const TestApp = (props) => {
   let highlightArr = [];
 
   /**
+   * @description: 判断下标为n-1后面的数值是否都比arr[n-1]大，是返回true
+   * @param {*}
+   * @return {*}
+   */
+  let bigger = (n, arr) => {
+    let label = true;
+    for (let i = n; i < arr.length; i++) {
+      if (arr[n - 1] < arr[i]) label = false;
+    }
+    return label;
+  };
+
+  /**
    * @description: 得到基频value*n正负10%区间内的最大y值作为dbn
    * @param {*}
    * @return {*}
@@ -156,6 +169,7 @@ const TestApp = (props) => {
       // });
 
       let copy_data;
+      console.log('MaxF:', MaxF);
       dispatch({
         type: 'demonTable/setdata',
         payload: {},
@@ -168,8 +182,8 @@ const TestApp = (props) => {
               // 展示的时候不能*10
               hz:
                 i === 0
-                  ? MaxF
-                  : getMaxIndexInRange(MaxFnum * (i + 1)).retVal / 10,
+                  ? params.dataIndex / 10
+                  : getMaxIndexInRange(params.dataIndex * (i + 1)).retVal / 10,
               db: MaxDB.toPrecision(3),
             });
           return { tabledata: copy_data };
@@ -181,9 +195,10 @@ const TestApp = (props) => {
       let rpm = params.dataIndex * 60;
       //轴数 暂时无算法
 
+      // console.log('params', params);
+      // console.log('此时的Data', Data);
       let db1 = params.value;
-      console.log('此时的Data', Data);
-      let db2 =
+      /* let db2 =
         Data.ydata[Data.label][
           getIndex(params.dataIndex * 2, Data.xdata[Data.label])
         ];
@@ -210,7 +225,14 @@ const TestApp = (props) => {
       let db8 =
         Data.ydata[Data.label][
           getIndex(params.dataIndex * 8, Data.xdata[Data.label])
-        ];
+        ]; */
+      let db2 = getMaxIndexInRange(params.dataIndex * 2).maxYval;
+      let db3 = getMaxIndexInRange(params.dataIndex * 3).maxYval;
+      let db4 = getMaxIndexInRange(params.dataIndex * 4).maxYval;
+      let db5 = getMaxIndexInRange(params.dataIndex * 5).maxYval;
+      let db6 = getMaxIndexInRange(params.dataIndex * 6).maxYval;
+      let db7 = getMaxIndexInRange(params.dataIndex * 7).maxYval;
+      let db8 = getMaxIndexInRange(params.dataIndex * 8).maxYval;
       let dbData = [];
       dbData.push(db1);
       dbData.push(db2);
@@ -232,23 +254,19 @@ const TestApp = (props) => {
       );
       console.log(Data.ydata[Data.label]);
       console.log(Data.xdata[Data.label]);
-      let bigger = (n, arr) => {
-        let label = true;
-        for (let i = n - 1; i < arr.length; i++) {
-          if (arr[n] < arr[i]) label = false;
-        }
-        return label;
-      };
+      // ===================================
+      // 省略>n倍频判断条件的新算法
+      // ===================================
       if (bigger(3, dbData)) {
-        if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
-          label = 3;
+        if (db1 > db2 && db2 > db4) label = 3;
       }
       if (bigger(4, dbData)) {
-        if (db1 > db3 && db3 > db5 && db5 > db7 && db2 > db6) label = 4;
+        if (db1 > db3 && db3 > db5 && db2 > db6) {
+          label = 4;
+        }
       }
       if (bigger(5, dbData)) {
-        if (db2 > db3 && db3 > db7 && db7 > db8 && db1 > db4 && db4 > db6)
-          label = 5;
+        if (db2 > db3 && db3 > db7 && db1 > db4 && db4 > db6) label = 5;
       }
       if (bigger(6, dbData)) {
         if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
@@ -275,7 +293,7 @@ const TestApp = (props) => {
         type: 'basicSoundData/setdata',
         payload: {
           db: params.value.toPrecision(3),
-          hz: params.dataIndex,
+          hz: params.dataIndex / 10,
           label: label,
           rpm: rpm,
         },
@@ -391,13 +409,6 @@ const TestApp = (props) => {
 
     console.log('dbData', dbData);
 
-    let bigger = (n, arr) => {
-      let label = true;
-      for (let i = n; i < arr.length; i++) {
-        if (arr[n - 1] < arr[i]) label = false;
-      }
-      return label;
-    };
     /* if (bigger(3, dbData)) {
       if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
         label = 3;
