@@ -17,9 +17,81 @@ const Index = () => {
   const [loading, setloading] = useState(false);
 
   const recorderPlay = () => {
-    console.log('object');
+    //===================
+    // 原来的代码
+    //===================
+    /* if (play === 'start') {
+      console.log('start:reacoedState', RecordState);
+      setrecordState(RecordState.PAUSE);
+      setplay(RecordState.PAUSE);
+      setloading(false);
+    } else {
+      console.log('pause:reacoedState', RecordState);
+      setrecordState(RecordState.START);
+      setplay(RecordState.START);
+      seturl(null);
+      setvisible(false);
+      setloading(true);
+    } */
+
+    function _catch(body, recover) {
+      try {
+        var result = body();
+      } catch (e) {
+        return recover(e);
+      }
+      if (result && result.then) {
+        return result.then(void 0, recover);
+      }
+      return result;
+    }
+
+    if (play === 'start') {
+      console.log('start:reacoedState', RecordState);
+      setrecordState(RecordState.PAUSE);
+      setplay(RecordState.PAUSE);
+      setloading(false);
+    } else {
+      console.log('pause:reacoedState', RecordState);
+      let getStream = function (constraints) {
+        if (!constraints) {
+          constraints = {
+            audio: true,
+            video: false,
+          };
+        }
+
+        return navigator.mediaDevices.getUserMedia(constraints);
+      };
+      var _temp4 = _catch(
+        function () {
+          return Promise.resolve(getStream()).then(function (_this$getStream) {
+            window.stream = _this$getStream;
+            console.log('_this$getStream', _this$getStream);
+            let myContext = new AudioContext();
+            myContext.createMediaStreamSource(_this$getStream);
+            console.log('有麦克风');
+            setrecordState(RecordState.START);
+            setplay(RecordState.START);
+            seturl(null);
+            setvisible(false);
+            setloading(true);
+          });
+        },
+        function (err) {
+          // 需要在服务器端配置https，否则报错：Cannot read properties of undefined (reading 'getUserMedia')
+          // https://www.guobao0730.com/typeerror-cannot-read-property-getusermedia-of-undefined/
+          console.log('mtttError: Issue getting mic', err);
+          message.warning('请检查设备是否有麦克风！');
+        },
+      );
+      console.log('_temp4', _temp4);
+    }
+
+    // console.log('object');
+
     //调用开启麦克风
-    let constraints = {
+    /* let constraints = {
       audio: true,
       video: false,
     };
@@ -43,7 +115,7 @@ const Index = () => {
       .catch((e) => {
         // console.log('e',e)
         message.warning('请检查设备是否有麦克风！');
-      });
+      }); */
   };
 
   const stop = () => {
