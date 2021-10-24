@@ -1,7 +1,8 @@
 import { post } from '@/utils/request';
 import React, { useEffect, useState } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Space } from 'antd';
 import style from './style.less';
+
 import AddKnowledge from './addKnowledge';
 
 const Component = (props: any) => {
@@ -25,6 +26,23 @@ const Component = (props: any) => {
       title: '内容',
       dataIndex: 'content',
       key: 'content',
+    },
+    {
+      title: '删除',
+      key: 'actions',
+      render(_, data: any) {
+        return (
+          <Space size="middle">
+            <Button
+              onClick={() => {
+                console.log('delete', data);
+              }}
+            >
+              删除
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 

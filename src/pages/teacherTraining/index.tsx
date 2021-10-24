@@ -8,6 +8,7 @@ import PaperList from './PaperList';
 import QuestionList from './questionList';
 import AddQuestion from './addQuestion';
 import KnowledgeList from './knowledgeList';
+import AddKnowledge from './addKnowledge';
 
 import { sidebarEventEmitter } from '../../models/eventBus';
 
@@ -19,6 +20,7 @@ const NAVIGATION = [
   QuestionList,
   AddQuestion,
   KnowledgeList,
+  AddKnowledge,
 ];
 
 const Index = (props: any) => {
