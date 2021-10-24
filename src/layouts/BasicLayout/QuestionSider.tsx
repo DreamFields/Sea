@@ -63,6 +63,7 @@ const Component = () => {
           <Menu.Item key="8">试卷题目列表</Menu.Item>
           <Menu.Item key="9">试卷选题</Menu.Item>
           <Menu.Item key="10">学生答题界面</Menu.Item>
+          <Menu.Item key="11">学生考核详情</Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>

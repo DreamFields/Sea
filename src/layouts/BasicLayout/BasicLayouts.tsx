@@ -1845,22 +1845,22 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               />
             </Dropdown>
           </div>
-
-          <div className="info">
-            <span
-              style={{
-                display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
-              }}
-            >
-              <Link to="/staffManage">用户管理 </Link>|
-            </span>
-
-            <span>{` 您好，${
-              CookieUtil.get('role')
-                ? roles[CookieUtil.get('role') - 1]
-                : 'null'
-            }`}</span>
-          </div>
+          {!train && (
+            <div className="info">
+              <span
+                style={{
+                  display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
+                }}
+              >
+                <Link to="/staffManage">用户管理 </Link>|
+              </span>
+              <span>{` 您好，${
+                CookieUtil.get('role')
+                  ? roles[CookieUtil.get('role') - 1]
+                  : 'null'
+              }`}</span>
+            </div>
+          )}
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
           {!train && (

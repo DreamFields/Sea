@@ -30,6 +30,7 @@ const NAVIGATION = [
   PaperQuestionList,
   NewQuestionForPaper,
   StudentPaperExam,
+  KaoheDetail,
 ];
 
 const Index = (props: any) => {
