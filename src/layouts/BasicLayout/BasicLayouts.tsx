@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import QuestionSider from './QuestionSider';
 import './BasicLayouts.css';
 import {
   Menu,
@@ -1870,6 +1871,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               </div>
             </Sider>
           )}
+          {train && <QuestionSider />}
           <Content className="main-content">{props.children}</Content>
         </Layout>
 
