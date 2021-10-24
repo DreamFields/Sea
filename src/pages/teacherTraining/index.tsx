@@ -1,39 +1,42 @@
-import React, { useState } from 'react';
-import { Tabs } from 'antd';
-const { TabPane } = Tabs;
+import React, { useState, useEffect } from 'react';
 import style from './style.less';
-import StudentList from './studentList';
-import KnowledgeList from './knowledgeList';
+
+import StudentKaohe from './StudentKaohe';
+import StudentKaoshi from './StudentKaoshi';
+import PaperAdd from './PaperAdd';
+import PaperList from './PaperList';
 import QuestionList from './questionList';
+import AddQuestion from './addQuestion';
+import KnowledgeList from './knowledgeList';
+
+import { sidebarEventEmitter } from '../../models/eventBus';
 
 const NAVIGATION = [
-  {
-    text: '答题情况',
-    component: StudentList,
-  },
-  {
-    text: '知识点列表',
-    component: KnowledgeList,
-  },
-  {
-    text: '题目列表',
-    component: QuestionList,
-  },
+  StudentKaohe,
+  StudentKaoshi,
+  PaperList,
+  PaperAdd,
+  QuestionList,
+  AddQuestion,
+  KnowledgeList,
 ];
 
 const Index = (props: any) => {
-  return (
-    <Tabs defaultActiveKey="0">
-      {NAVIGATION.map((item, idx) => {
-        const Component = item.component;
-        return (
-          <TabPane tab={item.text} key={idx.toString()}>
-            <Component />
-          </TabPane>
-        );
-      })}
-    </Tabs>
-  );
+  const [cur, setCur] = useState(0);
+  useEffect(() => {
+    const handler = (e: any) => {
+      console.log('on change', e);
+      setCur(+e);
+    };
+
+    sidebarEventEmitter.on('change', handler);
+    return () => {
+      sidebarEventEmitter.off('change', handler);
+    };
+  });
+
+  const Component = NAVIGATION[cur];
+  return <Component />;
 };
 
 export default Index;
