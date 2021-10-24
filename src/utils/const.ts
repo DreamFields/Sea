@@ -1,1 +1,1 @@
-export const SERVICEURL = 'http://114.55.176.95:80';
+export const SERVICEURL = 'http://114.55.176.95:5000';

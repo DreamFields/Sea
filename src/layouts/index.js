@@ -9,6 +9,14 @@ const index = (props) => {
   const { pathname } = location;
 
   // console.log(pathname);
+  if (pathname.search('listenTraining') !== -1) {
+    return (
+      <ConfigProvider locale={zhCN}>
+        <BasicLayouts {...props} train={true} />
+      </ConfigProvider>
+    );
+  }
+
   if (pathname.search('/user') == -1) {
     return (
       <ConfigProvider locale={zhCN}>
