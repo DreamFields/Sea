@@ -12,7 +12,12 @@ const Component = (props: any) => {
   useEffect(() => {
     post<any>('/v1/teacher/knowledge_list').then((res) => {
       console.log('/v1/teacher/knowledge_list res', res);
-      setDataSource(res.sort(($1: any, $2: any) => $1.id - $2.id));
+
+      setDataSource(
+        res
+          .map((r) => ({ ...r, key: r.id }))
+          .sort(($1: any, $2: any) => $1.id - $2.id),
+      );
     });
   }, [state]);
 

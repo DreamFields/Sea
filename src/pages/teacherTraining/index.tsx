@@ -10,6 +10,8 @@ import AddQuestion from './addQuestion';
 import KnowledgeList from './knowledgeList';
 import AddKnowledge from './addKnowledge';
 import PaperQuestionList from './PaperQuestionList';
+import NewQuestionForPaper from './NewQuestionForPaper';
+import KaoheDetail from './KaoheDetail';
 
 import { sidebarEventEmitter } from '../../models/eventBus';
 
@@ -25,6 +27,8 @@ const NAVIGATION = [
 
   // Debug
   PaperQuestionList,
+  NewQuestionForPaper,
+  KaoheDetail,
 ];
 
 const Index = (props: any) => {

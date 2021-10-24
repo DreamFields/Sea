@@ -6,10 +6,36 @@ const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 const Component = () => {
+  const difficultMenu = (chapter_id: string) => {
+    const c: any[] = [];
+    for (let i = 1; i <= 10; i++) {
+      c.push(
+        <Menu.Item key={`chapter_id${chapter_id}_difficult${i}`}>
+          难度{i}
+        </Menu.Item>,
+      );
+    }
+    return (
+      <SubMenu key={`chapter_id${chapter_id}`} title={`章节${chapter_id}`}>
+        {c}
+      </SubMenu>
+    );
+  };
+  const d: any[] = [];
+  for (let i = 1; i <= 10; i++) {
+    d.push(i);
+  }
+
   return (
     <Sider className="side" width={350}>
       <Menu
-        onClick={(e) => sidebarEventEmitter.emit('change', e.key)}
+        onClick={(e) => {
+          if (e.key.startsWith('chapter_id')) {
+            sidebarEventEmitter.emit('change', '4');
+          } else {
+            sidebarEventEmitter.emit('change', e.key);
+          }
+        }}
         style={{ width: 350 }}
         defaultSelectedKeys={['0']}
         defaultOpenKeys={['sub1']}
@@ -24,7 +50,9 @@ const Component = () => {
           <Menu.Item key="3">新增试卷</Menu.Item>
         </SubMenu>
         <SubMenu key="sub3" title="题目管理">
-          <Menu.Item key="4">题目列表</Menu.Item>
+          <SubMenu key="4" title="题目列表">
+            {d.map((item) => difficultMenu(item))}
+          </SubMenu>
           <Menu.Item key="5">新增题目</Menu.Item>
         </SubMenu>
         <SubMenu key="sub4" title="知识点管理">
@@ -33,6 +61,7 @@ const Component = () => {
         </SubMenu>
         <SubMenu key="sub5" title="DEBUG">
           <Menu.Item key="8">试卷题目列表</Menu.Item>
+          <Menu.Item key="9">试卷选题</Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>
