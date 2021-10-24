@@ -31,6 +31,9 @@ const Component = () => {
           <Menu.Item key="6">知识点列表</Menu.Item>
           <Menu.Item key="7">添加知识点</Menu.Item>
         </SubMenu>
+        <SubMenu key="sub5" title="DEBUG">
+          <Menu.Item key="8">试卷题目列表</Menu.Item>
+        </SubMenu>
       </Menu>
     </Sider>
   );

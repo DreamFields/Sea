@@ -29,6 +29,7 @@
     "@umijs/test": "^3.2.3",
     "ajv-errors": "^1.0.1",
     "antd": "^4.7.3",
+    "array-move": "^4.0.0",
     "audio-react-recorder": "^1.0.4",
     "axios": "^0.19.2",
     "bizcharts": "^3.5.3-beta.0",
