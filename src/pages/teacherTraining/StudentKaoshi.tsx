@@ -8,7 +8,7 @@ const Index = () => {
   const [data, setData] = useState<any[]>([]);
   useEffect(() => {
     post<any>('/v1/teacher/Student_Exam_situation').then((res) => {
-      setData([...res]);
+      setData(res.map((r, i) => ({ ...r, key: i })));
     });
   }, []);
 

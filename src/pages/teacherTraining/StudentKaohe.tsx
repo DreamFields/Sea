@@ -9,7 +9,7 @@ const Index = () => {
 
   useEffect(() => {
     post<any>('/v1/teacher/Student_assessment').then((res) => {
-      setData([...res]);
+      setData(res.map((r, i) => ({ ...r, key: i })));
     });
   }, []);
 
