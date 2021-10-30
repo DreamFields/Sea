@@ -5,17 +5,12 @@ import { post } from '@/utils/request';
 
 const Index = () => {
   const id = (useParams() as any).id;
+  console.log('teacher training student kaohe detail router param', id);
 
-  const [data, setData] = useState<any[]>([
-    {
-      chapter: '章节1',
-      ...['1', '1', '1', '1', '1', '1', '1', '1', '1', '1'],
-    },
-  ]);
-
+  const [data, setData] = useState<any[]>([]);
   useEffect(() => {
     post<any>('/v1/teacher/Student_assessment_detail', {
-      data: { id: 1 },
+      data: { id },
     }).then((res) => {
       console.log('Student_assessment_detail', res);
       const d: any[] = [];

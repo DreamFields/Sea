@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { Button, Table, Space } from 'antd';
 import { post } from '@/utils/request';
+import { history } from 'umi';
 
 const Index = () => {
   const [data, setData] = useState<any[]>([]);
@@ -40,6 +41,7 @@ const Index = () => {
           <Button
             onClick={() => {
               console.log('detail paper', data);
+              history.push(`/teacherTraining/kaoshi/${data.id}`);
             }}
           >
             详情

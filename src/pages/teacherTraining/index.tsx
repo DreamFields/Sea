@@ -11,7 +11,6 @@ import KnowledgeList from './knowledgeList';
 import AddKnowledge from './addKnowledge';
 import PaperQuestionList from './PaperQuestionList';
 import NewQuestionForPaper from './NewQuestionForPaper';
-import StudentPaperExam from './StudentPaperExam';
 
 import { sidebarEventEmitter } from '../../models/eventBus';
 
@@ -28,7 +27,6 @@ const NAVIGATION = [
   // Debug
   PaperQuestionList,
   NewQuestionForPaper,
-  StudentPaperExam,
 ];
 
 const Index = (props: any) => {
