@@ -37,7 +37,7 @@ const Index = () => {
       <Space size="middle">
         <Button
           onClick={() => {
-            history.push(`/teacherTraining/kaohe/${data.id}`);
+            history.push(`/teacherTraining/kaohe/${data.user_id}`);
           }}
         >
           详情

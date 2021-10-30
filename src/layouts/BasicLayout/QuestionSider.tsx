@@ -1,10 +1,22 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { sidebarEventEmitter } from '../../models/eventBus';
 import { history } from 'umi';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
+
+const NAVIGATION = [
+  '/teacherTraining/StudentKaohe',
+  '/teacherTraining/StudentKaoshi',
+  '/teacherTraining/PaperList',
+  '/teacherTraining/PaperAdd',
+  '/teacherTraining/knowledgeList',
+  '/teacherTraining/addKnowledge',
+
+  // Debug
+  '/teacherTraining/PaperQuestionList',
+  '/teacherTraining/NewQuestionForPaper',
+];
 
 const Component = () => {
   const difficultMenu = (chapter_id: string) => {
@@ -36,7 +48,7 @@ const Component = () => {
             const { 1: chapter, 2: difficult } = r.exec(e.key)!;
             history.push(`/teacherTraining/${chapter}/${difficult}`);
           } else {
-            sidebarEventEmitter.emit('change', e.key);
+            history.push(NAVIGATION[e.key]);
           }
         }}
         style={{ width: 350 }}
