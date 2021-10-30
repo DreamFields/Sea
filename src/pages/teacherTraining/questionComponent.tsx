@@ -3,6 +3,7 @@ import style from './style.less';
 import { Input, Button, Select, Upload, Form, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
+import AddKnowledge from './addKnowledge';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -91,10 +92,14 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   });
 
   const [knowledgeList, setKnowledgeList] = useState<any>([]);
-  useEffect(() => {
+  const [openCreateKnowledge, setOpenCreateKnowledge] = useState(false);
+  const updateKnowledge = () => {
     post<any>('/v1/teacher/knowledge_list').then((res2) => {
       setKnowledgeList([...res2]);
     });
+  };
+  useEffect(() => {
+    updateKnowledge();
   }, []);
 
   return (
@@ -209,6 +214,22 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           })}
         </Select>
       </Form.Item>
+
+      {!readOnly && (
+        <div>
+          <Button onClick={() => setOpenCreateKnowledge(!openCreateKnowledge)}>
+            新增知识点
+          </Button>
+          {openCreateKnowledge && (
+            <AddKnowledge
+              onDone={() => {
+                updateKnowledge();
+                setOpenCreateKnowledge(false);
+              }}
+            />
+          )}
+        </div>
+      )}
 
       <Form.Item label="难度" name="difficulty">
         <Select
