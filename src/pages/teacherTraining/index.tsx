@@ -6,7 +6,6 @@ import StudentKaoshi from './StudentKaoshi';
 import PaperAdd from './PaperAdd';
 import PaperList from './PaperList';
 import QuestionList from './questionList';
-import AddQuestion from './addQuestion';
 import KnowledgeList from './knowledgeList';
 import AddKnowledge from './addKnowledge';
 import PaperQuestionList from './PaperQuestionList';
