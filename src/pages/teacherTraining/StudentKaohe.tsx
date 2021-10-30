@@ -1,29 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { Button, Table, Space } from 'antd';
+import { post } from '@/utils/request';
 
 const Index = () => {
-  const [data, setData] = useState([
-    {
-      name: 'ttzztztz',
-      chapter1: '10/100',
-      chapter2: '10/100',
-      chapter3: '10/100',
-      chapter4: '10/100',
-      chapter5: '10/100',
-      chapter6: '10/100',
-      chapter7: '10/100',
-      chapter8: '10/100',
-      chapter9: '10/100',
-      chapter10: '10/100',
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    post<any>('/v1/teacher/Student_assessment').then((res) => {
+      setData([...res]);
+    });
+  }, []);
 
   const columns: any[] = [
     {
       title: '名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'user_name',
+      key: 'user_name',
     },
   ];
 

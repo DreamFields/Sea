@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { Button, Table, Space } from 'antd';
+import { post } from '@/utils/request';
 
 const Index = () => {
-  const [data, setData] = useState([
-    {
-      key: '1',
-      name: '11',
-      avg: '100',
-      startTime: new Date().toString(),
-      endTime: new Date().toString(),
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
+  useEffect(() => {
+    post<any>('/v1/teacher/Student_Exam_situation').then((res) => {
+      setData([...res]);
+    });
+  }, []);
 
   const columns = [
     {
@@ -20,19 +18,19 @@ const Index = () => {
       key: 'name',
     },
     {
-      title: '均分',
-      dataIndex: 'avg',
-      key: 'avg',
+      title: '问题数量',
+      dataIndex: 'question_count',
+      key: 'question_count',
     },
     {
       title: '开始时间',
-      dataIndex: 'startTime',
-      key: 'startTime',
+      dataIndex: 'start_time',
+      key: 'start_time',
     },
     {
       title: '结束时间',
-      dataIndex: 'endTime',
-      key: 'endTime',
+      dataIndex: 'end_time',
+      key: 'end_time',
     },
     {
       title: '操作',
