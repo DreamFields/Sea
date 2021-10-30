@@ -1,20 +1,26 @@
 import { post } from '@/utils/request';
 import { Table, Button, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import AddQuestion from './addQuestion';
-import UpdateQuestion from './updateQuestion';
+import AddQuestion from '../addQuestion';
+import UpdateQuestion from '../updateQuestion';
+import { useParams } from 'umi';
 import style from './style.less';
 
 const Component = (props: any) => {
-  const difficult = '1';
-  const chapter = '1';
+  const { chapter, difficult } = useParams() as any;
+  console.log('question list detail router param', { chapter, difficult });
 
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
   const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
 
   useEffect(() => {
-    post<any>('/v1/teacher/question_list').then((res) => {
+    post<any>('/v1/teacher/question_list', {
+      data: {
+        chapter: +chapter,
+        difficult: +difficult,
+      },
+    }).then((res) => {
       setDataSource(res);
     });
   }, [state]);

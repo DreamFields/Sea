@@ -5,7 +5,6 @@ import StudentKaohe from './StudentKaohe';
 import StudentKaoshi from './StudentKaoshi';
 import PaperAdd from './PaperAdd';
 import PaperList from './PaperList';
-import QuestionList from './questionList';
 import KnowledgeList from './knowledgeList';
 import AddKnowledge from './addKnowledge';
 import PaperQuestionList from './PaperQuestionList';
@@ -18,7 +17,6 @@ const NAVIGATION = [
   StudentKaoshi,
   PaperList,
   PaperAdd,
-  QuestionList,
   KnowledgeList,
   AddKnowledge,
 

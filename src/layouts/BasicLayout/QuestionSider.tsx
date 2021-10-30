@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { sidebarEventEmitter } from '../../models/eventBus';
+import { history } from 'umi';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -31,7 +32,9 @@ const Component = () => {
       <Menu
         onClick={(e) => {
           if (e.key.startsWith('chapter_id')) {
-            sidebarEventEmitter.emit('change', '4');
+            const r = /^chapter_id(\d+)_difficult(\d+)$/;
+            const { 1: chapter, 2: difficult } = r.exec(e.key)!;
+            history.push(`/teacherTraining/${chapter}/${difficult}`);
           } else {
             sidebarEventEmitter.emit('change', e.key);
           }
@@ -53,12 +56,12 @@ const Component = () => {
           {d.map((item) => difficultMenu(item))}
         </SubMenu>
         <SubMenu key="sub4" title="知识点管理">
-          <Menu.Item key="5">知识点列表</Menu.Item>
-          <Menu.Item key="6">添加知识点</Menu.Item>
+          <Menu.Item key="4">知识点列表</Menu.Item>
+          <Menu.Item key="5">添加知识点</Menu.Item>
         </SubMenu>
         <SubMenu key="sub5" title="DEBUG">
-          <Menu.Item key="7">试卷题目列表</Menu.Item>
-          <Menu.Item key="8">试卷选题</Menu.Item>
+          <Menu.Item key="6">试卷题目列表</Menu.Item>
+          <Menu.Item key="7">试卷选题</Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>
