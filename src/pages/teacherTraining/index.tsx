@@ -20,7 +20,6 @@ const NAVIGATION = [
   PaperList,
   PaperAdd,
   QuestionList,
-  AddQuestion,
   KnowledgeList,
   AddKnowledge,
 

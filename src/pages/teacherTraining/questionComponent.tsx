@@ -249,6 +249,35 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="3">难度3</Option>
           <Option value="4">难度4</Option>
           <Option value="5">难度5</Option>
+          <Option value="6">难度6</Option>
+          <Option value="7">难度7</Option>
+          <Option value="8">难度8</Option>
+          <Option value="9">难度9</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item label="章节" name="chapter">
+        <Select
+          value={data.chapter}
+          defaultValue={data.chapter}
+          style={{
+            display: 'block',
+          }}
+          onChange={(e) => {
+            data.chapter = e;
+            onDataChange(data);
+          }}
+          disabled={readOnly}
+        >
+          <Option value="1">章节1</Option>
+          <Option value="2">章节2</Option>
+          <Option value="3">章节3</Option>
+          <Option value="4">章节4</Option>
+          <Option value="5">章节5</Option>
+          <Option value="6">章节6</Option>
+          <Option value="7">章节7</Option>
+          <Option value="8">章节8</Option>
+          <Option value="9">章节9</Option>
         </Select>
       </Form.Item>
 

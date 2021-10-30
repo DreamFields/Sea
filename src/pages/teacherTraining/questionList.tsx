@@ -6,6 +6,9 @@ import UpdateQuestion from './updateQuestion';
 import style from './style.less';
 
 const Component = (props: any) => {
+  const difficult = '1';
+  const chapter = '1';
+
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
   const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
@@ -68,7 +71,13 @@ const Component = (props: any) => {
 
       {state > 0 && <Button onClick={() => setState(0)}>返回题目列表</Button>}
 
-      {state === 1 && <AddQuestion onDone={() => setState(0)} />}
+      {state === 1 && (
+        <AddQuestion
+          chapter={chapter}
+          difficult={difficult}
+          onDone={() => setState(0)}
+        />
+      )}
       {state === 2 && (
         <UpdateQuestion onDone={() => setState(0)} id={updateQuestionId} />
       )}

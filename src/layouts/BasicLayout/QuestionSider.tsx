@@ -50,10 +50,7 @@ const Component = () => {
           <Menu.Item key="3">新增试卷</Menu.Item>
         </SubMenu>
         <SubMenu key="sub3" title="题目管理">
-          <SubMenu key="4" title="题目列表">
-            {d.map((item) => difficultMenu(item))}
-          </SubMenu>
-          <Menu.Item key="5">新增题目</Menu.Item>
+          {d.map((item) => difficultMenu(item))}
         </SubMenu>
         <SubMenu key="sub4" title="知识点管理">
           <Menu.Item key="6">知识点列表</Menu.Item>
