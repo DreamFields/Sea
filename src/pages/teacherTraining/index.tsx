@@ -11,7 +11,6 @@ import KnowledgeList from './knowledgeList';
 import AddKnowledge from './addKnowledge';
 import PaperQuestionList from './PaperQuestionList';
 import NewQuestionForPaper from './NewQuestionForPaper';
-import KaoheDetail from './KaoheDetail';
 import StudentPaperExam from './StudentPaperExam';
 
 import { sidebarEventEmitter } from '../../models/eventBus';
@@ -30,7 +29,6 @@ const NAVIGATION = [
   PaperQuestionList,
   NewQuestionForPaper,
   StudentPaperExam,
-  KaoheDetail,
 ];
 
 const Index = (props: any) => {
