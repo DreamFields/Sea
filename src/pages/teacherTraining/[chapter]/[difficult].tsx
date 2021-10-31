@@ -14,7 +14,7 @@ const Component = (props: any) => {
   const [state, setState] = useState(0);
   const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
 
-  useEffect(() => {
+  const fetchQuestionList = () => {
     post<any>('/v1/teacher/question_list', {
       data: {
         chapter: +chapter,
@@ -23,6 +23,9 @@ const Component = (props: any) => {
     }).then((res) => {
       setDataSource(res);
     });
+  };
+  useEffect(() => {
+    fetchQuestionList();
   }, [state]);
 
   const columns = [
@@ -58,7 +61,21 @@ const Component = (props: any) => {
                 setUpdateQuestionId(data.id);
               }}
             >
-              查看题目
+              详情
+            </Button>
+            <Button
+              onClick={() => {
+                if (confirm('是否要删除这个题目？')) {
+                  post<any>('/v1/teacher/delete_question', {
+                    data: { id: data.id },
+                  }).then((res) => {
+                    console.log('delete question response', res);
+                    fetchQuestionList();
+                  });
+                }
+              }}
+            >
+              删除题目
             </Button>
           </Space>
         );

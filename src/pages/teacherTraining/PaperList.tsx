@@ -5,10 +5,13 @@ import { post } from '@/utils/request';
 const Index = () => {
   const [dataSource, setDataSource] = useState<any[]>([]);
 
-  useEffect(() => {
+  const renderPaperList = () => {
     post<any>('/v1/teacher/paper_list').then((res) => {
       setDataSource([...res]);
     });
+  };
+  useEffect(() => {
+    renderPaperList();
   }, []);
 
   const columns = [
@@ -52,7 +55,14 @@ const Index = () => {
 
             <Button
               onClick={() => {
-                console.log('delete', data);
+                if (confirm('是否要删除这个试卷？')) {
+                  post<any>('/v1/teacher/delete_paper', {
+                    data: { id: data.id },
+                  }).then((res) => {
+                    console.log('delete paper response', res);
+                    renderPaperList();
+                  });
+                }
               }}
             >
               删除

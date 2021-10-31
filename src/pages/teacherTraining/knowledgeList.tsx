@@ -9,7 +9,7 @@ const Component = (props: any) => {
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
 
-  useEffect(() => {
+  const fetchKnowledgeList = () => {
     post<any>('/v1/teacher/knowledge_list').then((res) => {
       console.log('/v1/teacher/knowledge_list res', res);
 
@@ -19,6 +19,9 @@ const Component = (props: any) => {
           .sort(($1: any, $2: any) => $1.id - $2.id),
       );
     });
+  };
+  useEffect(() => {
+    fetchKnowledgeList();
   }, [state]);
 
   const columns = [
@@ -40,6 +43,14 @@ const Component = (props: any) => {
           <Space size="middle">
             <Button
               onClick={() => {
+                if (confirm('是否要删除这个知识点？')) {
+                  post<any>('/v1/teacher/delete_knowledge', {
+                    data: { id: data.id },
+                  }).then((res) => {
+                    console.log('delete knowledge response', res);
+                    fetchKnowledgeList();
+                  });
+                }
                 console.log('delete', data);
               }}
             >
