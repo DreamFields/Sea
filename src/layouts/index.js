@@ -1,3 +1,8 @@
+/*
+ * @Author: Meng Tian
+ * @Date: 2021-10-18 15:01:45
+ * @Description: Do not edit
+ */
 import BasicLayouts from './BasicLayout/BasicLayouts';
 import UserLayout from './UserLayouts.js';
 import React from 'react';
@@ -9,6 +14,17 @@ const index = (props) => {
   const { pathname } = location;
 
   // console.log(pathname);
+  if (
+    pathname.search('listenTraining') !== -1 ||
+    pathname.search('teacherTraining') !== -1
+  ) {
+    return (
+      <ConfigProvider locale={zhCN}>
+        <BasicLayouts {...props} train={true} />
+      </ConfigProvider>
+    );
+  }
+
   if (pathname.search('/user') == -1) {
     return (
       <ConfigProvider locale={zhCN}>

@@ -1,18 +1,27 @@
 import { post } from '@/utils/request';
 import React, { useEffect, useState } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Space } from 'antd';
 import style from './style.less';
+
 import AddKnowledge from './addKnowledge';
 
 const Component = (props: any) => {
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
 
-  useEffect(() => {
+  const fetchKnowledgeList = () => {
     post<any>('/v1/teacher/knowledge_list').then((res) => {
       console.log('/v1/teacher/knowledge_list res', res);
-      setDataSource(res.sort(($1: any, $2: any) => $1.id - $2.id));
+
+      setDataSource(
+        res
+          .map((r) => ({ ...r, key: r.id }))
+          .sort(($1: any, $2: any) => $1.id - $2.id),
+      );
     });
+  };
+  useEffect(() => {
+    fetchKnowledgeList();
   }, [state]);
 
   const columns = [
@@ -25,6 +34,31 @@ const Component = (props: any) => {
       title: '内容',
       dataIndex: 'content',
       key: 'content',
+    },
+    {
+      title: '删除',
+      key: 'actions',
+      render(_, data: any) {
+        return (
+          <Space size="middle">
+            <Button
+              onClick={() => {
+                if (confirm('是否要删除这个知识点？')) {
+                  post<any>('/v1/teacher/delete_knowledge', {
+                    data: { id: data.id },
+                  }).then((res) => {
+                    console.log('delete knowledge response', res);
+                    fetchKnowledgeList();
+                  });
+                }
+                console.log('delete', data);
+              }}
+            >
+              删除
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 

@@ -105,12 +105,12 @@ const Model = {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
-        if (pathname === '/listenTraining') {
-          dispatch({
-            type: 'getDiffcultList',
-            payload: {},
-          });
-        }
+        // if (pathname === '/listenTraining') {
+        //   dispatch({
+        //     type: 'getDiffcultList',
+        //     payload: {},
+        //   });
+        // }
       });
     },
   },
