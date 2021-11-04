@@ -77,6 +77,10 @@ const StudentIndex = (props: any) => {
     setView(0);
   }, []);
 
+  useEffect(() => {
+    console.log('view', view);
+  }, [view]);
+
   const handleClick = (e) => {
     setLevel([
       parseInt(e.keyPath[1], 10),
@@ -276,7 +280,10 @@ const StudentIndex = (props: any) => {
               })}
             </SubMenu>
             <SubMenu key="sub2" title="考试">
-              <Menu.Item key="done"> 已经参加的考试</Menu.Item>
+              <Menu.Item key="done" onClick={}>
+                {' '}
+                已经参加的考试
+              </Menu.Item>
               <Menu.Item key="canDo">可以参加的考试</Menu.Item>
             </SubMenu>
           </Menu>
