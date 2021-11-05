@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-17 10:36:16
+ * @LastEditTime: 2021-10-21 10:29:28
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\register\index.tsx
  */
@@ -74,10 +74,10 @@ const Index = (props: any) => {
               required: true,
               message: '请输入用户名!',
             },
-            {
+            /* {
               pattern: /^[a-zA-Z0-9_-]{4,16}$/,
               message: '用户名包含4到16位（字母，数字，下划线，减号）!',
-            },
+            }, */
           ]}
         >
           <Input size="large" className={style.user} autoComplete="off" />
@@ -141,7 +141,7 @@ const Index = (props: any) => {
           <Input.Password size="large" className={style.password} />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="用户类型"
           name="role"
           style={{ marginBottom: 0 }}
@@ -152,11 +152,11 @@ const Index = (props: any) => {
             },
           ]}
         >
-          <Radio.Group>
+          <Radio.Group value={3}>
             <Radio value={2}>教员</Radio>
             <Radio value={3}>学生</Radio>
           </Radio.Group>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item {...tailLayout} name="back">
           <Link to="/user/login">

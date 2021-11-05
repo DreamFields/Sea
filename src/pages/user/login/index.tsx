@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-11-17 10:33:56
+ * @LastEditTime: 2021-10-21 10:30:35
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\index.tsx
  */
@@ -81,10 +81,10 @@ const Index = (props: any) => {
               required: true,
               message: '请输入用户名!',
             },
-            {
+            /* {
               pattern: /^[a-zA-Z0-9_-]{4,16}$/,
               message: '用户名包含4到16位（字母，数字，下划线，减号）!',
-            },
+            }, */
           ]}
         >
           <Input size="large" className={style.user} id="user" />
@@ -153,16 +153,17 @@ const Index = (props: any) => {
 
   return (
     <div className={style.loginDiv}>
-      <img src={logo} style={{ height: 45, width: 45, marginLeft: '20%' }} />
+      <img src={logo} style={{ height: 45, width: 45, marginLeft: '10%' }} />
       <h2
         style={{
-          marginLeft: '34%',
+          marginLeft: '28%',
           marginTop: -40,
           marginBottom: 30,
+          width: '500px',
           color: 'white',
         }}
       >
-        水声数据库系统
+        水声数据整编分析系统
       </h2>
       <Login />
     </div>

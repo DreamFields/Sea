@@ -20,6 +20,7 @@ import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   const { audio_id, dispatch, Data } = props;
   const [nfft, setNFFT] = useState(2048);
+  const [ret_file_nfft, setret_file_nfft] = useState(2048);
   const { Option } = Select;
 
   useEffect(() => {
@@ -82,16 +83,27 @@ const TestApp = (props) => {
     let option = {
       title: {
         text: '特征提取',
+        align: 'center',
         subtext: '功率谱(默认1000hz)，1/3频谱分析（默认20000hz）',
       },
       animation: true,
       xAxis: {
         type: XType,
         data: Xdata,
+        axisLabel: {
+          formatter: function (value) {
+            // console.log('获取到的value',value)
+            console.log('file_nfft', ret_file_nfft);
+            return (value * ret_file_nfft) / Xdata.length;
+          },
+        },
       },
       yAxis: {
         type: YType,
         scale: true,
+        axisLabel: {
+          formatter: '{value} db',
+        },
       },
       dataZoom: [
         {
@@ -100,6 +112,15 @@ const TestApp = (props) => {
       ],
       tooltip: {
         trigger: 'axis',
+
+        axisPointer: {
+          label: {
+            formatter: function (value) {
+              console.log('value', value);
+              return (value.value * ret_file_nfft) / Xdata.length;
+            },
+          },
+        },
       },
       toolbox: {
         left: 'center',
@@ -175,6 +196,8 @@ const TestApp = (props) => {
         setid(id);
 
         setPicIfo(res.picIfo);
+
+        setret_file_nfft(res.file_nfft);
 
         let xd = [];
         let allYData = [];
@@ -367,6 +390,13 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
+
   return (
     <div>
       <Card>

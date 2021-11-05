@@ -1,3 +1,8 @@
+/*
+ * @Author: Meng Tian
+ * @Date: 2021-10-18 15:01:45
+ * @Description: 特征提取界面右侧下方的特征提取模块，在不同的特征选择下展示不同的水声信息
+ */
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
 import { Statistic } from 'antd';
@@ -6,6 +11,8 @@ import LofarTable from '../lofarV1/table';
 
 const Index = (props) => {
   const { f_key, data, dispatch } = props;
+
+  console.log('data.hz', data.hz);
 
   return (
     <>

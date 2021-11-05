@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-27 08:25:16
- * @LastEditTime : 2020-11-11 22:50:47
+ * @LastEditTime: 2021-10-27 14:19:36
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\proxy.ts
  */
@@ -30,6 +30,7 @@ export default {
       pathRewrite: {
         '^/api': '',
       },
+      secure: false, //umi代理https时应该设置secure属性
     },
   },
   test: {

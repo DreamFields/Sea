@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime : 2020-12-27 18:17:58
+ * @LastEditTime: 2021-10-19 21:41:08
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -25,17 +25,25 @@ import {
   Slider,
   Alert,
   Card,
+  Tooltip,
 } from 'antd';
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
 import CookieUtil from '@/utils/cookie.js';
+// import WaveSurfer from 'wavesurfer.js';
+// import WaveSurfer from 'react-wavesurfer';
 
 let region_now;
 let audio_id_dup = undefined;
 const alert_message_1 =
   '对一个区域进行操作前请务必先左键单击对应的区域；您可以通过点击一个标签后，在上方的开始时间和结束时间输入栏修改当前选择标签的起始时间和结束时间，修改后记得右键单击标签点击设置标签！';
-const alert_message_2 =
-  '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
+const alert_message_2_1 =
+  '操作方式一：①选中某个区域 ②进行拖动操作 ③单击鼠标左键（音频起止时间可自动更新） ④单击鼠标右键-保存该标签。';
+const alert_message_2_2 =
+  '操作方式二：①选中某个区域 ②在输入框中更新信息 ③单击鼠标右键-保存该标签。';
+
+// const alert_message_2 =
+//   '在修改标签的起始时间，结束时间，或者备注后请右键单击标签点击设置标签修改标签状态。您可以完成对所有标签的删除，新增，修改操作后再点击保存所有标签，但是一定要点击，不然不会保存。';
 
 //定义音频可视化组件
 let wavesurfer;
@@ -54,6 +62,25 @@ const Index = (props) => {
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
+
+  function chooseCurrentRegion(region) {
+    console.log('wavesurfer.regions.list', wavesurfer.regions.list);
+    // 设置点击的region为其它颜色，方便交互
+    Object.keys(wavesurfer.regions.list).map(function (id) {
+      console.log('id', id);
+      if (id === region.id) {
+        wavesurfer.regions.list[id].update({
+          color: 'rgba(242,136,57,0.4)',
+        });
+      } else {
+        wavesurfer.regions.list[id].update({
+          color: 'rgba(100,149,237,0.3)',
+        });
+      }
+    });
+    const newData = wavesurfer.regions.list;
+    console.log('new wavesurfer.regions.list', newData);
+  }
 
   useEffect(() => {
     console.log('pretreatment', Pretreatment);
@@ -100,16 +127,35 @@ const Index = (props) => {
     }
   }, [tab, Pretreatment.audio_id]);
 
-  const Waveform = () => {
-    function editAnnotation(region) {
-      form.setFieldsValue({
-        start: region.start.toFixed(3),
-        end: region.end.toFixed(3),
-        note: region.data.note || '',
-      });
-      region_now = region;
+  /**
+   * Display annotation.
+   */
+  function showNote(region) {
+    console.log('region-in方法');
+    if (!showNote.el) {
+      showNote.el = document.querySelector('#subtitle');
     }
+    showNote.el.textContent = region.data.note || '–';
+  }
 
+  function editAnnotation(region) {
+    console.log('保存的region', region);
+    // const newNote=form.getFieldsValue().note
+    form.getFieldsValue();
+    console.log('editAnnotation()');
+    form.setFieldsValue({
+      start: region.start.toFixed(3),
+      end: region.end.toFixed(3),
+      // note: newNote===undefined?region.data.note:newNote || '',
+      note: region.data.note || '',
+    });
+    // console.log('region.list',region.list)
+
+    region_now = region;
+    console.log('点击后的region_now', region_now);
+  }
+
+  const Waveform = () => {
     /**
      * Load regions.
      */
@@ -146,7 +192,7 @@ const Index = (props) => {
         progressColor: '#1e90ff',
         splitChannels: true,
         cursorColor: '#bdc3c7',
-        cursorWidth: 1,
+        cursorWidth: 1, // 鼠标点击的竖线宽度
         // barWidth: 1,
         // barHeight: 1, // the height of the wave
         barRadius: 3,
@@ -182,28 +228,30 @@ const Index = (props) => {
       }
 
       wavesurfer.on('ready', function () {
+        // console.log('regions',regions)
         wavesurfer.enableDragSelection({
-          color: 'rgba(100,149,237,0.3)',
+          color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
+          // waveColor: 'red',
         });
         wavesurfer.clearRegions();
         loadRegions(Pretreatment.tips);
       });
+
+      // 鼠标在region中点击时触发
       wavesurfer.on('region-click', function (region, e) {
+        chooseCurrentRegion(region);
+        wavesurfer.enableDragSelection({
+          color: 'rgba(100,149,237,0.3)', // 设置可拖拽区域的颜色
+        });
+        // console.log('点击的区域', region);
+        // console.log('e', e);
         e.stopPropagation();
         e.shiftKey ? region.playLoop() : region.play();
       });
+
+      // 鼠标在region中点击时触发
       wavesurfer.on('region-click', editAnnotation);
       wavesurfer.on('region-in', showNote);
-
-      /**
-       * Display annotation.
-       */
-      function showNote(region) {
-        if (!showNote.el) {
-          showNote.el = document.querySelector('#subtitle');
-        }
-        showNote.el.textContent = region.data.note || '–';
-      }
 
       // Progress bar
       (function () {
@@ -256,25 +304,6 @@ const Index = (props) => {
       }).then(() => {
         const _path = path + '?ran=' + randomString(true, 5, 15);
         setpath(_path);
-      });
-    };
-
-    const handle_save_regions = () => {
-      var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
-        var region = wavesurfer.regions.list[id];
-        return {
-          start: region.start,
-          end: region.end,
-          data: region.data,
-        };
-      });
-      console.log(JSON.stringify(regions));
-      dispatch({
-        type: 'pretreatment/saveTips',
-        payload: {
-          audio_id: Pretreatment.audio_id,
-          regions: JSON.stringify(regions),
-        },
       });
     };
 
@@ -361,7 +390,7 @@ const Index = (props) => {
             >
               导出当前音频
             </Button>
-            <Popover content="将所有设置过的标签保存。" title="保存所有标签">
+            <Popover content="将所有鼠标拖动过的标签保存。">
               <Button
                 type="primary"
                 onClick={handle_save_regions}
@@ -398,9 +427,60 @@ const Index = (props) => {
       </>
     );
   };
+  /**
+   * @description: 保存所有标签
+   * @param {*}
+   * @return {*}
+   */
+  const handle_save_regions = () => {
+    var regions = Object.keys(wavesurfer.regions.list).map(function (id) {
+      var region = wavesurfer.regions.list[id];
+      return {
+        start: region.start,
+        end: region.end,
+        data: region.data,
+      };
+    });
+    console.log(JSON.stringify(regions));
+    dispatch({
+      type: 'pretreatment/saveTips',
+      payload: {
+        audio_id: Pretreatment.audio_id,
+        regions: JSON.stringify(regions),
+      },
+    });
+    form.setFieldsValue({
+      start: null,
+      end: null,
+      note: null,
+    });
+  };
 
   //保存某个区域到wavesurfer的regions数组里
-  const handle_save_region = () => {
+  // 修改，使其点击后能够将标签直接保存到下面的列表中
+  const handle_save_region_tag = () => {
+    // console.log(form.getFieldsValue())
+    if (region_now != undefined) {
+      region_now.update({
+        start: form.getFieldsValue().start,
+        end: form.getFieldsValue().end,
+        data: {
+          note: form.getFieldsValue().note,
+        },
+      });
+    }
+    /* wavesurfer.regions.list[region_now.id].update({
+      start: form.getFieldsValue().start,
+      end: form.getFieldsValue().end,
+      data: {
+        note: form.getFieldsValue().note,
+      },
+    }); */
+    // 同时保存所有标签（因为只有一个保存所有标签的接口）
+    handle_save_regions();
+  };
+
+  const handle_save_region_edit = () => {
     // console.log(form.getFieldsValue())
     if (region_now != undefined) {
       region_now.update({
@@ -625,12 +705,21 @@ const Index = (props) => {
     settab(key);
   };
 
-  const handle_remove_region = () => {
+  const handle_remove_region_tag = () => {
     if (!region_now) {
       message.warning('请先通过点击以选择一片区域！');
     } else {
       region_now.remove();
     }
+    handle_save_regions();
+  };
+  const handle_remove_region_edit = () => {
+    if (!region_now) {
+      message.warning('请先通过点击以选择一片区域！');
+    } else {
+      region_now.remove();
+    }
+    // handle_save_regions();
   };
 
   return (
@@ -660,7 +749,13 @@ const Index = (props) => {
             style={{ display: tab == '2' ? 'none' : 'block' }}
           />
           <Alert
-            message={alert_message_2}
+            message={alert_message_2_1}
+            type="warning"
+            showIcon
+            style={{ display: tab == '1' ? 'none' : 'block' }}
+          />
+          <Alert
+            message={alert_message_2_2}
             type="warning"
             showIcon
             style={{ display: tab == '1' ? 'none' : 'block' }}
@@ -673,22 +768,28 @@ const Index = (props) => {
           >
             <Row gutter={16}>
               <Col span={6}>
-                <Form.Item name="start" label="开始时间">
-                  <Input id="regionStart" name="start" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改后请及时单击右键-保存该标签">
+                  <Form.Item name="start" label="开始时间">
+                    <Input id="regionStart" name="start" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
               <Col span={6}>
-                <Form.Item name="end" label="结束时间">
-                  <Input id="regionEnd" name="end" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改后请及时单击右键-保存该标签">
+                  <Form.Item name="end" label="结束时间">
+                    <Input id="regionEnd" name="end" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
               <Col
                 span={12}
                 style={{ display: tab === '2' ? 'block' : 'none' }}
               >
-                <Form.Item name="note" label="备注">
-                  <Input id="regionNote" name="note" autoComplete="off" />
-                </Form.Item>
+                <Tooltip title="修改后请及时单击右键-保存该标签">
+                  <Form.Item name="note" label="备注">
+                    <Input id="regionNote" name="note" autoComplete="off" />
+                  </Form.Item>
+                </Tooltip>
               </Col>
             </Row>
           </Form>
@@ -731,9 +832,27 @@ const Index = (props) => {
                             <Button
                               type="primary"
                               onClick={() => {
-                                console.log(wavesurfer.getCurrentTime());
+                                console.log(
+                                  'wavesurfer.getCurrentTime()',
+                                  wavesurfer.getCurrentTime(),
+                                );
                                 wavesurfer.skip(
                                   item.start - wavesurfer.getCurrentTime(),
+                                );
+                                console.log('item', item);
+                                editAnnotation(item);
+                                Object.keys(wavesurfer.regions.list).map(
+                                  function (id) {
+                                    if (
+                                      wavesurfer.regions.list[id].start ===
+                                      item.start
+                                    ) {
+                                      chooseCurrentRegion(
+                                        wavesurfer.regions.list[id],
+                                      );
+                                      showNote(wavesurfer.regions.list[id]);
+                                    }
+                                  },
                                 );
                               }}
                             >
@@ -768,17 +887,21 @@ const Index = (props) => {
           type="button"
           className="btn btn-default"
           id="saveRegion"
-          onClick={handle_save_region}
+          onClick={
+            tab === '1' ? handle_save_region_edit : handle_save_region_tag
+          }
         >
-          {tab === '1' ? '设置区域' : '设置标签'}
+          {tab === '1' ? '设置区域' : '保存该标签'}
         </button>
         <button
           type="button"
           className="btn btn-default"
           id="deleteRegion"
-          onClick={handle_remove_region}
+          onClick={
+            tab === '1' ? handle_remove_region_edit : handle_remove_region_tag
+          }
         >
-          {tab === '1' ? '删除区域' : '删除标签'}
+          {tab === '1' ? '删除区域' : '删除该标签'}
         </button>
         <button
           type="button"

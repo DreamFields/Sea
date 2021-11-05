@@ -17,6 +17,9 @@ import { SERVICEURL } from '../../utils/const';
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
+  useEffect(() => {
+    console.log('Data', Data);
+  }, [Data]);
 
   // 播放控制
   let animationValue = false;
@@ -33,7 +36,8 @@ const TestApp = (props) => {
   //自动计算所需参数
   let maxDB = 0;
   let maxF = 0;
-  let maxFnum = 0;
+  const throwNum = 5; //舍弃了前5个点
+  let maxFnum = throwNum;
 
   const [MaxDB, setMaxDB] = useState(maxDB);
   const [MaxF, setMaxF] = useState(maxF);
@@ -47,16 +51,49 @@ const TestApp = (props) => {
   let echartInstance;
   //用highlight列表来控制点点状态
   let highlightArr = [];
-  // useEffect(() => {
-  // 获取音频时长
-  // if (path) {
-  //   let audioElement = new Audio(path);
-  //   audioElement.addEventListener('loadedmetadata', function (_event) {
-  //     duration = audioElement.duration * 1000;
-  //     // console.log('视频的时长为(ms):', duration);
-  //   });
-  // }
-  // }, []);
+
+  /**
+   * @description: 判断下标为n-1后面的数值是否都比arr[n-1]大，是返回true
+   * @param {*}
+   * @return {*}
+   */
+  let bigger = (n, arr) => {
+    let label = true;
+    for (let i = n; i < arr.length; i++) {
+      if (arr[n - 1] < arr[i]) label = false;
+    }
+    return label;
+  };
+
+  /**
+   * @description: 得到基频value*n正负10%区间内的最大y值作为dbn
+   * @param {*}
+   * @return {*}
+   */
+  let getMaxIndexInRange = (value) => {
+    let maxYval = -1;
+    let retIndex = 0;
+    let retVal = 0;
+    /* console.log('基频的10%=', Math.ceil(MaxFnum * 0.1));
+    console.log('最小值：', value - Math.ceil(MaxFnum * 0.1));
+    console.log('最大值：', value + Math.ceil(MaxFnum * 0.1)); */
+    for (
+      let xVal = value - Math.ceil(MaxFnum * 0.1);
+      xVal <= value + Math.ceil(MaxFnum * 0.1);
+      xVal++
+    ) {
+      let temp = Data.ydata[Data.label][getIndex(xVal, Data.xdata[Data.label])];
+      if (maxYval < temp) {
+        maxYval = temp;
+        retIndex = getIndex(xVal, Data.xdata[Data.label]);
+        retVal = xVal;
+      }
+    }
+    /* console.log('计算得到的下标值：', retIndex);
+    console.log('计算得到的基频值：', retVal);
+    console.log('计算得到的y值：', maxYval); */
+    return { maxYval, retVal };
+  };
 
   useEffect(() => {
     setmyType('value');
@@ -111,6 +148,8 @@ const TestApp = (props) => {
     };
     return option;
   };
+
+  // 获取value对应在数组中的下标（该代码中对value本身进行了*10处理）
   const getIndex = (value, arr) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] * 10 === value) {
@@ -130,6 +169,7 @@ const TestApp = (props) => {
       // });
 
       let copy_data;
+      console.log('MaxF:', MaxF);
       dispatch({
         type: 'demonTable/setdata',
         payload: {},
@@ -138,9 +178,13 @@ const TestApp = (props) => {
           copy_data = [];
           for (let i = 0; i < 8; i++)
             copy_data.push({
-              hz: params.dataIndex * (i + 1),
-              db: params.value.toPrecision(3),
-              rpm: params.dataIndex * 60 * (i + 1),
+              // hz: Math.floor(MaxF * (i + 1) * 10),
+              // 展示的时候不能*10
+              hz:
+                i === 0
+                  ? params.dataIndex / 10
+                  : getMaxIndexInRange(params.dataIndex * (i + 1)).retVal / 10,
+              db: MaxDB.toPrecision(3),
             });
           return { tabledata: copy_data };
         },
@@ -151,8 +195,10 @@ const TestApp = (props) => {
       let rpm = params.dataIndex * 60;
       //轴数 暂时无算法
 
+      // console.log('params', params);
+      // console.log('此时的Data', Data);
       let db1 = params.value;
-      let db2 =
+      /* let db2 =
         Data.ydata[Data.label][
           getIndex(params.dataIndex * 2, Data.xdata[Data.label])
         ];
@@ -179,7 +225,14 @@ const TestApp = (props) => {
       let db8 =
         Data.ydata[Data.label][
           getIndex(params.dataIndex * 8, Data.xdata[Data.label])
-        ];
+        ]; */
+      let db2 = getMaxIndexInRange(params.dataIndex * 2).maxYval;
+      let db3 = getMaxIndexInRange(params.dataIndex * 3).maxYval;
+      let db4 = getMaxIndexInRange(params.dataIndex * 4).maxYval;
+      let db5 = getMaxIndexInRange(params.dataIndex * 5).maxYval;
+      let db6 = getMaxIndexInRange(params.dataIndex * 6).maxYval;
+      let db7 = getMaxIndexInRange(params.dataIndex * 7).maxYval;
+      let db8 = getMaxIndexInRange(params.dataIndex * 8).maxYval;
       let dbData = [];
       dbData.push(db1);
       dbData.push(db2);
@@ -189,29 +242,31 @@ const TestApp = (props) => {
       dbData.push(db6);
       dbData.push(db7);
       dbData.push(db8);
+
+      console.log('原来算法得到的dbData', dbData);
       console.log(dbData);
       console.log(params.dataIndex);
+
       console.log(params.dataIndex * 2);
-      console.log(getIndex(params.dataIndex * 2, Data.xdata[Data.label]));
+      console.log(
+        'getIndex(params.dataIndex * 2, Data.xdata[Data.label])',
+        getIndex(params.dataIndex * 2, Data.xdata[Data.label]),
+      );
       console.log(Data.ydata[Data.label]);
       console.log(Data.xdata[Data.label]);
-      let bigger = (n, arr) => {
-        let label = true;
-        for (let i = n - 1; i < arr.length; i++) {
-          if (arr[n] < arr[i]) label = false;
-        }
-        return label;
-      };
+      // ===================================
+      // 省略>n倍频判断条件的新算法
+      // ===================================
       if (bigger(3, dbData)) {
-        if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
-          label = 3;
+        if (db1 > db2 && db2 > db4) label = 3;
       }
       if (bigger(4, dbData)) {
-        if (db1 > db3 && db3 > db5 && db5 > db7 && db2 > db6) label = 4;
+        if (db1 > db3 && db3 > db5 && db2 > db6) {
+          label = 4;
+        }
       }
       if (bigger(5, dbData)) {
-        if (db2 > db3 && db3 > db7 && db7 > db8 && db1 > db4 && db4 > db6)
-          label = 5;
+        if (db2 > db3 && db3 > db7 && db1 > db4 && db4 > db6) label = 5;
       }
       if (bigger(6, dbData)) {
         if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
@@ -238,7 +293,7 @@ const TestApp = (props) => {
         type: 'basicSoundData/setdata',
         payload: {
           db: params.value.toPrecision(3),
-          hz: params.dataIndex,
+          hz: params.dataIndex / 10,
           label: label,
           rpm: rpm,
         },
@@ -248,27 +303,50 @@ const TestApp = (props) => {
 
   const autoExtract = () => {
     let copy_data;
-    dispatch({
-      type: 'demonTable/setdata',
-      payload: {},
-      callback: (state) => {
-        // copy_data = state.tabledata.slice();
-        copy_data = [];
-        for (let i = 0; i < 8; i++)
-          copy_data.push({
-            hz: Math.floor(MaxF * (i + 1) * 10),
-            db: MaxDB.toPrecision(3),
-          });
-        return { tabledata: copy_data };
-      },
-    });
+
     //叶片数
     let label = 0;
     //转速
     let rpm = MaxF * 600;
     //轴数 暂时无算法
 
-    let db1 = MaxDB;
+    //=================================================
+    // 更新叶片计算方法，允许左右10%误差
+    //=================================================
+    /* // 最多计算8倍基频
+    for (let cnt = 1; cnt <= 8; cnt++) {
+      if (cnt===1) {
+        dbData.push(MaxDB)
+      }
+      else{
+        let dbn=getMaxIndexInRange(MaxFnum*cnt);
+        dbData.push(dbn)
+      }
+      
+    } */
+
+    console.log('MaxFnum', MaxFnum);
+    let db1 = Data.ydata[Data.label][getIndex(MaxFnum, Data.xdata[Data.label])];
+    console.log('db1', db1);
+    console.log('MaxDB', MaxDB);
+    let db2 = getMaxIndexInRange(MaxFnum * 2).maxYval;
+    let db3 = getMaxIndexInRange(MaxFnum * 3).maxYval;
+    let db4 = getMaxIndexInRange(MaxFnum * 4).maxYval;
+    let db5 = getMaxIndexInRange(MaxFnum * 5).maxYval;
+    let db6 = getMaxIndexInRange(MaxFnum * 6).maxYval;
+    let db7 = getMaxIndexInRange(MaxFnum * 7).maxYval;
+    let db8 = getMaxIndexInRange(MaxFnum * 8).maxYval;
+
+    for (let i = 0; i < 7; i++) {
+      console.log(
+        '倍频数',
+        i + 2,
+        '结果：',
+        getMaxIndexInRange(MaxFnum * (i + 2)),
+      );
+    }
+    /* let db1 = MaxDB;
+
     let db2 =
       Data.ydata[Data.label][getIndex(MaxFnum * 2, Data.xdata[Data.label])];
     let db3 =
@@ -282,7 +360,7 @@ const TestApp = (props) => {
     let db7 =
       Data.ydata[Data.label][getIndex(MaxFnum * 7, Data.xdata[Data.label])];
     let db8 =
-      Data.ydata[Data.label][getIndex(MaxFnum * 8, Data.xdata[Data.label])];
+      Data.ydata[Data.label][getIndex(MaxFnum * 8, Data.xdata[Data.label])]; */
     let dbData = [];
     dbData.push(db1);
     dbData.push(db2);
@@ -292,15 +370,46 @@ const TestApp = (props) => {
     dbData.push(db6);
     dbData.push(db7);
     dbData.push(db8);
-    console.log(dbData);
-    let bigger = (n, arr) => {
-      let label = true;
-      for (let i = n - 1; i < arr.length; i++) {
-        if (arr[n] < arr[i]) label = false;
+
+    /* for (let cnt = 1; cnt <= 8; cnt++) {
+      console.log(
+        '原来算法得到的下标值：',
+        getIndex(MaxFnum * cnt, Data.xdata[Data.label]),
+      );
+      if (cnt === 1) {
+        dbData.push(MaxDB);
+      } else {
+        // let dbn=getMaxIndexInRange(MaxFnum*cnt);
+        let dbn =
+          Data.ydata[Data.label][
+            getIndex(MaxFnum * cnt, Data.xdata[Data.label])
+          ];
+        dbData.push(dbn);
       }
-      return label;
-    };
-    if (bigger(3, dbData)) {
+    } */
+    dispatch({
+      type: 'demonTable/setdata',
+      payload: {},
+      callback: (state) => {
+        // copy_data = state.tabledata.slice();
+        copy_data = [];
+        for (let i = 0; i < 8; i++)
+          copy_data.push({
+            // hz: Math.floor(MaxF * (i + 1) * 10),
+            // 展示的时候不能*10
+            hz:
+              i === 0
+                ? MaxF
+                : getMaxIndexInRange(MaxFnum * (i + 1)).retVal / 10,
+            db: MaxDB.toPrecision(3),
+          });
+        return { tabledata: copy_data };
+      },
+    });
+
+    console.log('dbData', dbData);
+
+    /* if (bigger(3, dbData)) {
       if (db1 > db2 && db2 > db4 && db4 > db5 && db5 > db7 && db7 > db8)
         label = 3;
     }
@@ -310,6 +419,27 @@ const TestApp = (props) => {
     if (bigger(5, dbData)) {
       if (db2 > db3 && db3 > db7 && db7 > db8 && db1 > db4 && db4 > db6)
         label = 5;
+    }
+    if (bigger(6, dbData)) {
+      if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
+    }
+    if (db1 > db6 && db6 > db8 && db2 > db5 && db3 > db4 && db7 > db8) {
+      label = 7;
+    } */
+
+    // ===================================
+    // 省略>n倍频判断条件的新算法
+    // ===================================
+    if (bigger(3, dbData)) {
+      if (db1 > db2 && db2 > db4) label = 3;
+    }
+    if (bigger(4, dbData)) {
+      if (db1 > db3 && db3 > db5 && db2 > db6) {
+        label = 4;
+      }
+    }
+    if (bigger(5, dbData)) {
+      if (db2 > db3 && db3 > db7 && db1 > db4 && db4 > db6) label = 5;
     }
     if (bigger(6, dbData)) {
       if (db1 > db5 && db5 > db7 && db2 > db4 && db4 > db8) label = 6;
@@ -362,11 +492,13 @@ const TestApp = (props) => {
         }
         xdata.push(res.FreqV[0]);
         ydata.push(res.outputData_2[0]);
-        for (let i = 0; i < res.FreqV[0].length; i++) {
+
+        for (let i = throwNum + 1; i < res.FreqV[0].length; i++) {
           if (res.outputData_2[0][maxFnum] < res.outputData_2[0][i]) {
             maxFnum = i;
           }
         }
+        console.log('maxFnum', maxFnum);
         maxDB = res.outputData_2[0][maxFnum];
         maxF = res.FreqV[0][maxFnum];
         setMaxFnum(maxFnum);
@@ -438,6 +570,13 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
+
   return (
     <div>
       <Card>

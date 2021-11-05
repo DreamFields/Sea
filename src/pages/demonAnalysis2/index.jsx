@@ -92,7 +92,7 @@ const TestApp = (props) => {
         },
       ],
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
       },
       toolbox: {
         left: 'center',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   notification,
@@ -65,6 +65,9 @@ const TestApp = (props) => {
         data: Xdata,
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       yAxis: {
@@ -72,6 +75,9 @@ const TestApp = (props) => {
         data: Ydata,
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       visualMap: {
@@ -95,7 +101,7 @@ const TestApp = (props) => {
         },
       ],
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
       },
       toolbox: {
         left: 'center',
@@ -305,6 +311,13 @@ const TestApp = (props) => {
       }
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
+
   return (
     <div>
       <Card>

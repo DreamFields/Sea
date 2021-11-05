@@ -3,6 +3,7 @@ import UserLayout from './UserLayouts.js';
 import React from 'react';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { ConfigProvider } from 'antd';
+import CookieUtil from '../utils/cookie';
 
 const index = (props) => {
   const { location } = props;

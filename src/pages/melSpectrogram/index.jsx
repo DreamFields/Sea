@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+/*
+ * @Author: Meng Tian
+ * @Date: 2021-10-18 15:09:08
+ * @Description: 时频图组件
+ */
 import {
   Button,
   notification,
@@ -59,20 +64,27 @@ const TestApp = (props) => {
   );
   const getOption = (data, Xdata, Ydata, Min, Max) => {
     let option = {
+      // backgroundColor: '#000', //背景色
       darkMode: true,
       title: {
         text: '特征提取',
         subtext: '时频图',
       },
       grid: {
+        show: true,
         height: '70%',
         top: '10%',
+        backgroundColor: '#000',
       },
       xAxis: {
         type: 'category',
         data: Xdata,
+        // dark主题的背景默认是白色#eee，在此覆盖其变为背景色
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       yAxis: {
@@ -80,6 +92,9 @@ const TestApp = (props) => {
         data: Ydata,
         splitArea: {
           show: true,
+          areaStyle: {
+            color: ['#333333'],
+          },
         },
       },
       visualMap: {
@@ -87,6 +102,7 @@ const TestApp = (props) => {
         max: Max,
         calculable: true,
         orient: 'horizontal',
+        // orient: 'vertical',
         inRange: {
           color: ['#080707', '#261379', '#9708a4', '#c94f2d', '#eaea5e'],
         },
@@ -96,14 +112,16 @@ const TestApp = (props) => {
       },
       dataZoom: [
         {
+          // dataBackgroundColor:'rgba(47,69,84,1)',
           type: 'inside',
           //实现横纵坐标缩放，折线图不设置默认只缩放x轴
           xAxisIndex: [0],
           yAxisIndex: [0],
+          data,
         },
       ],
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
       },
       brush: {
         toolbox: ['rect', 'polygon', 'keep', 'clear'],
@@ -297,6 +315,12 @@ const TestApp = (props) => {
       });
     });
   };
+
+  useEffect(() => {
+    if (audio_id) {
+      getData();
+    }
+  }, [audio_id]);
 
   return (
     <div>
