@@ -46,6 +46,7 @@ import topLogo from '@/assets/top-logo.png';
 import bottomLogo from '@/assets/bottom-logo.png';
 import { SERVICEURL } from '@/utils/const';
 import { getRole } from '@/utils/util';
+import StuQuestionSider from '@/layouts/BasicLayout/StuQuestionSider';
 
 const { Header, Sider, Footer, Content } = Layout;
 
@@ -1871,6 +1872,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             </Sider>
           )}
           {train && getRole() !== '学员' && <QuestionSider />}
+          {train && getRole() === '学员' && <StuQuestionSider />}
           <Content className="main-content">{props.children}</Content>
         </Layout>
 

@@ -23,13 +23,20 @@ const Component = () => {
     const c: any[] = [];
     for (let i = 1; i <= 10; i++) {
       c.push(
-        <Menu.Item key={`chapter_id${chapter_id}_difficult${i}`}>
+        <Menu.Item
+          style={{ fontSize: 15 }}
+          key={`chapter_id${chapter_id}_difficult${i}`}
+        >
           难度{i}
         </Menu.Item>,
       );
     }
     return (
-      <SubMenu key={`chapter_id${chapter_id}`} title={`章节${chapter_id}`}>
+      <SubMenu
+        style={{ fontSize: 20 }}
+        key={`chapter_id${chapter_id}`}
+        title={`章节${chapter_id}`}
+      >
         {c}
       </SubMenu>
     );
