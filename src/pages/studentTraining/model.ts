@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { Effect } from '@umijs/preset-react';
-import { getQuestionsList, getDiffcult } from './service';
+import { getQuestionsList, getDiffcult, getPaperDoneList } from './service';
 
 export interface StateType {}
 
@@ -39,6 +39,7 @@ const Model = {
       //     "student_answer": null
       // },
     ],
+    paperDoneList: [],
   },
 
   effects: {
@@ -75,6 +76,19 @@ const Model = {
       }
     },
 
+    *getPaperDone({}, { call, put }) {
+      const data = yield call(getPaperDoneList);
+      console.log('data', data);
+      if (data) {
+        yield put({
+          type: 'save',
+          payload: {
+            paperDoneList: data.paper_done_list,
+          },
+        });
+      }
+    },
+
     // *submitQuestion({ payload: { id, answer } },{ call, put }) {
     //   const response = yield call(submit,{ id, answer });
     //   console.log(response);
@@ -99,6 +113,9 @@ const Model = {
         ...state,
         difficultList,
       };
+    },
+    save(state, { payload }) {
+      return { ...state, ...payload };
     },
   },
 

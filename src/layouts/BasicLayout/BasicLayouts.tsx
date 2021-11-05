@@ -45,13 +45,12 @@ import moment from 'moment';
 import topLogo from '@/assets/top-logo.png';
 import bottomLogo from '@/assets/bottom-logo.png';
 import { SERVICEURL } from '@/utils/const';
+import { getRole } from '@/utils/util';
 
 const { Header, Sider, Footer, Content } = Layout;
 
 const { Option } = Select;
 const { Search } = Input;
-
-const roles = ['管理员', '教员', '学员'];
 
 const alltype = {
   name_date: '时间或文件名',
@@ -1566,7 +1565,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             <Link to="/qualityJudge">质量评价</Link>
           </Menu.Item>
           <Menu.Item key="/exam" icon={<UserOutlined />}>
-            <Link to="/listenTraining">听音训练</Link>
+            <Link
+              to={getRole() === '学员' ? '/studentTraining' : 'teacherTraining'}
+            >
+              听音训练
+            </Link>
           </Menu.Item>
           <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
             <Link to="/targetRecognition">分类识别</Link>
@@ -1854,16 +1857,12 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Link to="/staffManage">用户管理 </Link>|
               </span>
-              <span>{` 您好，${
-                CookieUtil.get('role')
-                  ? roles[CookieUtil.get('role') - 1]
-                  : 'null'
-              }`}</span>
+              <span>{` 您好，${getRole()}`}</span>
             </div>
           )}
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
-          {!train && location.pathname !== '/listenTraining' && (
+          {!train && (
             <Sider className="side" width={350}>
               <AllSearch />
               <div className="fileContainer">
@@ -1871,7 +1870,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               </div>
             </Sider>
           )}
-          {train && <QuestionSider />}
+          {train && getRole() !== '学员' && <QuestionSider />}
           <Content className="main-content">{props.children}</Content>
         </Layout>
 

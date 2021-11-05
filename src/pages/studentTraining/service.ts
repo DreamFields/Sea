@@ -28,3 +28,10 @@ export async function getDiffcult() {
 //     }
 //   })
 // }
+
+// 查看已完成的试卷列表
+export async function getPaperDoneList() {
+  return request(`/v1/student/exam_done_list`, {
+    method: 'POST',
+  });
+}

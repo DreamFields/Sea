@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import { post } from '@/utils/request';
 import style from './style.less';
-import ExamCanDo from './ExamCanDo';
-import ExamDone from './ExamDone';
+import ExamCanDo from './PaperCanDo';
+import PaperDone from './PaperDone';
 // import TeacherIndex from '../teacherTraining/index';
 
 import CookieUtil from '@/utils/cookie.js';
@@ -378,7 +378,7 @@ const StudentIndex = (props: any) => {
   const RenderRightContent = () => {
     switch (curMenu) {
       case 'done':
-        return <ExamDone />;
+        return <PaperDone />;
         break;
       case 'canDo':
         return <ExamCanDo />;
@@ -450,6 +450,7 @@ const StudentIndex = (props: any) => {
         </Col>
         <Col span={3} style={{ height: '100%' }}></Col>
         <Col span={16} style={{ height: '100%' }}>
+          {/*<PaperDone></PaperDone>*/}
           <RenderRightContent />
         </Col>
       </Row>
