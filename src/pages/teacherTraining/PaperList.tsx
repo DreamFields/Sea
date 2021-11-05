@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space } from 'antd';
+import { history } from 'umi';
 import { post } from '@/utils/request';
 
 const Index = () => {
   const [dataSource, setDataSource] = useState<any[]>([]);
-
   const renderPaperList = () => {
     post<any>('/v1/teacher/paper_list').then((res) => {
       setDataSource([...res]);
@@ -48,6 +48,7 @@ const Index = () => {
             <Button
               onClick={() => {
                 console.log('detail', data);
+                history.push(`/teacherTraining/paper/${data.id}/detail`);
               }}
             >
               详情
