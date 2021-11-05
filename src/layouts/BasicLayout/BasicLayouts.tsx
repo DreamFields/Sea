@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QuestionSider from './QuestionSider';
+import AnswerSider from './AnswerSider';
 import './BasicLayouts.css';
 import {
   Menu,
@@ -771,6 +772,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     );
   };
 
+  const role = CookieUtil.get('role');
   return (
     <div>
       <Layout>
@@ -817,7 +819,8 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               </div>
             </Sider>
           )}
-          {train && <QuestionSider />}
+          {train && role === '2' && <QuestionSider />}
+          {train && role === '3' && <AnswerSider />}
           <Content className="main-content">{props.children}</Content>
         </Layout>
 
