@@ -3,6 +3,7 @@ import style from './style.less';
 import { Input, Button, Select, Upload, Form, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
+import AddKnowledge from './addKnowledge';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -91,10 +92,14 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   });
 
   const [knowledgeList, setKnowledgeList] = useState<any>([]);
-  useEffect(() => {
+  const [openCreateKnowledge, setOpenCreateKnowledge] = useState(false);
+  const updateKnowledge = () => {
     post<any>('/v1/teacher/knowledge_list').then((res2) => {
       setKnowledgeList([...res2]);
     });
+  };
+  useEffect(() => {
+    updateKnowledge();
   }, []);
 
   return (
@@ -210,6 +215,47 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         </Select>
       </Form.Item>
 
+      {!readOnly && (
+        <div>
+          <Button onClick={() => setOpenCreateKnowledge(!openCreateKnowledge)}>
+            新增知识点
+          </Button>
+          {openCreateKnowledge && (
+            <AddKnowledge
+              onDone={() => {
+                updateKnowledge();
+                setOpenCreateKnowledge(false);
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      <Form.Item label="章节" name="chapter">
+        <Select
+          value={data.chapter}
+          defaultValue={data.chapter}
+          style={{
+            display: 'block',
+          }}
+          onChange={(e) => {
+            data.chapter = e;
+            onDataChange(data);
+          }}
+          disabled={readOnly}
+        >
+          <Option value="1">章节1</Option>
+          <Option value="2">章节2</Option>
+          <Option value="3">章节3</Option>
+          <Option value="4">章节4</Option>
+          <Option value="5">章节5</Option>
+          <Option value="6">章节6</Option>
+          <Option value="7">章节7</Option>
+          <Option value="8">章节8</Option>
+          <Option value="9">章节9</Option>
+        </Select>
+      </Form.Item>
+
       <Form.Item label="难度" name="difficulty">
         <Select
           value={data.difficult}
@@ -228,6 +274,10 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="3">难度3</Option>
           <Option value="4">难度4</Option>
           <Option value="5">难度5</Option>
+          <Option value="6">难度6</Option>
+          <Option value="7">难度7</Option>
+          <Option value="8">难度8</Option>
+          <Option value="9">难度9</Option>
         </Select>
       </Form.Item>
 

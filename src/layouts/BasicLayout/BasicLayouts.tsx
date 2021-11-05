@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import QuestionSider from './QuestionSider';
 import './BasicLayouts.css';
 import {
   Menu,
@@ -103,6 +104,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     sound_list,
     soundListLoading,
     searchListLoading,
+    train,
     location,
   } = props;
   console.log('reRender2');
@@ -789,30 +791,33 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               />
             </Dropdown>
           </div>
-
-          <div className="info">
-            <span
-              style={{
-                display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
-              }}
-            >
-              <Link to="/staffManage">用户管理 </Link>|
-            </span>
-
-            <span>{` 您好，${
-              CookieUtil.get('role')
-                ? roles[CookieUtil.get('role') - 1]
-                : 'null'
-            }`}</span>
-          </div>
+          {!train && (
+            <div className="info">
+              <span
+                style={{
+                  display: CookieUtil.get('role') == 1 ? 'inline' : 'none',
+                }}
+              >
+                <Link to="/staffManage">用户管理 </Link>|
+              </span>
+              <span>{` 您好，${
+                CookieUtil.get('role')
+                  ? roles[CookieUtil.get('role') - 1]
+                  : 'null'
+              }`}</span>
+            </div>
+          )}
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
-          <Sider className="side" width={350}>
-            <AllSearch />
-            <div className="fileContainer">
-              <SideCardList />
-            </div>
-          </Sider>
+          {!train && (
+            <Sider className="side" width={350}>
+              <AllSearch />
+              <div className="fileContainer">
+                <SideCardList />
+              </div>
+            </Sider>
+          )}
+          {train && <QuestionSider />}
           <Content className="main-content">{props.children}</Content>
         </Layout>
 

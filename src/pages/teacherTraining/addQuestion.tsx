@@ -5,10 +5,12 @@ import { Button, message } from 'antd';
 import { post } from '@/utils/request';
 
 const Component = (props: any) => {
-  const { onDone } = props;
+  const { onDone, chapter, difficult } = props;
+  console.log('add question component', chapter, difficult);
 
   const [data, setData] = useState({
-    difficult: '1',
+    difficult,
+    chapter,
     correct: 'A',
     info_text_content: {
       question_info: '',
@@ -35,6 +37,7 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
+      chapter: +data.chapter,
     };
 
     if (data.question_id) {
