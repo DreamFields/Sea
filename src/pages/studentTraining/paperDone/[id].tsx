@@ -26,7 +26,9 @@ const PaperIndex = (props) => {
   }, [id]);
 
   return (
-    <div>
+    <div
+      style={{ padding: '30px', border: '1px solid #000000', margin: '50px' }}
+    >
       <QuestionList
         questions={questions}
         fetchQuestionList={fetchQuestionList}

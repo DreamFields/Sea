@@ -37,6 +37,11 @@ const Component = (props: any) => {
     // });
   }, [chapter, difficult]);
 
+  useEffect(() => {
+    dispatch({
+      type: 'listenTraining/getDiffcultList',
+    });
+  }, [questions]);
   const maxDiff = difficultList[`difficult${chapter}`];
   console.log('maxDiff', maxDiff);
 
@@ -48,10 +53,13 @@ const Component = (props: any) => {
 
   // console.log('activeKey', activeKey, typeof activeKey);
   return (
-    <div>
+    <div
+      style={{ padding: '30px', border: '1px solid #000000', margin: '50px' }}
+    >
       <QuestionList
         questions={questions}
         fetchQuestionList={fetchQuestionList}
+        canSubmit={true}
       ></QuestionList>
       {maxDiff > difficult ? (
         <Button onClick={handleNext}>下一关</Button>

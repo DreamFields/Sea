@@ -6,7 +6,7 @@ import Question from '@/pages/studentTraining/Question';
 const { TabPane } = Tabs;
 
 const QuestionList = (props) => {
-  const { questions, fetchQuestionList, setAnswers } = props;
+  const { questions, fetchQuestionList, setAnswers, canSubmit } = props;
   const [activeKey, setActiveKey] = useState<string>('1');
 
   return (
@@ -27,6 +27,7 @@ const QuestionList = (props) => {
                 question={question}
                 fetchQuestion={fetchQuestionList}
                 setAnswers={setAnswers}
+                canSubmit={canSubmit}
               ></Question>
             </TabPane>
           ))

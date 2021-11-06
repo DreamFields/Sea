@@ -103,7 +103,7 @@ const renderOptions = ({
 };
 
 const Question = (props) => {
-  const { question, dispatch, fetchQuestion, setAnswers } = props;
+  const { question, dispatch, fetchQuestion, setAnswers, canSubmit } = props;
   const { question_id, pic_url, sound_url } = question;
   const [currentUserAnswer, setCurrentUserAnswer] = useState(['A']);
   const handleChange = (e) => {
@@ -214,14 +214,16 @@ const Question = (props) => {
           )}
         </>
       )}
-      <div>
-        {question.question_status === 2 && (
-          <Button onClick={handleSubmit}>提交该题</Button>
-        )}
-        {question.question_status === 0 && (
-          <Button onClick={handleSubmit}>再次提交</Button>
-        )}
-      </div>
+      {canSubmit ? (
+        <div>
+          {question.question_status === 2 && (
+            <Button onClick={handleSubmit}>提交该题</Button>
+          )}
+          {question.question_status === 0 && (
+            <Button onClick={handleSubmit}>再次提交</Button>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };
