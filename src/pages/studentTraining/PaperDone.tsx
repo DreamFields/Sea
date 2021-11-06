@@ -45,7 +45,7 @@ const columns = [
       <Space size="middle">
         <a
           onClick={() => {
-            history.push(`/studentTraining/paper/${record.id}`);
+            history.push(`/studentTraining/paperDone/${record.id}`);
           }}
         >
           查看

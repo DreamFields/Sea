@@ -1,20 +1,20 @@
-import { useParams, history } from 'umi';
+import { useParams } from 'umi';
 import React, { useEffect, useState } from 'react';
 import { post } from '@/utils/request';
 import QuestionList from '@/pages/studentTraining/QuestionList';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 
 const PaperIndex = (props) => {
   const id = (useParams() as any).id;
   const [questions, setQuestions] = useState<any>([]);
   const [answers, setAnswers] = useState<any>({});
   const fetchQuestionList = () => {
-    post<any>('/v1/student/exam_detail', {
+    post<any>('/v1/student/done_paper_list', {
       data: {
-        id,
+        exam_id: +id,
       },
     }).then((res) => {
-      setQuestions(res.question_list);
+      setQuestions(res);
       console.log('res', res);
     });
   };
@@ -42,14 +42,9 @@ const PaperIndex = (props) => {
           console.log('questionList', questionList);
 
           post<any>('/v1/student/paper_submit', {
-            data: {
-              exam_id: parseInt(id, 10),
-              question_customer_answer: questionList,
-            },
+            data: { exam_id: parseInt(id, 10), question_list: questionList },
           }).then((res) => {
             console.log('res', res);
-            message.success('已完成考试');
-            history.push('/studentTraining/PaperCanDo');
           });
         }}
       >

@@ -35,3 +35,9 @@ export async function getPaperDoneList() {
     method: 'POST',
   });
 }
+
+export async function getPaperCanDoList() {
+  return request(`/v1/student/exam_undo_list`, {
+    method: 'POST',
+  });
+}

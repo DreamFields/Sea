@@ -1,6 +1,11 @@
 import { message } from 'antd';
 import { Effect } from '@umijs/preset-react';
-import { getQuestionsList, getDiffcult, getPaperDoneList } from './service';
+import {
+  getQuestionsList,
+  getDiffcult,
+  getPaperDoneList,
+  getPaperCanDoList,
+} from './service';
 
 export interface StateType {}
 
@@ -40,6 +45,7 @@ const Model = {
       // },
     ],
     paperDoneList: [],
+    paperCanDoList: [],
   },
 
   effects: {
@@ -84,6 +90,19 @@ const Model = {
           type: 'save',
           payload: {
             paperDoneList: data.paper_done_list,
+          },
+        });
+      }
+    },
+
+    *getPaperCanDo({}, { call, put }) {
+      const data = yield call(getPaperCanDoList);
+      console.log('data', data);
+      if (data) {
+        yield put({
+          type: 'save',
+          payload: {
+            paperCanDoList: data.paper_undo_list,
           },
         });
       }
