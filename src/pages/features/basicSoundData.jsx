@@ -47,7 +47,7 @@ const Index = (props) => {
           >
             {/* <Statistic title="轴数" value={data?.db} /> */}
             <Statistic title="叶数" value={data?.label} />
-            <Statistic title="转速" value={data?.rpm} />
+            <Statistic title="转速" value={0.1 * data?.rpm} />
           </div>
           {f_key === '1' ? <PowerTable /> : null}
         </div>

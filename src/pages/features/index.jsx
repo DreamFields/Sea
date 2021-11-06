@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-19 11:44:46
+ * @LastEditTime: 2021-11-06 20:41:25
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -124,6 +124,17 @@ const Index = (props) => {
             }}
           >
             复位
+          </Button>
+          <Button
+            type="primary"
+            style={{ fontSize: 15, float: 'left', marginLeft: '16px' }}
+            onClick={() => {
+              if (wavesurfer) {
+                wavesurfer.skip(0 - wavesurfer.getCurrentTime());
+              }
+            }}
+          >
+            复制截图
           </Button>
         </div>
         <div id="wave-timeline" style={{ marginTop: 20 }}></div>

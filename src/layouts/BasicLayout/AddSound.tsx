@@ -779,7 +779,18 @@ const AddSound: React.FC<{ sound_data: any; sumForm: any }> = (props: any) => {
               labelAlign="left"
               labelCol={{ span: 4 }}
             >
-              <Input />
+              <Input style={{ width: '24%' }} />
+              <span className="ant-form-text">
+                <strong>&ensp;度</strong>
+              </span>
+              <Input style={{ width: '24%' }} />
+              <span className="ant-form-text">
+                <strong>&ensp;秒</strong>
+              </span>
+              <Input style={{ width: '24%' }} />
+              <span className="ant-form-text">
+                <strong>&ensp;分</strong>
+              </span>
             </Form.Item>
           </Col>
         </Row>
@@ -801,7 +812,10 @@ const AddSound: React.FC<{ sound_data: any; sumForm: any }> = (props: any) => {
               labelAlign="left"
               labelCol={{ span: 4 }}
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '85%' }} />
+              <span className="ant-form-text">
+                <strong>m</strong>
+              </span>
             </Form.Item>
           </Col>
         </Row>
