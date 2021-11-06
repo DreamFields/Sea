@@ -12,7 +12,6 @@ const Index = () => {
     post<any>('/v1/teacher/Student_assessment_detail', {
       data: { id },
     }).then((res) => {
-      console.log('Student_assessment_detail', res);
       const d: any[] = [];
       for (let i = 1; i <= 9; i++) {
         const c = res[`chapter${i}`];
@@ -24,9 +23,8 @@ const Index = () => {
 
         for (let j = 1; j <= 9; j++) {
           const doo = c[`difficult${j}`];
-          o[j - 1] = `${doo.right} / ${doo.num}`;
+          o[j] = `${doo.right} / ${doo.num}`;
         }
-
         d.push(o);
       }
       setData(d);
@@ -42,13 +40,15 @@ const Index = () => {
     },
   ];
 
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 9; i++) {
     columns.push({
       title: `难度${i}`,
       dataIndex: `${i}`,
       key: `difficult${i}`,
     });
   }
+
+  console.log('teacher taining/kaohe/id', columns, data);
 
   return <Table columns={columns} dataSource={data} />;
 };
