@@ -32,24 +32,6 @@ const PaperIndex = (props) => {
         fetchQuestionList={fetchQuestionList}
         setAnswers={setAnswers}
       ></QuestionList>
-      <Button
-        onClick={() => {
-          console.log('answers', answers);
-          const questionList = Object.keys(answers).map((qid) => ({
-            question_id: parseInt(qid, 10),
-            answer: answers[qid].sort().join('+'),
-          }));
-          console.log('questionList', questionList);
-
-          post<any>('/v1/student/paper_submit', {
-            data: { exam_id: parseInt(id, 10), question_list: questionList },
-          }).then((res) => {
-            console.log('res', res);
-          });
-        }}
-      >
-        提交
-      </Button>
     </div>
   );
 };

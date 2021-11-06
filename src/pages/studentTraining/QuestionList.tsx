@@ -1,7 +1,8 @@
-import QuestionTmp from '@/pages/studentTraining/QuestionTmp';
+import QuestionTmp from '@/pages/studentTraining/Question';
 import style from '@/pages/studentTraining/style.less';
 import { Tabs, Radio, Button, Tag, Row, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Question from '@/pages/studentTraining/Question';
 const { TabPane } = Tabs;
 
 const QuestionList = (props) => {
@@ -22,11 +23,11 @@ const QuestionList = (props) => {
         {questions.length > 0 ? (
           questions.map((question, index) => (
             <TabPane tab={index + 1} key={index + 1}>
-              <QuestionTmp
+              <Question
                 question={question}
                 fetchQuestion={fetchQuestionList}
                 setAnswers={setAnswers}
-              ></QuestionTmp>
+              ></Question>
             </TabPane>
           ))
         ) : (
@@ -41,7 +42,7 @@ const QuestionList = (props) => {
         )}
       </Tabs>
       <Row>
-        {parseInt(activeKey) > 1 && (
+        {questions.length > 0 && parseInt(activeKey) > 1 && (
           <div
             className={style.btn}
             onClick={() => {

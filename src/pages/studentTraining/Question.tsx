@@ -1,19 +1,48 @@
-import React, { useCallback } from 'react';
-import { Image, Radio, Row, Button } from 'antd';
-import style from './style.less';
+import React from 'react';
+import { useState } from 'react';
+import {
+  Row,
+  Col,
+  Menu,
+  Checkbox,
+  Radio,
+  Tag,
+  TagProps,
+  Image,
+  Button,
+  message,
+} from 'antd';
+import { CloseCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
+import style from '@/pages/studentTraining/style.less';
+import { post } from '@/utils/request';
+import { connect } from '@@/plugin-dva/exports';
 
-const Question = (props) => {
-  const { currentQuestion, length, index, setIndex, handleSubmit } = props;
-  const { pic_url, sound_url } = currentQuestion;
+const questionType = {
+  0: '',
+  1: '( 单选 )',
+  2: '( 多选 )',
+};
 
-  const renderOptions = ({ disabled }: { disabled: boolean }) => {
+const answerState = ['wrong', 'right', 'none'];
+
+const renderOptions = ({
+  question,
+  question_type,
+  student_answer,
+  question_status,
+  disabled,
+}: {
+  question: any;
+  question_type: Number;
+  student_answer: String;
+  disabled: boolean;
+  question_status: Number;
+}) => {
+  if (question_type === 1) {
     return (
       <>
         {['A', 'B', 'C', 'D'].map((option) => {
-          const shouldDisable =
-            disabled ||
-            ('customer_answer' in currentQuestion &&
-              option === currentQuestion?.customer_answer);
+          const shouldDisable = disabled;
           return (
             <Radio
               style={{ display: 'block' }}
@@ -22,28 +51,112 @@ const Question = (props) => {
               value={option}
               disabled={shouldDisable}
             >
-              {option}: {currentQuestion.info_text_content[option]}
+              {question_status === 1 && student_answer === option && (
+                <CheckCircleTwoTone twoToneColor="green" />
+              )}
+              {question_status === 0 && student_answer === option && (
+                <CloseCircleTwoTone twoToneColor="red" />
+              )}
+              {option}: {question.info_text_content[option]}
             </Radio>
           );
         })}
       </>
     );
+  } else {
+    return (
+      <>
+        {['A', 'B', 'C', 'D'].map((option) => {
+          const shouldDisable = disabled;
+          return (
+            <>
+              <Checkbox
+                id={`option-${option}`}
+                key={`option-${option}`}
+                value={option}
+                defaultChecked={
+                  student_answer
+                    ? student_answer.split('+').indexOf(option) < 0
+                      ? false
+                      : true
+                    : false
+                }
+                disabled={shouldDisable}
+              >
+                {question_status === 1 &&
+                  student_answer.indexOf(option) !== -1 && (
+                    <CheckCircleTwoTone twoToneColor="green" />
+                  )}
+                {question_status === 0 &&
+                  student_answer.indexOf(option) !== -1 && (
+                    <CloseCircleTwoTone twoToneColor="red" />
+                  )}
+                {option}: {question.info_text_content[option]}
+              </Checkbox>
+              <br />
+            </>
+          );
+        })}
+      </>
+    );
+  }
+};
+
+const Question = (props) => {
+  const { question, dispatch, fetchQuestion, setAnswers } = props;
+  const { question_id, pic_url, sound_url } = question;
+  const [currentUserAnswer, setCurrentUserAnswer] = useState(['A']);
+  const handleChange = (e) => {
+    setCurrentUserAnswer([e.target.value]);
+    if (setAnswers) {
+      setAnswers((pre) => ({
+        ...pre,
+        [question_id]: [e.target.value],
+      }));
+    }
   };
 
-  const handleChange = useCallback(
-    (e) => {
-      // setQuestionList((draft) => {
-      //   draft[index].student_answer = e.target.value;
-      // });
-    },
-    [index],
-  );
-  //当选项改变时,发送数据流改变questionList
+  const _handleChange = (e) => {
+    setCurrentUserAnswer(e);
+    if (setAnswers) {
+      setAnswers((pre) => ({
+        ...pre,
+        [question_id]: e,
+      }));
+    }
+  };
+
+  const handleSubmit = () => {
+    const { question_id } = question;
+    if (!currentUserAnswer.length) {
+      message.info('请先选择你的答案');
+    } else {
+      post<any>('/v1/student/Student_assessment_submission', {
+        data: {
+          id: question_id,
+          answer: currentUserAnswer.sort().join('+'),
+        },
+      }).then((response) => {
+        // 由于没有单个问题刷新的接口，只能整体刷新
+        if (response) {
+          fetchQuestion();
+          dispatch({
+            type: 'listenTraining/getDiffcultList',
+          });
+        }
+      });
+    }
+  };
 
   return (
     <div>
       <h4>问题</h4>
-      <div>{currentQuestion.info_text_content.question_info}</div>
+      <div>
+        {questionType[question?.question_type || 0]}
+        {question.info_text_content
+          ? question.info_text_content.question_info
+          : null}
+      </div>
       {pic_url && (
         <Image
           alt={`msg`}
@@ -55,61 +168,62 @@ const Question = (props) => {
         />
       )}
       {sound_url && <audio controls autoPlay={false} src={sound_url} />}
-
-      {'analysis' in currentQuestion ? (
+      {question.question_status === 1 ? (
         <>
-          {renderOptions({ disabled: true })}
+          {renderOptions({
+            question,
+            question_type: question.question_type,
+            student_answer: question.student_answer,
+            question_status: question.question_status,
+            disabled: true,
+          })}
           <h4>正确选项</h4>
           <p>
-            {currentQuestion.correct}:
-            {currentQuestion.info_text_content[currentQuestion.correct]}
+            {question.correct}:{question.info_text_content[question.correct]}
           </p>
           <h4>题目解析</h4>
-          <div>{currentQuestion.analysis}</div>
+          <div>{question.analysis}</div>
         </>
       ) : (
         <>
           <h4>你的选择</h4>
 
-          <Radio.Group
-            onChange={handleChange}
-            value={currentQuestion.userAnswer ?? ''}
-          >
-            {renderOptions({ disabled: false })}
-          </Radio.Group>
+          {question.question_type === 1 ? (
+            <Radio.Group buttonStyle="solid" onChange={handleChange}>
+              {renderOptions({
+                question,
+                question_type: question.question_type,
+                student_answer: question.student_answer,
+                question_status: question.question_status,
+                disabled: false,
+              })}
+            </Radio.Group>
+          ) : (
+            <Checkbox.Group
+              onChange={_handleChange}
+              // value={currentUserAnswer}
+            >
+              {renderOptions({
+                question,
+                question_type: question.question_type,
+                student_answer: question.student_answer,
+                question_status: question.question_status,
+                disabled: false,
+              })}
+            </Checkbox.Group>
+          )}
         </>
       )}
-
-      {'analysis' in currentQuestion && <></>}
-      <Row>
-        {index !== 0 && (
-          <div
-            className={style.btn}
-            onClick={() => {
-              setIndex(index - 1);
-            }}
-          >
-            上一题
-          </div>
-        )}
-
-        {currentQuestion.question_status === 2 && (
+      <div>
+        {question.question_status === 2 && (
           <Button onClick={handleSubmit}>提交该题</Button>
         )}
-
-        {index !== length - 1 && (
-          <div
-            className={style.btn}
-            onClick={() => {
-              setIndex(index + 1);
-            }}
-          >
-            下一题
-          </div>
+        {question.question_status === 0 && (
+          <Button onClick={handleSubmit}>再次提交</Button>
         )}
-      </Row>
+      </div>
     </div>
   );
 };
 
-export default Question;
+export default connect()(Question);

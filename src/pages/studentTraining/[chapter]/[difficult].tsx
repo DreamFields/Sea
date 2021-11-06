@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { connect } from '@@/plugin-dva/exports';
 import { post } from '@/utils/request';
-import QuestionTmp from '@/pages/studentTraining/QuestionTmp';
+import QuestionTmp from '@/pages/studentTraining/Question';
 import style from '@/pages/studentTraining/style.less';
 import QuestionList from '@/pages/studentTraining/QuestionList';
 
@@ -38,6 +38,7 @@ const Component = (props: any) => {
   }, [chapter, difficult]);
 
   const maxDiff = difficultList[`difficult${chapter}`];
+  console.log('maxDiff', maxDiff);
 
   const handleNext = (e) => {
     // console.log(e);
