@@ -48,9 +48,9 @@ const Component = (props: any) => {
       for (const custom of Object.values(
         res?.question_customer_answer.question_customer_answer ?? {},
       )) {
-        const { question_id: id, customer_answer, question_status } = custom;
+        const { question_id, customer_answer, question_status } = custom;
         const detail = await post<any>('/v1/teacher/detail_question', {
-          data: { id },
+          data: { question_id },
         });
         details.push({ ...detail, customer_answer, question_status });
       }
