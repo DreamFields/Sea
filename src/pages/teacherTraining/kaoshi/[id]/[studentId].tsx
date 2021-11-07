@@ -1,42 +1,58 @@
 import { post } from '@/utils/request';
-import { Table, Button, Space, Row, Card, Radio, Badge, Tag } from 'antd';
+import {
+  Table,
+  Button,
+  Space,
+  Row,
+  Card,
+  Radio,
+  Badge,
+  Tag,
+  Divider,
+  Descriptions,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'umi';
 // import style from './style.less';
 import { Typography } from 'antd';
-import { epilog } from 'yargs';
 
 const { Title, Text } = Typography;
 interface IResp {
-  create_user_id: number;
-  end_time: string;
-  frame_text_content: Record<string, number>;
-  id: number;
-  name: string;
-  question_count: number;
-  score: number;
-  start_time: string;
+  customer_score: number;
+  exam_name: string;
+  question_correct_count: number;
+  question_customer_answer: {
+    question_customer_answer: {
+      customer_answer: string;
+      question_id: number;
+      question_status: 1;
+    }[];
+  };
+  total_count: number;
+  total_score: number;
+  user_name: string;
 }
 
 const Component = (props: any) => {
-  const { id } = useParams() as any;
-
+  const { studentId } = useParams() as any;
   const [dataSource, setDataSource] = useState<IResp | null>(null);
   const [state, setState] = useState(0);
-  const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
   const [questions, setQuestions] = useState<any[]>([]);
 
   const fetchQuestionList = () => {
-    post<IResp>('/v1/teacher/paper_detail', {
-      data: { id: +id },
+    post<IResp>('/v1/teacher/Student_Exam_detail_situation_detail', {
+      data: { id: +studentId },
     }).then(async (res) => {
       setDataSource(res);
       let details = [] as any[];
-      for (const [k, id] of Object.entries(res?.frame_text_content ?? {})) {
+      for (const custom of Object.values(
+        res?.question_customer_answer.question_customer_answer ?? {},
+      )) {
+        const { question_id: id, customer_answer, question_status } = custom;
         const detail = await post<any>('/v1/teacher/detail_question', {
           data: { id },
         });
-        details.push(detail);
+        details.push({ ...detail, customer_answer, question_status });
       }
       console.log('details:', details);
       setQuestions(details);
@@ -48,9 +64,21 @@ const Component = (props: any) => {
 
   return (
     <>
-      <Title>{dataSource?.name}</Title>
-      <Text>开始时间：{dataSource?.start_time}</Text>
-      <Text>结束时间：{dataSource?.end_time}</Text>
+      <Divider />
+      <Descriptions
+        title={dataSource?.exam_name}
+        bordered
+        size="small"
+        column={{ xxl: 1, xl: 3, lg: 3, md: 3, sm: 1, xs: 1 }}
+      >
+        {/* <Descriptions.Item label="OpenID">{data.openid}</Descriptions.Item> */}
+        <Descriptions.Item label="提交人">
+          {dataSource?.user_name}
+        </Descriptions.Item>
+        <Descriptions.Item label="得分">
+          {dataSource?.customer_score}/{dataSource?.total_score}
+        </Descriptions.Item>
+      </Descriptions>
       {questions.map((question, idx) => (
         <Row key={`question-${idx + 1}`}>
           <Card
@@ -83,15 +111,24 @@ const Component = (props: any) => {
           >
             {Object.entries(question?.info_text_content)
               .filter(([k]) => k !== 'question_info')
-              .map(([k, v]) => (
-                <Radio
-                  value={k}
-                  onClick={(e) => e.preventDefault}
-                  checked={k === question?.correct}
-                >
-                  {k}: {v}
-                </Radio>
-              ))}
+              .map(([k, v]) => {
+                const color =
+                  k === question?.correct
+                    ? 'green'
+                    : k === question?.customer_answer
+                    ? 'red'
+                    : 'inherit';
+                return (
+                  <Radio
+                    style={{ color }}
+                    value={k}
+                    onClick={(e) => e.preventDefault}
+                    checked={k === question?.correct}
+                  >
+                    {k}: {v}
+                  </Radio>
+                );
+              })}
             <Row>
               <Text>分析：{question.analysis}</Text>
             </Row>

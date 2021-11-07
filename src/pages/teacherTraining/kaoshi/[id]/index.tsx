@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { Button, Table, Space } from 'antd';
-import { useParams } from 'umi';
+import { history, useParams } from 'umi';
 import { post } from '@/utils/request';
 
 const Index = () => {
@@ -20,7 +20,7 @@ const Index = () => {
 
   const columns: any[] = [
     {
-      title: '学生名称',
+      title: '学生名称aaa',
       dataIndex: 'student_name',
       key: 'student_name',
     },
@@ -43,6 +43,7 @@ const Index = () => {
           <Button
             onClick={() => {
               console.log('detail paper student', data);
+              history.push(`/teacherTraining/kaoshi/${id}/${data.user_id}`);
             }}
           >
             详情
