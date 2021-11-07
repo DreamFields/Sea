@@ -47,8 +47,19 @@ const Component = (props: any) => {
                   post<any>('/v1/teacher/delete_knowledge', {
                     data: { id: data.id },
                   }).then((res) => {
-                    console.log('delete knowledge response', res);
-                    fetchKnowledgeList();
+                    if (res instanceof Array && res.length === 0) {
+                      console.log('delete knowledge response', res);
+                      fetchKnowledgeList();
+                    } else {
+                      alert(
+                        '知识点删除失败，因为知识点被以下题目占用了' +
+                          res
+                            .map(
+                              (t) => t.question_info ?? '<空标题> 编号' + t.id,
+                            )
+                            .join(','),
+                      );
+                    }
                   });
                 }
                 console.log('delete', data);

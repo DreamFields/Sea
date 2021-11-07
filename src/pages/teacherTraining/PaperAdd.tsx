@@ -17,45 +17,6 @@ import { post } from '@/utils/request';
 const Option = Select.Option;
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
-const options = [
-  {
-    label: 'Light',
-    value: 'light',
-    children: new Array(20)
-      .fill(null)
-      .map((_, index) => ({ label: `Number ${index}`, value: index })),
-  },
-  {
-    label: 'Bamboo',
-    value: 'bamboo',
-    children: [
-      {
-        label: 'Little',
-        value: 'little',
-        children: [
-          {
-            label: 'Toy Fish',
-            value: 'fish',
-          },
-          {
-            label: 'Toy Cards',
-            value: 'cards',
-          },
-          {
-            label: 'Toy Bird',
-            value: 'bird',
-          },
-        ],
-      },
-    ],
-  },
-];
-
-function onChange(value) {
-  console.log(value);
-}
-
-const { TextArea } = Input;
 
 const Index = () => {
   const [data, setData] = useState({
@@ -152,13 +113,15 @@ const Index = () => {
   return (
     <div>
       <Form labelCol={{ span: 2 }} wrapperCol={{ span: 16 }} autoComplete="off">
-        <Input
-          placeholder="名称"
-          onChange={(e) =>
-            setData((data) => ({ ...data, name: e.target.value }))
-          }
-        />
-        <Space direction="vertical" size={12}>
+        <Form.Item label="试卷名称" name="name" required>
+          <Input
+            placeholder="名称"
+            onChange={(e) =>
+              setData((data) => ({ ...data, name: e.target.value }))
+            }
+          />
+        </Form.Item>
+        <Form.Item label="起止时间" name="range" required>
           <RangePicker
             showTime
             onChange={(range) => {
@@ -171,12 +134,11 @@ const Index = () => {
               });
             }}
           />
-        </Space>
+        </Form.Item>
         {/* <Divider />
         <Button onClick={handleAddQuestion}>新增题目</Button>
         <Divider /> */}
-        <Space direction="horizontal" size={12}>
-          <Text>章节</Text>
+        <Form.Item label="章节" name="chapter" required>
           <Select defaultValue={1} style={{ width: 120 }} onChange={setChapter}>
             {Array(10)
               .fill(null)
@@ -186,9 +148,8 @@ const Index = () => {
                 </Option>
               ))}
           </Select>
-        </Space>
-        <Space direction="horizontal" size={12}>
-          <Text>难度</Text>
+        </Form.Item>
+        <Form.Item label="难度" name="difficulty" required>
           <Select
             defaultValue={1}
             style={{ width: 120 }}
@@ -202,7 +163,7 @@ const Index = () => {
                 </Option>
               ))}
           </Select>
-        </Space>
+        </Form.Item>
 
         <h3>题目列表</h3>
         <Table columns={allColumns} dataSource={questions} />

@@ -26,7 +26,7 @@ const Component = (props: any) => {
   };
   useEffect(() => {
     fetchQuestionList();
-  }, [state]);
+  }, [state, chapter, difficult]);
 
   const columns = [
     {
