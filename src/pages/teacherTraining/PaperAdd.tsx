@@ -116,9 +116,10 @@ const Index = () => {
         <Form.Item label="试卷名称" name="name" required>
           <Input
             placeholder="名称"
-            onChange={(e) =>
-              setData((data) => ({ ...data, name: e.target.value }))
-            }
+            onChange={(e) => {
+              e.persist();
+              setData((data) => ({ ...data, name: e.target.value }));
+            }}
           />
         </Form.Item>
         <Form.Item label="起止时间" name="range" required>

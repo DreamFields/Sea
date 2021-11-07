@@ -32,9 +32,11 @@ const Component = (props: any) => {
     }).then(async (res) => {
       setDataSource(res);
       let details = [] as any[];
-      for (const [k, id] of Object.entries(res?.frame_text_content ?? {})) {
+      for (const [k, question_id] of Object.entries(
+        res?.frame_text_content ?? {},
+      )) {
         const detail = await post<any>('/v1/teacher/detail_question', {
-          data: { id },
+          data: { question_id },
         });
         details.push(detail);
       }
