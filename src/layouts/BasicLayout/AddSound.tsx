@@ -842,20 +842,20 @@ const AddSound: React.FC<{ sound_data: any; sumForm: any }> = (props: any) => {
           console.log(info.file.response);
           if (info.file.response.code === 200) {
             notification.success({
-              message: '${info.file.name} 文件上传成功.',
+              message: `${info.file.name} 文件上传成功.`,
             });
             dispatch({
               type: 'soundList/fetchSoundList',
             });
           } else {
-            notification.error({ message: '${info.file.name} 文件上传失败1.' });
-            notification.error({ message: '${info.file.response.msg}' });
+            notification.error({ message: `${info.file.name} 文件上传失败.` });
+            notification.error({ message: `${info.file.response.msg}` });
             dispatch({
               type: 'soundList/fetchSoundList',
             });
           }
         } else if (status === 'error') {
-          notification.error({ message: '${info.file.name} 文件上传失败2.' });
+          notification.error({ message: `${info.file.name} 文件上传失败.` });
           dispatch({
             type: 'soundList/fetchSoundList',
           });

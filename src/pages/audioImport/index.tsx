@@ -4,7 +4,7 @@
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-11-08 10:57:10
+ * @LastEditTime: 2021-11-08 11:18:38
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
@@ -71,14 +71,14 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
           console.log(info.file.response);
           if (info.file.response.code === 200) {
             notification.success({
-              message: '${info.file.name} 文件上传成功.',
+              message: `${info.file.name} 文件上传成功.`,
             });
           } else {
-            notification.error({ message: '${info.file.name} 文件上传失败3.' });
-            notification.error({ message: '${info.file.response.msg}' });
+            notification.error({ message: `${info.file.name} 文件上传失败.` });
+            notification.error({ message: `${info.file.response.msg}` });
           }
         } else if (status === 'error') {
-          notification.error({ message: '${info.file.name} 文件上传失败4.' });
+          notification.error({ message: `${info.file.name} 文件上传失败.` });
         }
       },
     };
@@ -123,10 +123,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               type: 'soundList/fetchSoundList',
             });
           } else {
-            message.error(`${info.file.response.msg} 文件上传失败.`);
+            notification.error({
+              message: `${info.file.response.msg} 文件上传失败.`,
+            });
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} 文件上传失败.`);
+          notification.error({ message: `${info.file.name} 文件上传失败.` });
         }
       },
     };
