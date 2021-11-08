@@ -34,6 +34,7 @@ import {
   Avatar,
   Upload,
   Popover,
+  notification,
 } from 'antd';
 import { connect } from '@@/plugin-dva/exports';
 const { Option } = Select;
@@ -840,19 +841,21 @@ const AddSound: React.FC<{ sound_data: any; sumForm: any }> = (props: any) => {
         if (status === 'done') {
           console.log(info.file.response);
           if (info.file.response.code === 200) {
-            message.success(`${info.file.name} 文件上传成功.`);
+            notification.success({
+              message: '${info.file.name} 文件上传成功.',
+            });
             dispatch({
               type: 'soundList/fetchSoundList',
             });
           } else {
-            message.error(`${info.file.name} 文件上传失败.`);
-            message.error(`${info.file.response.msg}`);
+            notification.error({ message: '${info.file.name} 文件上传失败1.' });
+            notification.error({ message: '${info.file.response.msg}' });
             dispatch({
               type: 'soundList/fetchSoundList',
             });
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} 文件上传失败.`);
+          notification.error({ message: '${info.file.name} 文件上传失败2.' });
           dispatch({
             type: 'soundList/fetchSoundList',
           });
