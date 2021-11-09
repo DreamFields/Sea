@@ -63,9 +63,9 @@ const Component = () => {
         defaultOpenKeys={['sub1']}
         mode="inline"
       >
-        <SubMenu key="sub1" title="学生情况">
-          <Menu.Item key="0">考核</Menu.Item>
-          <Menu.Item key="1">考试</Menu.Item>
+        <SubMenu key="sub1" title="训考类型">
+          <Menu.Item key="0">训练</Menu.Item>
+          <Menu.Item key="1">考核</Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" title="卷库管理">
           <Menu.Item key="2">试卷列表</Menu.Item>

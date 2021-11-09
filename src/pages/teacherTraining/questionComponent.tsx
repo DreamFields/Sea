@@ -1,6 +1,15 @@
 import React, { Validator, useState, useEffect } from 'react';
 import style from './style.less';
-import { Input, Button, Select, Upload, Form, Image } from 'antd';
+import {
+  Input,
+  Button,
+  Select,
+  Upload,
+  Form,
+  Image,
+  Radio,
+  Checkbox,
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
 import AddKnowledge from './addKnowledge';
@@ -118,7 +127,99 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           readOnly={readOnly}
         ></TextArea>
       </Form.Item>
-      <Form.Item label="A选项内容" name="a">
+
+      <Form.Item label="考试数据库">
+        <Radio.Group
+          defaultValue={`${data.question_bank_type}`}
+          onChange={(e) => {
+            console.log('question bank type change', e);
+            data.question_bank_type = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          disabled={readOnly}
+        >
+          <Radio value="1">训练题库</Radio>
+          <Radio value="2">考试题库</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item label="类型">
+        <Radio.Group
+          defaultValue={data.question_type.toString()}
+          onChange={(e) => {
+            console.log('question type change', e);
+            data.question_type = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          disabled={readOnly}
+        >
+          <Radio value="1">单选</Radio>
+          <Radio value="2">多选</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item label="正确答案">
+        {data.question_type == '1' && (
+          <Radio.Group
+            onChange={(e) => {
+              console.log('radio group on change', e);
+
+              data.correct = e.target.value;
+              onDataChange({
+                ...data,
+              });
+            }}
+            disabled={readOnly}
+            defaultValue={data.correct}
+          >
+            <Radio value="A">A</Radio>
+            <Radio value="B">B</Radio>
+            <Radio value="C">C</Radio>
+            <Radio value="D">D</Radio>
+          </Radio.Group>
+        )}
+
+        {data.question_type == '2' && (
+          <Checkbox.Group
+            defaultValue={(data.correct ?? '')
+              .split('+')
+              .filter((t) => t !== '')}
+            onChange={(e) => {
+              console.log('Checkbox group on change', e);
+
+              data.correct = e.map((t) => t.toString()).join('+');
+              onDataChange({
+                ...data,
+              });
+            }}
+            disabled={readOnly}
+            options={[
+              {
+                label: 'A',
+                value: 'A',
+              },
+              {
+                label: 'B',
+                value: 'B',
+              },
+              {
+                label: 'C',
+                value: 'C',
+              },
+              {
+                label: 'D',
+                value: 'D',
+              },
+            ]}
+          />
+        )}
+      </Form.Item>
+
+      {/* <Form.Item label="A选项内容" name="a">
         <TextArea
           value={data.info_text_content.A}
           defaultValue={data.info_text_content.A}
@@ -175,7 +276,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           placeholder="D选项内容"
           readOnly={readOnly}
         ></TextArea>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label="题目分析" name="analysis">
         <TextArea

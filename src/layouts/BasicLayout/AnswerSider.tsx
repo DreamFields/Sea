@@ -28,7 +28,7 @@ const Component = () => {
         defaultOpenKeys={['sub1']}
         mode="inline"
       >
-        <SubMenu key="sub1" title="考核">
+        <SubMenu key="sub1" title="训练">
           {d.map((chapter_id) => {
             return (
               <Menu.Item
@@ -37,7 +37,7 @@ const Component = () => {
             );
           })}
         </SubMenu>
-        <SubMenu key="sub2" title="考试">
+        <SubMenu key="sub2" title="考核">
           <Menu.Item key="1">已参加</Menu.Item>
           <Menu.Item key="2">未参加</Menu.Item>
         </SubMenu>
