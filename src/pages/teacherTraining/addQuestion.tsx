@@ -23,6 +23,7 @@ const Component = (props: any) => {
     knowledge_id: '',
     question_id: '',
     question_type: '1',
+    question_bank_type: '1',
   });
 
   const submit = async () => {
@@ -40,6 +41,7 @@ const Component = (props: any) => {
       },
       analysis: data.analysis,
       chapter: +data.chapter,
+      question_bank_type: +data.question_bank_type,
     };
 
     if (data.question_id) {

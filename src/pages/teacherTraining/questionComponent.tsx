@@ -128,6 +128,23 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         ></TextArea>
       </Form.Item>
 
+      <Form.Item label="考试数据库">
+        <Radio.Group
+          defaultValue={`${data.question_bank_type}`}
+          onChange={(e) => {
+            console.log('question bank type change', e);
+            data.question_bank_type = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          disabled={readOnly}
+        >
+          <Radio value="1">训练题库</Radio>
+          <Radio value="2">考试题库</Radio>
+        </Radio.Group>
+      </Form.Item>
+
       <Form.Item label="类型">
         <Radio.Group
           defaultValue={data.question_type.toString()}
