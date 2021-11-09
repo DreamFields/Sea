@@ -19,6 +19,7 @@ const Component = (props: any) => {
       id: +id,
       difficult: +data.difficult,
       knowledge_id: +data.knowledge_id ?? 1,
+      question_type: +data.question_type,
       correct: data.correct,
       info_text_content: {
         question_info: data.info_text_content.question_info,
