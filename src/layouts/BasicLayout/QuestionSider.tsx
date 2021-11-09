@@ -78,10 +78,10 @@ const Component = () => {
           <Menu.Item key="4">知识点列表</Menu.Item>
           <Menu.Item key="5">添加知识点</Menu.Item>
         </SubMenu>
-        <SubMenu key="sub5" title="DEBUG">
-          <Menu.Item key="6">试卷题目列表</Menu.Item>
-          <Menu.Item key="7">试卷选题</Menu.Item>
-        </SubMenu>
+        {/*<SubMenu key="sub5" title="DEBUG">*/}
+        {/*  <Menu.Item key="6">试卷题目列表</Menu.Item>*/}
+        {/*  <Menu.Item key="7">试卷选题</Menu.Item>*/}
+        {/*</SubMenu>*/}
       </Menu>
     </Sider>
   );

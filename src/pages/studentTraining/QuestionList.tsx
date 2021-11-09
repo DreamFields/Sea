@@ -4,14 +4,37 @@ import { Tabs, Radio, Button, Tag, Row, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Question from '@/pages/studentTraining/Question';
 const { TabPane } = Tabs;
+import { CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons';
 
 const QuestionList = (props) => {
   const { questions, fetchQuestionList, setAnswers, canSubmit } = props;
   const [activeKey, setActiveKey] = useState<string>('1');
 
+  const QuestionListTab = (props) => {
+    const { question, index } = props;
+    switch (question.question_status) {
+      case 0:
+        return (
+          <div>
+            <CloseCircleFilled style={{ color: 'red' }} /> {index}
+          </div>
+        );
+      case 1:
+        return (
+          <div>
+            <CheckCircleFilled style={{ color: 'green' }} /> {index}
+          </div>
+        );
+      default:
+        return <div>{index}</div>;
+    }
+  };
+
   return (
     <div>
-      <span>题目列表</span>
+      <span>
+        <h4>题目列表</h4>
+      </span>
       <Tabs
         // defaultActiveKey="1"
         activeKey={activeKey}
@@ -22,7 +45,15 @@ const QuestionList = (props) => {
       >
         {questions.length > 0 ? (
           questions.map((question, index) => (
-            <TabPane tab={index + 1} key={index + 1}>
+            <TabPane
+              tab={
+                <QuestionListTab
+                  index={index + 1}
+                  question={question}
+                ></QuestionListTab>
+              }
+              key={index + 1}
+            >
               <Question
                 question={question}
                 fetchQuestion={fetchQuestionList}

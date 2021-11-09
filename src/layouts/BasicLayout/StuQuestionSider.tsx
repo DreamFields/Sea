@@ -75,6 +75,7 @@ const StuQuestionSider = (props) => {
     <Sider className="side" width={350}>
       <Menu
         style={{ width: 350, fontSize: 30 }}
+        defaultOpenKeys={['sub1']}
         mode="inline"
         onClick={(e) => {
           // console.log('点击菜单项', e);

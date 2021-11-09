@@ -51,13 +51,13 @@ const renderOptions = ({
               value={option}
               disabled={shouldDisable}
             >
+              {option}: {question.info_text_content[option]}
               {question_status === 1 && student_answer === option && (
                 <CheckCircleTwoTone twoToneColor="green" />
               )}
               {question_status === 0 && student_answer === option && (
                 <CloseCircleTwoTone twoToneColor="red" />
               )}
-              {option}: {question.info_text_content[option]}
             </Radio>
           );
         })}
