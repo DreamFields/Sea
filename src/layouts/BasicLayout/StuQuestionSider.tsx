@@ -91,16 +91,16 @@ const StuQuestionSider = (props) => {
         }}
         selectedKeys={[curMenu]}
       >
-        <SubMenu key="sub1" title="考核">
+        <SubMenu key="sub1" title="训练">
           {d.map((item) => difficultMenu(item))}
         </SubMenu>
 
-        <SubMenu key="sub2" title="考试">
+        <SubMenu key="sub2" title="考核">
           <Menu.Item style={{ fontSize: 20 }} key="done">
-            已经参加的考试
+            已经参加的考核
           </Menu.Item>
           <Menu.Item style={{ fontSize: 20 }} key="canDo">
-            可以参加的考试
+            可以参加的考核
           </Menu.Item>
         </SubMenu>
       </Menu>
