@@ -219,7 +219,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         )}
       </Form.Item>
 
-      {/* <Form.Item label="A选项内容" name="a">
+      <Form.Item label="A选项内容" name="a">
         <TextArea
           value={data.info_text_content.A}
           defaultValue={data.info_text_content.A}
@@ -276,7 +276,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           placeholder="D选项内容"
           readOnly={readOnly}
         ></TextArea>
-      </Form.Item> */}
+      </Form.Item>
 
       <Form.Item label="题目分析" name="analysis">
         <TextArea
@@ -382,25 +382,6 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         </Select>
       </Form.Item>
 
-      <Form.Item label="正确选项" name="correct">
-        <Select
-          value={data.correct}
-          defaultValue={data.correct}
-          style={{
-            display: 'block',
-          }}
-          onChange={(e) => {
-            data.correct = e;
-            onDataChange(data);
-          }}
-          disabled={readOnly}
-        >
-          <Option value="A">正确选项A</Option>
-          <Option value="B">正确选项B</Option>
-          <Option value="C">正确选项C</Option>
-          <Option value="D">正确选项D</Option>
-        </Select>
-      </Form.Item>
       {!readOnly && (
         <Form.Item label="上传图片" name="uploadimg">
           <Upload name="file" customRequest={handlePictureUpload}>
