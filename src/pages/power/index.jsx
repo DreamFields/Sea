@@ -16,6 +16,8 @@ import request from '@/utils/request';
 // import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 import { SERVICEURL } from '../../utils/const';
+import html2canvas from 'html2canvas';
+import b64toBlob from 'b64-to-blob';
 
 const TestApp = (props) => {
   const { audio_id, dispatch, Data } = props;
@@ -129,7 +131,7 @@ const TestApp = (props) => {
             yAxisIndex: 'none',
           },
           saveAsImage: {
-            pixelRatio: 5,
+            pixelRatio: 6,
           },
           restore: {},
         },
@@ -391,6 +393,23 @@ const TestApp = (props) => {
     });
   };
 
+  const getScreenshot = () => {
+    html2canvas(document.querySelector('#capture'), {
+      // 转换为图片
+      useCORS: true, // 解决资源跨域问题
+    }).then((canvas) => {
+      // imgUrl 是图片的 base64格式 代码 png 格式
+      let imgUrl = canvas.toDataURL('image/png');
+      //下面是 下载图片的功能。 不需要不加 注意加 .png
+      const str = imgUrl.replace(/data:image\/png;base64,/, '');
+      const file = b64toBlob(str, 'image/png');
+      const clipboardItemInput = new window.ClipboardItem({
+        'image/png': file,
+      });
+      window.navigator.clipboard.write([clipboardItemInput]);
+    });
+  };
+
   useEffect(() => {
     if (audio_id) {
       getData();
@@ -401,6 +420,7 @@ const TestApp = (props) => {
     <div>
       <Card>
         <div
+          id="capture"
           style={{
             display: !picOn ? 'block' : 'none',
           }}
@@ -464,6 +484,7 @@ const TestApp = (props) => {
           </Select>
         </Popover>
         <Button onClick={getData2}>1/3频程分析</Button>
+        <Button onClick={getScreenshot}>复制截图</Button>
         <UploadPhotos url={`${SERVICEURL}/v1/ffile/power/${id}`} />
       </Card>
 

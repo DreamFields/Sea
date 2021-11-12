@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-11-06 20:41:25
+ * @LastEditTime: 2021-11-12 14:34:48
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -25,6 +25,8 @@ import MCFFApp from '../MCFF/index';
 import BasicSoundData from './basicSoundData';
 import FeatureRightMenu from './FeatureRightMenu';
 import FeatureMainContent from './FeatureMainContent';
+import html2canvas from 'html2canvas';
+import b64toBlob from 'b64-to-blob';
 
 const Index = (props) => {
   const { audio_id, dispatch } = props;
@@ -129,9 +131,20 @@ const Index = (props) => {
             type="primary"
             style={{ fontSize: 15, float: 'left', marginLeft: '16px' }}
             onClick={() => {
-              if (wavesurfer) {
-                wavesurfer.skip(0 - wavesurfer.getCurrentTime());
-              }
+              html2canvas(document.querySelector('#capture'), {
+                // 转换为图片
+                useCORS: true, // 解决资源跨域问题
+              }).then((canvas) => {
+                // imgUrl 是图片的 base64格式 代码 png 格式
+                let imgUrl = canvas.toDataURL('image/png');
+                //下面是 下载图片的功能。 不需要不加 注意加 .png
+                const str = imgUrl.replace(/data:image\/png;base64,/, '');
+                const file = b64toBlob(str, 'image/png');
+                const clipboardItemInput = new window.ClipboardItem({
+                  'image/png': file,
+                });
+                window.navigator.clipboard.write([clipboardItemInput]);
+              });
             }}
           >
             复制截图
@@ -189,7 +202,9 @@ const Index = (props) => {
           </h4>
           <div style={{ backgroundColor: '#2F2F2F' }}>
             <Waveform />
-            <FeatureMainContent path={path} />
+            <div>
+              <FeatureMainContent path={path} />
+            </div>
           </div>
         </div>
       </div>
