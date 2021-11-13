@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-11-12 14:34:48
+ * @LastEditTime: 2021-11-13 21:16:50
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\features\index.jsx
  */
@@ -103,6 +103,23 @@ const Index = (props) => {
       return () => {};
     }, [audio_id]);
 
+    const getScreenshot = () => {
+      html2canvas(document.querySelector('#waveform'), {
+        // 转换为图片
+        useCORS: true, // 解决资源跨域问题
+      }).then((canvas) => {
+        // imgUrl 是图片的 base64格式 代码 png 格式
+        let imgUrl = canvas.toDataURL('image/png');
+        //下面是 下载图片的功能。 不需要不加 注意加 .png
+        const str = imgUrl.replace(/data:image\/png;base64,/, '');
+        const file = b64toBlob(str, 'image/png');
+        const clipboardItemInput = new window.ClipboardItem({
+          'image/png': file,
+        });
+        window.navigator.clipboard.write([clipboardItemInput]);
+      });
+    };
+
     return (
       <>
         <div style={{ marginTop: 20, marginLeft: 10, overflow: 'auto' }}>
@@ -126,6 +143,13 @@ const Index = (props) => {
             }}
           >
             复位
+          </Button>
+          <Button
+            type="primary"
+            style={{ fontSize: 15, float: 'left', marginLeft: '16px' }}
+            onClick={getScreenshot}
+          >
+            复制截图
           </Button>
         </div>
         <div id="wave-timeline" style={{ marginTop: 20 }}></div>
