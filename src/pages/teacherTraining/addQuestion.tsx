@@ -5,10 +5,12 @@ import { Button, message } from 'antd';
 import { post } from '@/utils/request';
 
 const Component = (props: any) => {
-  const { onDone } = props;
+  const { onDone, chapter, difficult } = props;
+  console.log('add question component', chapter, difficult);
 
   const [data, setData] = useState({
-    difficult: '1',
+    difficult,
+    chapter,
     correct: 'A',
     info_text_content: {
       question_info: '',
@@ -20,6 +22,8 @@ const Component = (props: any) => {
     analysis: '',
     knowledge_id: '',
     question_id: '',
+    question_type: '1',
+    question_bank_type: '1',
   });
 
   const submit = async () => {
@@ -27,6 +31,7 @@ const Component = (props: any) => {
       difficult: +data.difficult,
       knowledge_id: +data.knowledge_id ?? 1,
       correct: data.correct,
+      question_type: +data.question_type,
       info_text_content: {
         question_info: data.info_text_content.question_info,
         A: data.info_text_content.A.toString(),
@@ -35,6 +40,8 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
+      chapter: +data.chapter,
+      question_bank_type: +data.question_bank_type,
     };
 
     if (data.question_id) {

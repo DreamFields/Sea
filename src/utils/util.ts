@@ -7,6 +7,8 @@
 import moment from 'moment';
 import React from 'react';
 import { MultipleChoiceDataType } from '@/models/data';
+import CookieUtil from '@/utils/cookie';
+import { ROLES } from '@/utils/const';
 
 /**
  * @description: 去掉请求中的NULL元素
@@ -158,4 +160,11 @@ export const getMultipleChoicePost = ({
     multipleChoice.other = '';
   multipleChoice.radio = result;
   return multipleChoice;
+};
+
+export const getRole = () => {
+  const role = CookieUtil.get('role')
+    ? ROLES[CookieUtil.get('role') - 1]
+    : 'null';
+  return role;
 };

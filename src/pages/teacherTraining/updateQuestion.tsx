@@ -19,6 +19,7 @@ const Component = (props: any) => {
       id: +id,
       difficult: +data.difficult,
       knowledge_id: +data.knowledge_id ?? 1,
+      question_type: +data.question_type,
       correct: data.correct,
       info_text_content: {
         question_info: data.info_text_content.question_info,
@@ -28,6 +29,7 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
+      question_bank_type: +data.question_bank_type,
     };
 
     const res = await post<any>('/v1/teacher/update_question', {
@@ -42,13 +44,12 @@ const Component = (props: any) => {
     if (id === undefined) {
       return;
     }
-
-    post<any>('/v1/teacher/question_detail', {
+    post<any>('/v1/teacher/detail_question', {
       data: {
         question_id: +id,
       },
     }).then((res1) => {
-      console.log('/v1/teacher/question_detail res', res1);
+      console.log('/v1/teacher/detail_question res', res1);
       if (res1.info_text_content === null) res1.info_text_content = {} as any;
       setData({ ...res1 });
     });

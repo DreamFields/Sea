@@ -1,8 +1,18 @@
 import React, { Validator, useState, useEffect } from 'react';
 import style from './style.less';
-import { Input, Button, Select, Upload, Form, Image } from 'antd';
+import {
+  Input,
+  Button,
+  Select,
+  Upload,
+  Form,
+  Image,
+  Radio,
+  Checkbox,
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
+import AddKnowledge from './addKnowledge';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -91,10 +101,14 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
   });
 
   const [knowledgeList, setKnowledgeList] = useState<any>([]);
-  useEffect(() => {
+  const [openCreateKnowledge, setOpenCreateKnowledge] = useState(false);
+  const updateKnowledge = () => {
     post<any>('/v1/teacher/knowledge_list').then((res2) => {
       setKnowledgeList([...res2]);
     });
+  };
+  useEffect(() => {
+    updateKnowledge();
   }, []);
 
   return (
@@ -113,6 +127,98 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           readOnly={readOnly}
         ></TextArea>
       </Form.Item>
+
+      <Form.Item label="考试数据库">
+        <Radio.Group
+          defaultValue={`${data.question_bank_type}`}
+          onChange={(e) => {
+            console.log('question bank type change', e);
+            data.question_bank_type = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          disabled={readOnly}
+        >
+          <Radio value="1">训练题库</Radio>
+          <Radio value="2">考试题库</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item label="类型">
+        <Radio.Group
+          defaultValue={data.question_type.toString()}
+          onChange={(e) => {
+            console.log('question type change', e);
+            data.question_type = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          disabled={readOnly}
+        >
+          <Radio value="1">单选</Radio>
+          <Radio value="2">多选</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item label="正确答案">
+        {data.question_type == '1' && (
+          <Radio.Group
+            onChange={(e) => {
+              console.log('radio group on change', e);
+
+              data.correct = e.target.value;
+              onDataChange({
+                ...data,
+              });
+            }}
+            disabled={readOnly}
+            defaultValue={data.correct}
+          >
+            <Radio value="A">A</Radio>
+            <Radio value="B">B</Radio>
+            <Radio value="C">C</Radio>
+            <Radio value="D">D</Radio>
+          </Radio.Group>
+        )}
+
+        {data.question_type == '2' && (
+          <Checkbox.Group
+            defaultValue={(data.correct ?? '')
+              .split('+')
+              .filter((t) => t !== '')}
+            onChange={(e) => {
+              console.log('Checkbox group on change', e);
+
+              data.correct = e.map((t) => t.toString()).join('+');
+              onDataChange({
+                ...data,
+              });
+            }}
+            disabled={readOnly}
+            options={[
+              {
+                label: 'A',
+                value: 'A',
+              },
+              {
+                label: 'B',
+                value: 'B',
+              },
+              {
+                label: 'C',
+                value: 'C',
+              },
+              {
+                label: 'D',
+                value: 'D',
+              },
+            ]}
+          />
+        )}
+      </Form.Item>
+
       <Form.Item label="A选项内容" name="a">
         <TextArea
           value={data.info_text_content.A}
@@ -210,6 +316,47 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         </Select>
       </Form.Item>
 
+      {!readOnly && (
+        <div>
+          <Button onClick={() => setOpenCreateKnowledge(!openCreateKnowledge)}>
+            新增知识点
+          </Button>
+          {openCreateKnowledge && (
+            <AddKnowledge
+              onDone={() => {
+                updateKnowledge();
+                setOpenCreateKnowledge(false);
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      <Form.Item label="章节" name="chapter">
+        <Select
+          value={data.chapter}
+          defaultValue={data.chapter}
+          style={{
+            display: 'block',
+          }}
+          onChange={(e) => {
+            data.chapter = e;
+            onDataChange(data);
+          }}
+          disabled={readOnly}
+        >
+          <Option value="1">章节1</Option>
+          <Option value="2">章节2</Option>
+          <Option value="3">章节3</Option>
+          <Option value="4">章节4</Option>
+          <Option value="5">章节5</Option>
+          <Option value="6">章节6</Option>
+          <Option value="7">章节7</Option>
+          <Option value="8">章节8</Option>
+          <Option value="9">章节9</Option>
+        </Select>
+      </Form.Item>
+
       <Form.Item label="难度" name="difficulty">
         <Select
           value={data.difficult}
@@ -228,28 +375,13 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="3">难度3</Option>
           <Option value="4">难度4</Option>
           <Option value="5">难度5</Option>
+          <Option value="6">难度6</Option>
+          <Option value="7">难度7</Option>
+          <Option value="8">难度8</Option>
+          <Option value="9">难度9</Option>
         </Select>
       </Form.Item>
 
-      <Form.Item label="正确选项" name="correct">
-        <Select
-          value={data.correct}
-          defaultValue={data.correct}
-          style={{
-            display: 'block',
-          }}
-          onChange={(e) => {
-            data.correct = e;
-            onDataChange(data);
-          }}
-          disabled={readOnly}
-        >
-          <Option value="A">正确选项A</Option>
-          <Option value="B">正确选项B</Option>
-          <Option value="C">正确选项C</Option>
-          <Option value="D">正确选项D</Option>
-        </Select>
-      </Form.Item>
       {!readOnly && (
         <Form.Item label="上传图片" name="uploadimg">
           <Upload name="file" customRequest={handlePictureUpload}>
