@@ -12,6 +12,7 @@ import {
 import { Row, Col, Space } from 'antd';
 import CookieUtil from '@/utils/cookie.js';
 import PeopleShow from '@/components/PeopleShow/index';
+import { getRole } from '@/utils/util';
 
 // const ProportionAudio = React.lazy(
 //   () => import('@/components/pie/ProportionAudio'),
@@ -256,7 +257,9 @@ const MainContent: React.FC<mainContentProps> = (props) => {
             </Link>
           </Col>
           <Col span={8}>
-            <Link to="/listenTraining">
+            <Link
+              to={getRole() === '学员' ? '/studentTraining' : 'teacherTraining'}
+            >
               <div
                 style={{ backgroundColor: '#F79C32' }}
                 className={style.featuresDiv}

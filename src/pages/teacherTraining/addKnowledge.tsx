@@ -3,6 +3,8 @@ import style from './style.less';
 import { Input, Button, message } from 'antd';
 import { post } from '@/utils/request';
 
+const { TextArea } = Input;
+
 const Component = (props: any) => {
   const { onDone } = props;
   const [content, setContent] = useState('');
@@ -19,11 +21,11 @@ const Component = (props: any) => {
   };
   return (
     <div>
-      <Input
+      <TextArea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="内容"
-      ></Input>
+      />
       <Button onClick={submit}>提交</Button>
     </div>
   );

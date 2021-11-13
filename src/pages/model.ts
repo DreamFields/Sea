@@ -10,6 +10,8 @@ import {
   GetAudio,
   GetPeople,
 } from './service';
+import CookieUtil from '@/utils/cookie';
+import { ROLES } from '@/utils/const';
 export interface stateType {
   active_pulseData?: any;
   target_echoData?: any;

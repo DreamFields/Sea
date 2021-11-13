@@ -1,20 +1,32 @@
 import { post } from '@/utils/request';
 import { Table, Button, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import AddQuestion from './addQuestion';
-import UpdateQuestion from './updateQuestion';
+import AddQuestion from '../addQuestion';
+import UpdateQuestion from '../updateQuestion';
+import { useParams } from 'umi';
 import style from './style.less';
 
 const Component = (props: any) => {
+  const { chapter, difficult } = useParams() as any;
+  console.log('question list detail router param', { chapter, difficult });
+
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
   const [updateQuestionId, setUpdateQuestionId] = useState(undefined);
 
-  useEffect(() => {
-    post<any>('/v1/teacher/question_list').then((res) => {
+  const fetchQuestionList = () => {
+    post<any>('/v1/teacher/question_list', {
+      data: {
+        chapter: +chapter,
+        difficult: +difficult,
+      },
+    }).then((res) => {
       setDataSource(res);
     });
-  }, [state]);
+  };
+  useEffect(() => {
+    fetchQuestionList();
+  }, [state, chapter, difficult]);
 
   const columns = [
     {
@@ -49,7 +61,21 @@ const Component = (props: any) => {
                 setUpdateQuestionId(data.id);
               }}
             >
-              查看题目
+              详情
+            </Button>
+            <Button
+              onClick={() => {
+                if (confirm('是否要删除这个题目？')) {
+                  post<any>('/v1/teacher/delete_question', {
+                    data: { id: data.id },
+                  }).then((res) => {
+                    console.log('delete question response', res);
+                    fetchQuestionList();
+                  });
+                }
+              }}
+            >
+              删除题目
             </Button>
           </Space>
         );
@@ -68,7 +94,13 @@ const Component = (props: any) => {
 
       {state > 0 && <Button onClick={() => setState(0)}>返回题目列表</Button>}
 
-      {state === 1 && <AddQuestion onDone={() => setState(0)} />}
+      {state === 1 && (
+        <AddQuestion
+          chapter={chapter}
+          difficult={difficult}
+          onDone={() => setState(0)}
+        />
+      )}
       {state === 2 && (
         <UpdateQuestion onDone={() => setState(0)} id={updateQuestionId} />
       )}
