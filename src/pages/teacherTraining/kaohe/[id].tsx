@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-13 21:24:31
+ * @LastEditTime: 2021-11-16 20:13:12
+ * @LastEditors: your name
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \Sea\src\pages\teacherTraining\kaohe\[id].tsx
+ */
 import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import { useParams } from 'umi';
@@ -13,7 +21,7 @@ const Index = () => {
       data: { id },
     }).then((res) => {
       const d: any[] = [];
-      for (let i = 1; i <= 9; i++) {
+      for (let i = 1; i <= 10; i++) {
         const c = res[`chapter${i}`];
         console.log('c', c, i);
 
@@ -40,7 +48,7 @@ const Index = () => {
     },
   ];
 
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 10; i++) {
     columns.push({
       title: `难度${i}`,
       dataIndex: `${i}`,

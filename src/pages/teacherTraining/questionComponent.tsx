@@ -354,6 +354,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="7">章节7</Option>
           <Option value="8">章节8</Option>
           <Option value="9">章节9</Option>
+          <Option value="9">章节10</Option>
         </Select>
       </Form.Item>
 
@@ -379,7 +380,23 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="7">难度7</Option>
           <Option value="8">难度8</Option>
           <Option value="9">难度9</Option>
+          <Option value="9">难度10</Option>
         </Select>
+      </Form.Item>
+
+      <Form.Item label="分数" name="sc">
+        <TextArea
+          value={data.score}
+          defaultValue={data.score}
+          onChange={(e) => {
+            data.score = e.target.value;
+            onDataChange({
+              ...data,
+            });
+          }}
+          placeholder="分数"
+          readOnly={readOnly}
+        ></TextArea>
       </Form.Item>
 
       {!readOnly && (
