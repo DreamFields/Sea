@@ -9,6 +9,7 @@ import {
   Image,
   Radio,
   Checkbox,
+  InputNumber,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
@@ -335,7 +336,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       <Form.Item label="章节" name="chapter">
         <Select
           value={data.chapter}
-          defaultValue={data.chapter}
+          defaultValue={`难度${data.chapter}`}
           style={{
             display: 'block',
           }}
@@ -361,7 +362,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       <Form.Item label="难度" name="difficulty">
         <Select
           value={data.difficult}
-          defaultValue={data.difficult}
+          defaultValue={`难度${data.difficult}`}
           style={{
             display: 'block',
           }}
@@ -385,18 +386,18 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       </Form.Item>
 
       <Form.Item label="分数" name="sc">
-        <TextArea
+        <InputNumber
           value={data.score}
           defaultValue={data.score}
           onChange={(e) => {
-            data.score = e.target.value;
+            data.score = e;
             onDataChange({
               ...data,
             });
           }}
           placeholder="分数"
           readOnly={readOnly}
-        ></TextArea>
+        />
       </Form.Item>
 
       {!readOnly && (

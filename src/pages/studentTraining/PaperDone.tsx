@@ -39,6 +39,11 @@ const columns = [
     key: 'score',
   },
   {
+    title: '试卷总分',
+    dataIndex: 'score',
+    key: 'score',
+  },
+  {
     title: 'Action',
     key: 'action',
     render: (text, record) => (

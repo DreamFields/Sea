@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 22:36:12
+ * @LastEditTime: 2021-11-17 20:27:32
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \Sea\src\pages\teacherTraining\addQuestion.tsx
+ */
 import React, { useState } from 'react';
 import style from './style.less';
 import QuestionComponent from './questionComponent';
@@ -24,6 +32,7 @@ const Component = (props: any) => {
     question_id: '',
     question_type: '1',
     question_bank_type: '1',
+    score: 10,
   });
 
   const submit = async () => {
@@ -42,6 +51,7 @@ const Component = (props: any) => {
       analysis: data.analysis,
       chapter: +data.chapter,
       question_bank_type: +data.question_bank_type,
+      score: +data.score,
     };
 
     if (data.question_id) {
