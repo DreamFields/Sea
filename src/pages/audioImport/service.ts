@@ -16,6 +16,13 @@ export async function GetRnType(body: any) {
   });
 }
 
+export async function DelRnType(body: any) {
+  console.log(body);
+  return request(`/v1/type/rn_type/${body}`, {
+    method: 'DELETE',
+  });
+}
+
 //添加目标回声类别
 export async function AddTeType(body: any) {
   return request('/v1/type/te_type', {

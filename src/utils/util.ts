@@ -168,3 +168,10 @@ export const getRole = () => {
     : 'null';
   return role;
 };
+
+export const getName = () => {
+  const role = CookieUtil.get('token').data;
+  //? ROLES[CookieUtil.get('name') - 1]
+  //: 'null';
+  return role;
+};

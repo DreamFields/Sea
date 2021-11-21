@@ -3,6 +3,7 @@ import { message } from 'antd';
 import {
   AddRnType,
   GetRnType,
+  DelRnType,
   AddTeType,
   GetTeType,
   AddApType,
@@ -45,6 +46,7 @@ export interface ModelType {
   effects: {
     addRnType: Effect;
     getRnType: Effect;
+    delRnType: Effect;
     addTeType: Effect;
     getTeType: Effect;
     addApType: Effect;
@@ -107,6 +109,32 @@ const Model: ModelType = {
       } else {
         message.error('添加辐射噪声目标类别失败！');
       }
+    },
+    *delRnType({ payload }, { call, put }) {
+      console.log(payload);
+      const data = yield call(DelRnType, payload.name);
+      if (data) {
+        message.success('删除辐射噪声目标类别成功！');
+      } else {
+        message.error('删除辐射噪声目标类别失败！');
+      }
+      /*
+      const data = yield call(deleteRecord, { id });
+      if (data) {
+        message.success('Delete successfully.');
+        const { page, per_page } = yield select(
+          (state: any) => state.users.meta,
+        );
+        yield put({
+          type: 'getRemote',
+          payload: {
+            page,
+            per_page,
+          },
+        });
+      } else {
+        message.error('Delete failed.');
+      }*/
     },
     *getTeType({ payload }, { call, put }) {
       const data = yield call(GetTeType, payload);

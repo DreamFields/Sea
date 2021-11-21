@@ -46,7 +46,7 @@ import moment from 'moment';
 import topLogo from '@/assets/top-logo.png';
 import bottomLogo from '@/assets/bottom-logo.png';
 import { SERVICEURL } from '@/utils/const';
-import { getRole } from '@/utils/util';
+import { getRole, getName } from '@/utils/util';
 import StuQuestionSider from '@/layouts/BasicLayout/StuQuestionSider';
 
 const { Header, Sider, Footer, Content } = Layout;
@@ -210,6 +210,24 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         }
       };
 
+      const deletePopover = (nameRN) => (
+        <div>
+          <p>{nameRN}</p>
+          <Button
+            onClick={() => {
+              dispatch({
+                type: 'inforImport/delRnType',
+                payload: { name: nameRN },
+              }).then(() => {
+                settype(-1);
+              });
+            }}
+          >
+            删除
+          </Button>
+        </div>
+      );
+
       return (
         <>
           <Row gutter={16}>
@@ -237,7 +255,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.rnType?.map((item) => {
-                    return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
+                    return (
+                      <Radio value={item.rn_type}>
+                        <Popover content={deletePopover(item.rn_type)}>
+                          {item.rn_type}
+                        </Popover>
+                      </Radio>
+                    );
                   })}
                   <Radio
                     value={'添加新类别'}
@@ -1860,7 +1884,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Link to="/staffManage">用户管理 </Link>|
               </span>
-              <span>{` 您好，${getRole()}`}</span>
+              <span>{` 您好，${getName()}`}</span>
             </div>
           )}
         </Header>
