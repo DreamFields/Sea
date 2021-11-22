@@ -39,11 +39,11 @@ const Component = (props: any) => {
       dataIndex: 'create_time',
       key: 'create_time',
     },
-    {
+    /*{
       title: '难度',
       dataIndex: 'difficult',
       key: 'difficult',
-    },
+    },*/
     {
       title: '用户名',
       dataIndex: 'nickname',
@@ -88,7 +88,14 @@ const Component = (props: any) => {
       {state === 0 && (
         <>
           <Button onClick={() => setState(1)}>添加题目</Button>
-          <Table dataSource={dataSource} columns={columns} />
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={{
+              pageSize: 100,
+              hideOnSinglePage: true,
+            }}
+          />
         </>
       )}
 
