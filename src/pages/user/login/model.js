@@ -1,9 +1,9 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-27 08:46:01
- * @LastEditTime : 2020-11-14 17:15:41
+ * @LastEditTime: 2021-11-24 10:34:29
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\user\login\model.js
  */
@@ -33,7 +33,7 @@ const Model = {
       console.log('back data', data);
       if (data) {
         console.log('token', data);
-        const { token, role } = data;
+        const { token, role, nickname } = data;
         // token 过期时间24小时
         let expires;
         if (payload.remember) {
@@ -46,6 +46,7 @@ const Model = {
 
         CookieUtil.set('token', token, expires, '/');
         CookieUtil.set('role', role, expires, '/');
+        CookieUtil.set('nickname', nickname, expires, '/');
         // CookieUtil.set('userInfo', JSON.stringify(userInfo), new Date(+new Date() + 24 * 60 * 60 * 1000))
         message.success('登录成功！');
         return true;

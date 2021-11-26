@@ -170,8 +170,5 @@ export const getRole = () => {
 };
 
 export const getName = () => {
-  const role = CookieUtil.get('token').data;
-  //? ROLES[CookieUtil.get('name') - 1]
-  //: 'null';
-  return role;
+  return CookieUtil.get('nickname');
 };

@@ -1,15 +1,16 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-28 09:56:58
- * @LastEditTime : 2020-12-08 15:02:46
+ * @LastEditTime: 2021-11-24 10:23:59
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\models\soundList.ts
  */
 import { Effect, Reducer, Subscription } from 'umi';
 import { message } from 'antd';
 import {
+  GetToken,
   FetchSoundList,
   SearchByname_date,
   SearchBystype,

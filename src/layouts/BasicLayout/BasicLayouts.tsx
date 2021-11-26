@@ -209,7 +209,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           setVisible(true);
         }
       };
-
+      /*
       const deletePopover = (nameRN) => (
         <div>
           <p>{nameRN}</p>
@@ -227,7 +227,10 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           </Button>
         </div>
       );
-
+      
+      <Popover content={deletePopover(item.rn_type)}>
+      */
+      // TODO
       return (
         <>
           <Row gutter={16}>
@@ -255,13 +258,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Radio.Group onChange={onChange_2} value={value_2}>
                   {InforImport.rnType?.map((item) => {
-                    return (
-                      <Radio value={item.rn_type}>
-                        <Popover content={deletePopover(item.rn_type)}>
-                          {item.rn_type}
-                        </Popover>
-                      </Radio>
-                    );
+                    return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
                   })}
                   <Radio
                     value={'添加新类别'}
@@ -274,6 +271,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
                   >
                     添加新类别
                   </Radio>
+                  <Radio value={'空'}> 空 </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -1854,7 +1852,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     );
   };
 
-  const role = CookieUtil.get('role');
   return (
     <div>
       <Layout>
@@ -1884,7 +1881,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Link to="/staffManage">用户管理 </Link>|
               </span>
-              <span>{` 您好，${getName()}`}</span>
+              <span>{` 欢迎您回来，${getName()}`}</span>
             </div>
           )}
         </Header>

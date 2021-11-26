@@ -1,13 +1,22 @@
 /*
  * @Descripttion :
  * @Author       : HuRenbin
- * @LastEditors  : HuRenbin
+ * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-27 08:19:03
- * @LastEditTime : 2020-12-08 13:37:18
+ * @LastEditTime: 2021-11-24 10:23:13
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\layouts\BasicLayout\service.ts
  */
 import request from '@/utils/request';
+
+// 获取用户名
+export async function GetToken(body) {
+  // console.log(body);
+  return request('/v1/token', {
+    method: 'POST',
+    data: body,
+  });
+}
 
 // 获取声音文件列表
 export async function FetchSoundList(body: any) {

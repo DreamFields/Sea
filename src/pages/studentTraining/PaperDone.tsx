@@ -29,14 +29,19 @@ const columns = [
     render: (text) => <a>{text}</a>,
   },
   {
-    title: '考试时间',
+    title: '开始时间',
     dataIndex: 'start_time',
     key: 'start_time',
   },
   {
+    title: '结束时间',
+    dataIndex: 'end_time',
+    key: 'end_time',
+  },
+  {
     title: '我的分数',
-    dataIndex: 'score',
-    key: 'score',
+    dataIndex: 'customer_score',
+    key: 'customer_score',
   },
   {
     title: '试卷总分',
