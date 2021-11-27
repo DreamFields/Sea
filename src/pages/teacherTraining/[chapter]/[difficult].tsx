@@ -114,21 +114,28 @@ const Component = (props: any) => {
 
     onSortEnd = ({ oldIndex, newIndex }) => {
       const { data } = this.state;
+      console.log('Unsorted items: ', data);
       if (oldIndex !== newIndex) {
         const newData = arrayMoveImmutable(
           [].concat(data),
           oldIndex,
           newIndex,
         ).filter((el) => !!el);
-        console.log('Sorted items: ', newData);
+
         this.setState({ data: newData });
         //console.log('Sorted items: ', oldIndex, newIndex);
+
+        if (oldIndex < newIndex) {
+          let list_io = [];
+          for (let i = oldIndex; i <= newIndex; i++) {
+            list_io.push(data[i]['item_order']);
+          }
+        }
 
         let id1 = data[oldIndex]['id'];
         let id2 = data[newIndex]['id'];
         let io1 = data[oldIndex]['item_order'];
         let io2 = data[newIndex]['item_order'];
-        //console.log('ID: ', id1);
         post<any>('/v1/teacher/re_order', {
           data: {
             list: [
@@ -137,9 +144,10 @@ const Component = (props: any) => {
             ],
           },
         }).then((res) => {
-          console.log(res);
+          console.log('Sorted items: ', newData);
           console.log(id1, io1, id2, io2);
         });
+        fetchQuestionList();
       }
     };
 

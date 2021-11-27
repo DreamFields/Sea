@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-13 21:24:31
- * @LastEditTime: 2021-11-16 20:13:12
- * @LastEditors: your name
+ * @LastEditTime: 2021-11-26 15:42:51
+ * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \Sea\src\pages\teacherTraining\kaohe\[id].tsx
  */
@@ -29,7 +29,7 @@ const Index = () => {
           chapter: `章节${i}`,
         };
 
-        for (let j = 1; j <= 9; j++) {
+        for (let j = 1; j <= 10; j++) {
           const doo = c[`difficult${j}`];
           o[j] = `${doo.right} / ${doo.num}`;
         }

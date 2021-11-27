@@ -1,6 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-13 21:24:31
+ * @LastEditTime: 2021-11-26 19:05:08
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \Sea\src\pages\teacherTraining\StudentKaohe.tsx
+ */
 import React, { useState, useEffect } from 'react';
 import style from './style.less';
-import { Button, Table, Space } from 'antd';
+import { Button, Table, Space, message } from 'antd';
 import { post } from '@/utils/request';
 import { history } from 'umi';
 
@@ -38,9 +46,22 @@ const Index = () => {
         <Button
           onClick={() => {
             history.push(`/teacherTraining/kaohe/${data.user_id}`);
+            console.log(data.user_id);
           }}
         >
           详情
+        </Button>
+        <Button
+          onClick={() => {
+            post<any>('/v1/teacher/Clear_All_Student_Assessment', {
+              data: { user_id: data.user_id },
+            }).then((res) => {
+              message.success('清空记录成功！');
+              console.log(data.user_id);
+            });
+          }}
+        >
+          清空
         </Button>
       </Space>
     ),
