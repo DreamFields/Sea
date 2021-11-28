@@ -18,7 +18,7 @@ import { arrayMoveImmutable } from 'array-move';
 
 const Component = (props: any) => {
   const { chapter, difficult } = useParams() as any;
-  console.log('question list detail router param', { chapter, difficult });
+  //console.log('question list detail router param', { chapter, difficult });
 
   const [dataSource, setDataSource] = useState([]);
   const [state, setState] = useState(0);
@@ -57,11 +57,16 @@ const Component = (props: any) => {
       dataIndex: 'create_time',
       key: 'create_time',
     },
-    /*{
-      title: '难度',
-      dataIndex: 'difficult',
-      key: 'difficult',
-    },*/
+    {
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'item_order',
+      dataIndex: 'item_order',
+      key: 'item_order',
+    },
     {
       title: '用户名',
       dataIndex: 'nickname',
@@ -113,41 +118,71 @@ const Component = (props: any) => {
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
-      const { data } = this.state;
-      console.log('Unsorted items: ', data);
+      const { data: dataUnsort } = this.state;
+      console.log('Unsorted items: ', dataUnsort);
       if (oldIndex !== newIndex) {
         const newData = arrayMoveImmutable(
-          [].concat(data),
+          [].concat(dataUnsort),
           oldIndex,
           newIndex,
         ).filter((el) => !!el);
 
-        this.setState({ data: newData });
-        //console.log('Sorted items: ', oldIndex, newIndex);
+        console.log('newData: ', newData);
+        //this.setState({ data: newData });
+        console.log('Index: ', oldIndex, newIndex);
+
+        let listId = [];
+        let listIo = [];
+        let listIoSort = [];
+
+        const dataSort = newData;
 
         if (oldIndex < newIndex) {
-          let list_io = [];
+          listId.push(dataUnsort[oldIndex]['id']);
+          listIo.push(dataUnsort[newIndex]['item_order']);
+          listIoSort.push(dataUnsort[oldIndex]['item_order']);
+          for (let i = oldIndex; i < newIndex; i++) {
+            listId.push(dataUnsort[i + 1]['id']);
+            listIo.push(dataUnsort[i]['item_order']);
+            listIoSort.push(dataUnsort[i + 1]['item_order']);
+          }
           for (let i = oldIndex; i <= newIndex; i++) {
-            list_io.push(data[i]['item_order']);
+            dataSort[i]['item_order'] = listIoSort[i - oldIndex];
+          }
+        } else {
+          for (let i = newIndex; i < oldIndex; i++) {
+            listId.push(dataUnsort[i]['id']);
+            listIo.push(dataUnsort[i + 1]['item_order']);
+            listIoSort.push(dataUnsort[i]['item_order']);
+          }
+          listId.push(dataUnsort[oldIndex]['id']);
+          listIo.push(dataUnsort[newIndex]['item_order']);
+          listIoSort.push(dataUnsort[oldIndex]['item_order']);
+          for (let i = newIndex; i <= oldIndex; i++) {
+            dataSort[i]['item_order'] = listIoSort[i - newIndex];
           }
         }
 
-        let id1 = data[oldIndex]['id'];
-        let id2 = data[newIndex]['id'];
-        let io1 = data[oldIndex]['item_order'];
-        let io2 = data[newIndex]['item_order'];
+        console.log('dataSort: ', dataSort);
+        this.setState({ data: dataSort });
+
+        console.log('id', listId);
+        console.log('io', listIo);
+        let listData: any = [];
+
+        for (let i = 0; i < listId.length; i++) {
+          listData.push({ id: listId[i], item_order: listIo[i] });
+        }
+
+        console.log('data', listData);
         post<any>('/v1/teacher/re_order', {
           data: {
-            list: [
-              { id: id1, item_order: io1 },
-              { id: id2, item_order: io2 },
-            ],
+            list: listData,
           },
-        }).then((res) => {
-          console.log('Sorted items: ', newData);
-          console.log(id1, io1, id2, io2);
-        });
-        fetchQuestionList();
+        }).then((res) => {});
+        //fetchQuestionList();
+        //console.log(dataSortEnd);
+        //this.setState({ data : dataSortEnd });
       }
     };
 

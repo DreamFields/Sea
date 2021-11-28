@@ -1872,7 +1872,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               />
             </Dropdown>
           </div>
-          {!train && (
+          {
             <div className="info">
               <span
                 style={{
@@ -1883,7 +1883,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               </span>
               <span>{` 欢迎您回来，${getName()}`}</span>
             </div>
-          )}
+          }
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
           {!train && (
