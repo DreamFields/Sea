@@ -41,9 +41,9 @@ const Component = (props: any) => {
 
   const columns = [
     {
-      title: 'Sort',
+      title: '排序',
       dataIndex: 'index',
-      width: 30,
+      width: 60,
       className: 'drag-visible',
       render: () => <DragHandle />,
     },
@@ -57,7 +57,7 @@ const Component = (props: any) => {
       dataIndex: 'create_time',
       key: 'create_time',
     },
-    {
+    /*{
       title: 'id',
       dataIndex: 'id',
       key: 'id',
@@ -66,7 +66,7 @@ const Component = (props: any) => {
       title: 'item_order',
       dataIndex: 'item_order',
       key: 'item_order',
-    },
+    },*/
     {
       title: '用户名',
       dataIndex: 'nickname',

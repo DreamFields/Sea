@@ -36,23 +36,27 @@ const PaperIndex = (props) => {
       ></QuestionList>
       <Button
         onClick={() => {
-          console.log('answers', answers);
-          const questionList = Object.keys(answers).map((qid) => ({
-            question_id: parseInt(qid, 10),
-            answer: answers[qid].sort().join('+'),
-          }));
-          console.log('questionList', questionList);
+          if (questions.length !== Object.keys(answers).length) {
+            message.error('试卷还未做完');
+          } else {
+            console.log('answers', answers);
+            const questionList = Object.keys(answers).map((qid) => ({
+              question_id: parseInt(qid, 10),
+              answer: answers[qid].sort().join('+'),
+            }));
+            console.log('questionList', questionList);
 
-          post<any>('/v1/student/paper_submit', {
-            data: {
-              exam_id: parseInt(id, 10),
-              question_customer_answer: questionList,
-            },
-          }).then((res) => {
-            console.log('res', res);
-            message.success('已完成考试');
-            history.push('/studentTraining/PaperCanDo');
-          });
+            post<any>('/v1/student/paper_submit', {
+              data: {
+                exam_id: parseInt(id, 10),
+                question_customer_answer: questionList,
+              },
+            }).then((res) => {
+              console.log('res', res);
+              message.success('已完成考试');
+              history.push('/studentTraining/PaperCanDo');
+            });
+          }
         }}
       >
         提交
