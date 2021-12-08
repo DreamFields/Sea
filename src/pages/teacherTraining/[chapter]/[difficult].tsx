@@ -3,6 +3,7 @@ import { Table, Button, Space } from 'antd';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 //import { HTML5Backend } from 'react-dnd-html5-backend';
 import AddQuestion from '../addQuestion';
+import CopyQuestion from '../copyQuestion';
 import UpdateQuestion from '../updateQuestion';
 import { useParams } from 'umi';
 //import { DndProvider, useDrag, useDrop } from 'react-dnd';
@@ -85,6 +86,14 @@ const Component = (props: any) => {
               }}
             >
               详情
+            </Button>
+            <Button
+              onClick={() => {
+                setState(3);
+                setUpdateQuestionId(data.id);
+              }}
+            >
+              复制题目
             </Button>
             <Button
               onClick={() => {
@@ -254,6 +263,9 @@ const Component = (props: any) => {
       )}
       {state === 2 && (
         <UpdateQuestion onDone={() => setState(0)} id={updateQuestionId} />
+      )}
+      {state === 3 && (
+        <CopyQuestion id={updateQuestionId} onDone={() => setState(0)} />
       )}
     </div>
   );

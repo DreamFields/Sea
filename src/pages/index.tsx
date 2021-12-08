@@ -129,7 +129,7 @@ const MainContent: React.FC<mainContentProps> = (props) => {
   ];
 
   return (
-    <div className={style.rightContent}>
+    <div className={style.rightContent} style={{ overflow: 'hidden' }}>
       <div
         style={{
           width: '95%',

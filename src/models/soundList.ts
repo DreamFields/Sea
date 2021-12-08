@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-28 09:56:58
- * @LastEditTime: 2021-11-24 10:23:59
+ * @LastEditTime: 2021-12-08 14:40:40
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\models\soundList.ts
  */
@@ -34,16 +34,20 @@ import {
   SearchBypm,
   GetAudioInforById,
 } from '@/layouts/BasicLayout/service';
+import { STATEMENT_OR_BLOCK_KEYS } from '@babel/types';
+import { convertLegacyProps } from 'antd/lib/button/button';
 
 export interface StateType {
   sound_list?: any;
   detail?: any;
+  overflowType?: string;
 }
 
 export interface ModelType {
   namespace: string;
   state: StateType;
   effects: {
+    refreshOverflowType: Effect;
     fetchSoundList: Effect;
     searchByname_date: Effect;
     searchBystype: Effect;
@@ -80,9 +84,21 @@ const Model: ModelType = {
 
   state: {
     sound_list: undefined,
+    overflowType: 'auto',
   },
 
   effects: {
+    *refreshOverflowType({ payload }, { call, put }) {
+      if (payload) {
+        yield put({
+          type: 'save',
+          payload: {
+            overflowType: payload.overflowType,
+          },
+        });
+      }
+    },
+
     *fetchSoundList({ payload }, { call, put }) {
       const data = yield call(FetchSoundList, payload);
       // console.log(data);

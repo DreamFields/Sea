@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-11-09 16:13:58
+ * @LastEditTime: 2021-12-08 14:13:29
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -30,6 +30,8 @@ import {
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
 import CookieUtil from '@/utils/cookie.js';
+import { setOverFlowHidden } from '@/layouts/BasicLayout/BasicLayouts.tsx';
+import { setOverFlowAuto } from '@/layouts/BasicLayout/BasicLayouts.tsx';
 // import WaveSurfer from 'wavesurfer.js';
 // import WaveSurfer from 'react-wavesurfer';
 
@@ -47,6 +49,7 @@ const alert_message_2_2 =
 
 //定义音频可视化组件
 let wavesurfer;
+let h = 128;
 let tip_region = null;
 
 const gridStyle = {
@@ -62,6 +65,41 @@ const Index = (props) => {
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
+  const [margin, setmargin] = useState(0);
+
+  function mouseEnter() {
+    document.body.style.overflow = 'hidden';
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'hidden',
+      },
+    });
+  }
+
+  function mouseLeave() {
+    document.body.style.overflow = 'auto';
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'auto',
+      },
+    });
+  }
+
+  function handleSetHeight(e) {
+    let step = 4;
+    e.preventDefault();
+    if (e.nativeEvent.deltaY <= 0 && h > 128) {
+      h -= step;
+    } else if (e.nativeEvent.deltaY > 0 && h < 256) {
+      h += step;
+    }
+    wavesurfer.setHeight(h);
+    //setmargin((256-h)/2);
+    console.log('h', h);
+    console.log('margin', margin);
+  }
 
   function chooseCurrentRegion(region) {
     console.log('wavesurfer.regions.list', wavesurfer.regions.list);
@@ -318,7 +356,17 @@ const Index = (props) => {
 
               <div id="wave-timeline"></div>
 
-              <div id="waveform" style={{ height: 128, overflow: 'auto' }}>
+              <div
+                id="waveform"
+                onWheel={handleSetHeight}
+                onMouseEnter={mouseEnter}
+                onMouseLeave={mouseLeave}
+                style={{
+                  marginTop: margin,
+                  height: 256 - margin,
+                  overflow: 'auto',
+                }}
+              >
                 <div
                   className="progress progress-striped active"
                   id="progress-bar"
@@ -330,7 +378,10 @@ const Index = (props) => {
 
               <div
                 id="wave-spectrogram"
-                style={{ display: tab === '1' ? 'block' : 'none' }}
+                style={{
+                  display: tab === '1' ? 'block' : 'none',
+                  marginTop: 60,
+                }}
               ></div>
 
               <div style={{ marginTop: 20, float: 'left' }}>

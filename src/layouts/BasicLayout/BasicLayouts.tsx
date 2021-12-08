@@ -48,6 +48,7 @@ import bottomLogo from '@/assets/bottom-logo.png';
 import { SERVICEURL } from '@/utils/const';
 import { getRole, getName } from '@/utils/util';
 import StuQuestionSider from '@/layouts/BasicLayout/StuQuestionSider';
+import { convertLegacyProps } from 'antd/lib/button/button';
 
 const { Header, Sider, Footer, Content } = Layout;
 
@@ -96,7 +97,20 @@ interface BasicLayoutsContentProps {
   sound_list: any;
   soundListLoading: boolean;
   // loading: boolean;
+  overflowType: string;
 }
+/*
+let overf = 'auto';
+export function setOverFlowHidden() { 
+
+} 
+
+export function setOverFlowAuto() { 
+  overf = 'auto';
+  console.log("auto");
+  //setoverf('auto');
+} 
+*/
 
 const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   const {
@@ -107,12 +121,20 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     searchListLoading,
     train,
     location,
+    overflowType,
   } = props;
 
   useEffect(() => {
     dispatch({
       type: 'soundList/fetchSoundList',
     });
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'auto',
+      },
+    });
+    console.log(overflowType);
     return () => {};
   }, [1]);
 
@@ -1896,7 +1918,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
           )}
           {train && getRole() !== '学员' && <QuestionSider />}
           {train && getRole() === '学员' && <StuQuestionSider />}
-          <Content className="main-content">{props.children}</Content>
+          <Content style={{ overflow: overflowType }} className="main-content">
+            {props.children}
+          </Content>
         </Layout>
 
         <Footer
@@ -1921,8 +1945,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 };
 
 const mapStateToProps = ({ loading, soundList, inforImport }) => {
-  // console.log(loading)
+  /*console.log('1',loading);
+  console.log('2',soundList);
+  console.log('3',inforImport);
+  console.log('4',overflow);*/
+
   return {
+    overflowType: soundList.overflowType,
     InforImport: inforImport,
     soundListLoading: loading.effects['soundList/fetchSoundList'],
     sound_list: soundList.sound_list,
