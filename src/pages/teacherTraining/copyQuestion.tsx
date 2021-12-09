@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-12-08 16:02:42
- * @LastEditTime: 2021-12-08 19:22:55
+ * @LastEditTime: 2021-12-09 18:00:36
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \Sea\src\pages\teacherTraining\copyQuestion.tsx
@@ -23,7 +23,7 @@ const Component = (props: any) => {
     }
 
     console.log('knowledge_id', data.knowledge_id);
-    const postData = {
+    const postData: any = {
       difficult: +data.difficult,
       knowledge_id: +data.knowledge_id ?? 1,
       question_type: +data.question_type,
@@ -41,10 +41,20 @@ const Component = (props: any) => {
       score: +data.score,
     };
 
+    if (data.question_id) {
+      postData.id = data.question_id;
+    }
+
     console.log(data.question_id);
-    const res = await post<any>('/v1/teacher/add_question', {
-      data: postData,
-    });
+    console.log(postData);
+    const res = await post<any>(
+      data.question_id
+        ? '/v1/teacher/update_question'
+        : '/v1/teacher/add_question',
+      {
+        data: postData,
+      },
+    );
     console.log('add_question', res);
     message.success('添加成功');
     onDone && onDone();
@@ -73,7 +83,7 @@ const Component = (props: any) => {
       {data && (
         <>
           <QuestionComponent
-            data={{ ...data, question_id: id }}
+            data={data}
             onDataChange={setData}
             readOnly={false}
           />
