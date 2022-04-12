@@ -70,15 +70,24 @@ const TestApp = (props) => {
   const [picOn, setPicOn] = useState(false);
   const SelectTip = (
     <div>
-      频率选择的默认值为2048Hz
+      频率选择的默认值为1000Hz
       <br />
       <b style={{ color: 'cyan' }}>额外提示</b>
       <br />
-      频率选择范围为512Hz～8192Hz
+      频率选择范围为1000Hz～44000Hz
       <br />
       选择频率之后需要再点击一次功率谱分析按钮才能实现重新加载
     </div>
   );
+  const data = [];
+  for (let i = 0; i < 45; i++) {
+    data.push(i);
+  }
+  const options = data.map((item) => (
+    <Option key={item} value={item * 1000}>
+      {item * 1000}
+    </Option>
+  ));
   const getOption = (XType, YType, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -456,11 +465,7 @@ const TestApp = (props) => {
               setNFFT(value);
             }}
           >
-            <Option value={512}>512</Option>
-            <Option value={1024}>1024</Option>
-            <Option value={2048}>2048</Option>
-            <Option value={4096}>4096</Option>
-            <Option value={8192}>8192</Option>
+            {options}
           </Select>
         </Popover>
         <Button onClick={getData2}>1/3频程分析</Button>
