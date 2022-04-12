@@ -16,8 +16,6 @@ import request from '@/utils/request';
 // import PowerTable from './table';
 import UploadPhotos from '../../components/UploadPhotos';
 import { SERVICEURL } from '../../utils/const';
-import html2canvas from 'html2canvas';
-import b64toBlob from 'b64-to-blob';
 
 const TestApp = (props) => {
   const { audio_id, dispatch, Data } = props;
@@ -72,15 +70,24 @@ const TestApp = (props) => {
   const [picOn, setPicOn] = useState(false);
   const SelectTip = (
     <div>
-      频率选择的默认值为2048Hz
+      频率选择的默认值为1000Hz
       <br />
       <b style={{ color: 'cyan' }}>额外提示</b>
       <br />
-      频率选择范围为512Hz～8192Hz
+      频率选择范围为1000Hz～44000Hz
       <br />
       选择频率之后需要再点击一次功率谱分析按钮才能实现重新加载
     </div>
   );
+  const data = [];
+  for (let i = 0; i < 45; i++) {
+    data.push(i);
+  }
+  const options = data.map((item) => (
+    <Option key={item} value={item * 1000}>
+      {item * 1000}
+    </Option>
+  ));
   const getOption = (XType, YType, data1, Xdata, Type2) => {
     let option = {
       title: {
@@ -131,7 +138,7 @@ const TestApp = (props) => {
             yAxisIndex: 'none',
           },
           saveAsImage: {
-            pixelRatio: 6,
+            pixelRatio: 5,
           },
           restore: {},
         },
@@ -393,23 +400,6 @@ const TestApp = (props) => {
     });
   };
 
-  const getScreenshot = () => {
-    html2canvas(document.querySelector('#capture'), {
-      // 转换为图片
-      useCORS: true, // 解决资源跨域问题
-    }).then((canvas) => {
-      // imgUrl 是图片的 base64格式 代码 png 格式
-      let imgUrl = canvas.toDataURL('image/png');
-      //下面是 下载图片的功能。 不需要不加 注意加 .png
-      const str = imgUrl.replace(/data:image\/png;base64,/, '');
-      const file = b64toBlob(str, 'image/png');
-      const clipboardItemInput = new window.ClipboardItem({
-        'image/png': file,
-      });
-      window.navigator.clipboard.write([clipboardItemInput]);
-    });
-  };
-
   useEffect(() => {
     if (audio_id) {
       getData();
@@ -420,7 +410,6 @@ const TestApp = (props) => {
     <div>
       <Card>
         <div
-          id="capture"
           style={{
             display: !picOn ? 'block' : 'none',
           }}
@@ -476,15 +465,10 @@ const TestApp = (props) => {
               setNFFT(value);
             }}
           >
-            <Option value={512}>512</Option>
-            <Option value={1024}>1024</Option>
-            <Option value={2048}>2048</Option>
-            <Option value={4096}>4096</Option>
-            <Option value={8192}>8192</Option>
+            {options}
           </Select>
         </Popover>
         <Button onClick={getData2}>1/3频程分析</Button>
-        <Button onClick={getScreenshot}>复制截图</Button>
         <UploadPhotos url={`${SERVICEURL}/v1/ffile/power/${id}`} />
       </Card>
 
