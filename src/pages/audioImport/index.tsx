@@ -3,8 +3,8 @@
  * @github: https://github.com/HlgdB/Seadata
  * @Author: HuRenbin
  * @Date: 2020-10-26 15:36:10
- * @LastEditors  : HuRenbin
- * @LastEditTime : 2020-12-14 20:10:19
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-11-08 11:18:38
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
 import React, { useState, useEffect } from 'react';
@@ -25,6 +25,7 @@ import {
   Form,
   Radio,
   Steps,
+  notification,
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -69,13 +70,15 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
         if (status === 'done') {
           console.log(info.file.response);
           if (info.file.response.code === 200) {
-            message.success(`${info.file.name} 文件上传成功.`);
+            notification.success({
+              message: `${info.file.name} 文件上传成功.`,
+            });
           } else {
-            message.error(`${info.file.name} 文件上传失败.`);
-            message.error(`${info.file.response.msg}`);
+            notification.error({ message: `${info.file.name} 文件上传失败.` });
+            notification.error({ message: `${info.file.response.msg}` });
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} 文件上传失败.`);
+          notification.error({ message: `${info.file.name} 文件上传失败.` });
         }
       },
     };
@@ -120,10 +123,12 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
               type: 'soundList/fetchSoundList',
             });
           } else {
-            message.error(`${info.file.response.msg} 文件上传失败.`);
+            notification.error({
+              message: `${info.file.response.msg} 文件上传失败.`,
+            });
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} 文件上传失败.`);
+          notification.error({ message: `${info.file.name} 文件上传失败.` });
         }
       },
     };

@@ -3,7 +3,7 @@
  * @Author       : HuRenbin
  * @LastEditors: Please set LastEditors
  * @Date         : 2020-10-26 15:36:10
- * @LastEditTime: 2021-10-19 21:41:08
+ * @LastEditTime: 2021-12-08 14:13:29
  * @github       : https://github.com/HlgdB/Seadata
  * @FilePath     : \Seadata-front\src\pages\audioEdit\index.jsx
  */
@@ -30,6 +30,8 @@ import {
 import request from '@/utils/request';
 import randomString from '@/utils/random.js';
 import CookieUtil from '@/utils/cookie.js';
+import { setOverFlowHidden } from '@/layouts/BasicLayout/BasicLayouts.tsx';
+import { setOverFlowAuto } from '@/layouts/BasicLayout/BasicLayouts.tsx';
 // import WaveSurfer from 'wavesurfer.js';
 // import WaveSurfer from 'react-wavesurfer';
 
@@ -47,6 +49,7 @@ const alert_message_2_2 =
 
 //定义音频可视化组件
 let wavesurfer;
+let h = 128;
 let tip_region = null;
 
 const gridStyle = {
@@ -62,6 +65,41 @@ const Index = (props) => {
   const [path, setpath] = useState(undefined);
   const [tab, settab] = useState('1');
   const [form] = Form.useForm();
+  const [margin, setmargin] = useState(0);
+
+  function mouseEnter() {
+    document.body.style.overflow = 'hidden';
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'hidden',
+      },
+    });
+  }
+
+  function mouseLeave() {
+    document.body.style.overflow = 'auto';
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'auto',
+      },
+    });
+  }
+
+  function handleSetHeight(e) {
+    let step = 4;
+    e.preventDefault();
+    if (e.nativeEvent.deltaY <= 0 && h > 128) {
+      h -= step;
+    } else if (e.nativeEvent.deltaY > 0 && h < 256) {
+      h += step;
+    }
+    wavesurfer.setHeight(h);
+    //setmargin((256-h)/2);
+    console.log('h', h);
+    console.log('margin', margin);
+  }
 
   function chooseCurrentRegion(region) {
     console.log('wavesurfer.regions.list', wavesurfer.regions.list);
@@ -309,112 +347,150 @@ const Index = (props) => {
 
     return (
       <>
-        <div style={{ backgroundColor: '#3D3D3D' }}>
-          <p id="subtitle" className="text-center text-info">
-            &nbsp;
-          </p>
-          <div id="wave-timeline"></div>
-          <div id="waveform">
-            <div
-              className="progress progress-striped active"
-              id="progress-bar"
-              style={{ display: 'none' }}
-            >
-              <div className="progress-bar progress-bar-info"></div>
+        <Row gutter={16}>
+          <Col span={22}>
+            <div style={{ backgroundColor: '#3D3D3D' }}>
+              <p id="subtitle" className="text-center text-info">
+                &nbsp;
+              </p>
+
+              <div id="wave-timeline"></div>
+
+              <div
+                id="waveform"
+                onWheel={handleSetHeight}
+                onMouseEnter={mouseEnter}
+                onMouseLeave={mouseLeave}
+                style={{
+                  marginTop: margin,
+                  height: 256 - margin,
+                  overflow: 'auto',
+                }}
+              >
+                <div
+                  className="progress progress-striped active"
+                  id="progress-bar"
+                  style={{ display: 'none' }}
+                >
+                  <div className="progress-bar progress-bar-info"></div>
+                </div>
+              </div>
+
+              <div
+                id="wave-spectrogram"
+                style={{
+                  display: tab === '1' ? 'block' : 'none',
+                  marginTop: 60,
+                }}
+              ></div>
+
+              <div style={{ marginTop: 20, float: 'left' }}>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    if (wavesurfer) {
+                      wavesurfer.skip(0 - wavesurfer.getCurrentTime());
+                    }
+                  }}
+                  style={{
+                    float: 'left',
+                    marginRight: 20,
+                  }}
+                >
+                  复位
+                </Button>
+                <Popover
+                  content="将修改后的音频保存为一个版本存储，会在下方的版本记录中显示历史版本。"
+                  title="保存音频"
+                >
+                  <Button
+                    type="primary"
+                    onClick={handle_save_audio}
+                    style={{
+                      float: 'left',
+                      marginRight: 20,
+                      display: tab === '1' ? 'block' : 'none',
+                    }}
+                  >
+                    保存音频
+                  </Button>
+                </Popover>
+                <Popover
+                  content="将当前被修改后的音频重置到当前版本状态，注意不是重置到最初状态。"
+                  title="重置"
+                >
+                  <Button
+                    type="primary"
+                    onClick={handle_reset}
+                    style={{
+                      float: 'left',
+                      marginRight: 20,
+                      display: tab === '1' ? 'block' : 'none',
+                    }}
+                  >
+                    重置为当前版本
+                  </Button>
+                </Popover>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    window.open(path, '_blank');
+                  }}
+                  style={{
+                    float: 'left',
+                    marginRight: 20,
+                    display:
+                      tab === '1' && CookieUtil.get('role') !== '3'
+                        ? 'block'
+                        : 'none',
+                  }}
+                >
+                  导出当前音频
+                </Button>
+                <Popover content="将所有鼠标拖动过的标签保存。">
+                  <Button
+                    type="primary"
+                    onClick={handle_save_regions}
+                    style={{
+                      float: 'left',
+                      marginRight: 20,
+                      display: tab === '2' ? 'block' : 'none',
+                    }}
+                  >
+                    保存所有标签
+                  </Button>
+                </Popover>
+                <Button
+                  type="primary"
+                  id="btnPlay"
+                  style={{ fontSize: 15 }}
+                  onClick={() => {
+                    wavesurfer.playPause();
+                  }}
+                >
+                  <PlayCircleOutlined />/<PauseOutlined />
+                </Button>
+              </div>
             </div>
-          </div>
-          <div
-            id="wave-spectrogram"
-            style={{ display: tab === '1' ? 'block' : 'none' }}
-          ></div>
-          <div style={{ marginTop: 20, float: 'left' }}>
-            <Button
-              type="primary"
-              onClick={() => {
-                if (wavesurfer) {
-                  wavesurfer.skip(0 - wavesurfer.getCurrentTime());
-                }
-              }}
+          </Col>
+          <Col span={2}>
+            <Slider
+              vertical
+              defaultValue={128}
+              max={256}
+              min={128}
+              reverse={true}
               style={{
-                float: 'left',
-                marginRight: 20,
+                display: 'inline-block',
+                height: 128,
+                marginLeft: 70,
               }}
-            >
-              复位
-            </Button>
-            <Popover
-              content="将修改后的音频保存为一个版本存储，会在下方的版本记录中显示历史版本。"
-              title="保存音频"
-            >
-              <Button
-                type="primary"
-                onClick={handle_save_audio}
-                style={{
-                  float: 'left',
-                  marginRight: 20,
-                  display: tab === '1' ? 'block' : 'none',
-                }}
-              >
-                保存音频
-              </Button>
-            </Popover>
-            <Popover
-              content="将当前被修改后的音频重置到当前版本状态，注意不是重置到最初状态。"
-              title="重置"
-            >
-              <Button
-                type="primary"
-                onClick={handle_reset}
-                style={{
-                  float: 'left',
-                  marginRight: 20,
-                  display: tab === '1' ? 'block' : 'none',
-                }}
-              >
-                重置为当前版本
-              </Button>
-            </Popover>
-            <Button
-              type="primary"
-              onClick={() => {
-                window.open(path, '_blank');
+              onChange={(value) => {
+                if (wavesurfer) wavesurfer.setHeight(value); //wavesurfer.zoom(value);
               }}
-              style={{
-                float: 'left',
-                marginRight: 20,
-                display:
-                  tab === '1' && CookieUtil.get('role') !== '3'
-                    ? 'block'
-                    : 'none',
-              }}
-            >
-              导出当前音频
-            </Button>
-            <Popover content="将所有鼠标拖动过的标签保存。">
-              <Button
-                type="primary"
-                onClick={handle_save_regions}
-                style={{
-                  float: 'left',
-                  marginRight: 20,
-                  display: tab === '2' ? 'block' : 'none',
-                }}
-              >
-                保存所有标签
-              </Button>
-            </Popover>
-            <Button
-              type="primary"
-              id="btnPlay"
-              style={{ fontSize: 15 }}
-              onClick={() => {
-                wavesurfer.playPause();
-              }}
-            >
-              <PlayCircleOutlined />/<PauseOutlined />
-            </Button>
-          </div>
-        </div>
+            />
+          </Col>
+        </Row>
         <Slider
           defaultValue={20}
           max={5000}

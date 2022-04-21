@@ -178,7 +178,7 @@ const Index = (props) => {
       { label: '优', value: '优' },
       { label: '良', value: '良' },
       { label: '中', value: '中' },
-      { label: '劣', value: '劣' },
+      { label: '差', value: '差' },
     ];
 
     const onQLChange = (e) => {

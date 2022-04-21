@@ -25,6 +25,9 @@ import request from '@/utils/request';
 import UploadPhotos from '../../components/UploadPhotos';
 import MelTable from './table';
 import { SERVICEURL } from '../../utils/const';
+import html2canvas from 'html2canvas';
+import b64toBlob from 'b64-to-blob';
+
 const TestApp = (props) => {
   console.log(props);
   const { audio_id, audio_name, signal_type, dispatch } = props;
@@ -316,6 +319,23 @@ const TestApp = (props) => {
     });
   };
 
+  const getScreenshot = () => {
+    html2canvas(document.querySelector('#capture'), {
+      // 转换为图片
+      useCORS: true, // 解决资源跨域问题
+    }).then((canvas) => {
+      // imgUrl 是图片的 base64格式 代码 png 格式
+      let imgUrl = canvas.toDataURL('image/png');
+      //下面是 下载图片的功能。 不需要不加 注意加 .png
+      const str = imgUrl.replace(/data:image\/png;base64,/, '');
+      const file = b64toBlob(str, 'image/png');
+      const clipboardItemInput = new window.ClipboardItem({
+        'image/png': file,
+      });
+      window.navigator.clipboard.write([clipboardItemInput]);
+    });
+  };
+
   useEffect(() => {
     if (audio_id) {
       getData();
@@ -325,18 +345,20 @@ const TestApp = (props) => {
   return (
     <div>
       <Card>
-        <Spin spinning={loading}>
-          <ReactEcharts
-            option={getOption(data, Xdata, Ydata, min, max)}
-            theme="dark"
-            style={{ height: '400px' }}
-            onEvents={{
-              brushselected: handleBrushSelected,
-              brushEnd: calculate,
-              click: handleClick,
-            }}
-          />
-        </Spin>
+        <div id="capture">
+          <Spin spinning={loading}>
+            <ReactEcharts
+              option={getOption(data, Xdata, Ydata, min, max)}
+              theme="dark"
+              style={{ height: '400px' }}
+              onEvents={{
+                brushselected: handleBrushSelected,
+                brushEnd: calculate,
+                click: handleClick,
+              }}
+            />
+          </Spin>
+        </div>
         <Button onClick={getData}>时频图分析</Button>
         <Popover title="提示" content={InputTip2}>
           <Input
@@ -348,6 +370,7 @@ const TestApp = (props) => {
             style={{ width: 120 }}
           />
         </Popover>
+        <Button onClick={getScreenshot}>复制截图</Button>
         <UploadPhotos url={`${SERVICEURL}/v1/ffile/frequency/${id}`} />
       </Card>
       <div

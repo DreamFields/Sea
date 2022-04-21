@@ -3,6 +3,8 @@ import UserLayout from './UserLayouts.js';
 import React from 'react';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { ConfigProvider } from 'antd';
+import CookieUtil from '../utils/cookie';
+import { getRole } from '../utils/util';
 
 const index = (props) => {
   const { location } = props;
@@ -10,7 +12,7 @@ const index = (props) => {
 
   // console.log(pathname);
   if (
-    pathname.search('listenTraining') !== -1 ||
+    pathname.search('studentTraining') !== -1 ||
     pathname.search('teacherTraining') !== -1
   ) {
     return (

@@ -29,7 +29,9 @@ const Component = (props: any) => {
         D: data.info_text_content.D.toString(),
       },
       analysis: data.analysis,
+      chapter: +data.chapter,
       question_bank_type: +data.question_bank_type,
+      score: +data.score,
     };
 
     const res = await post<any>('/v1/teacher/update_question', {

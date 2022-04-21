@@ -9,6 +9,7 @@ import {
   Image,
   Radio,
   Checkbox,
+  InputNumber,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { post } from '@/utils/request';
@@ -219,7 +220,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
         )}
       </Form.Item>
 
-      {/* <Form.Item label="A选项内容" name="a">
+      <Form.Item label="A选项内容" name="a">
         <TextArea
           value={data.info_text_content.A}
           defaultValue={data.info_text_content.A}
@@ -276,7 +277,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           placeholder="D选项内容"
           readOnly={readOnly}
         ></TextArea>
-      </Form.Item> */}
+      </Form.Item>
 
       <Form.Item label="题目分析" name="analysis">
         <TextArea
@@ -335,7 +336,7 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
       <Form.Item label="章节" name="chapter">
         <Select
           value={data.chapter}
-          defaultValue={data.chapter}
+          defaultValue={`难度${data.chapter}`}
           style={{
             display: 'block',
           }}
@@ -354,13 +355,14 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="7">章节7</Option>
           <Option value="8">章节8</Option>
           <Option value="9">章节9</Option>
+          <Option value="9">章节10</Option>
         </Select>
       </Form.Item>
 
       <Form.Item label="难度" name="difficulty">
         <Select
           value={data.difficult}
-          defaultValue={data.difficult}
+          defaultValue={`难度${data.difficult}`}
           style={{
             display: 'block',
           }}
@@ -379,28 +381,25 @@ const CommonComponent = ({ data, onDataChange, readOnly }: any) => {
           <Option value="7">难度7</Option>
           <Option value="8">难度8</Option>
           <Option value="9">难度9</Option>
+          <Option value="9">难度10</Option>
         </Select>
       </Form.Item>
 
-      <Form.Item label="正确选项" name="correct">
-        <Select
-          value={data.correct}
-          defaultValue={data.correct}
-          style={{
-            display: 'block',
-          }}
+      <Form.Item label="分数" name="sc">
+        <InputNumber
+          value={data.score}
+          defaultValue={data.score}
           onChange={(e) => {
-            data.correct = e;
-            onDataChange(data);
+            data.score = e;
+            onDataChange({
+              ...data,
+            });
           }}
-          disabled={readOnly}
-        >
-          <Option value="A">正确选项A</Option>
-          <Option value="B">正确选项B</Option>
-          <Option value="C">正确选项C</Option>
-          <Option value="D">正确选项D</Option>
-        </Select>
+          placeholder="分数"
+          readOnly={readOnly}
+        />
       </Form.Item>
+
       {!readOnly && (
         <Form.Item label="上传图片" name="uploadimg">
           <Upload name="file" customRequest={handlePictureUpload}>
