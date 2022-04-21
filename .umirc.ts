@@ -34,6 +34,7 @@ export default defineConfig({
       .use('file-loader')
       .loader(require.resolve('file-loader'));
   },
+  mfsu: {},
   dynamicImport: {},
   dva: {},
   devtool: 'source-map',
