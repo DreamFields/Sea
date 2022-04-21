@@ -57,7 +57,7 @@
     "react-wavesurfer": "^0.8.6",
     "recorder-core": "^1.1.21021500",
     "typescript-eslint": "0.0.1-alpha.0",
-    "umi": "^3.2.3",
+    "umi": "^3.5.0",
     "use-immer": "^0.6.0",
     "wavesurfer.js": "^4.0.1",
     "yorkie": "^2.0.0"

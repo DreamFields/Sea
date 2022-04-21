@@ -5,7 +5,7 @@
  */
 // http是80端口，https是443端口
 // export const SERVICEURL = 'https://114.55.176.95:443'; // 云服务器打包，前端调试可用
-export const SERVICEURL = 'http://114.55.176.95:5000'; // 前端调试可用
+export const SERVICEURL = 'http://124.223.14.27:5000'; // 前端调试可用
 // export const SERVICEURL = 'https://10.0.82.218:443';// docker服务器打包
 //export const SERVICEURL = 'http://127.0.0.1:80'; // 本机打包，暂时无法调试
 

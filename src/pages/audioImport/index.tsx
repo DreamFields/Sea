@@ -7,37 +7,25 @@
  * @LastEditTime: 2021-11-08 11:18:38
  * @FilePath     : \Seadata-front\src\pages\audioImport\index.tsx
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect, Dispatch, history } from 'umi';
 import {
-  DatePicker,
-  TimePicker,
   Result,
-  Row,
-  Col,
-  Input,
   Button,
-  Select,
-  InputNumber,
   Upload,
   message,
-  Modal,
   Form,
-  Radio,
   Steps,
   notification,
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import moment from 'moment';
 import Cookies from 'js-cookie';
 import style from './style.less';
-import CookieUtil from '@/utils/cookie.js';
 import RecorderCn from '@/components/recorder_v2/index.jsx';
 import { SERVICEURL } from '@/utils/const';
 import AddSound from '@/pages/audioImport/AddSound';
 
 const { Dragger } = Upload;
-const { Option } = Select;
 const { Step } = Steps;
 
 interface AudioImportContentProps {
@@ -101,10 +89,7 @@ const AudioImport: React.FC<AudioImportContentProps> = (props) => {
     const uploadprops = {
       name: 'audio',
       accept: '.wav, .mp3',
-      // multiple: true,
       action: `${SERVICEURL}/v1/sound/upload_sound`,
-      // action: 'http://10.0.70.89:5000/v1/sound/upload_sound',
-      // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
