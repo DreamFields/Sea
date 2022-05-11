@@ -127,6 +127,8 @@ const AddSound: React.FC<{
               }
             }
             delete copy_vals['shaft_blade_rotationl'];
+            copy_vals['name'] = copy_vals['fleet_name'];
+            delete copy_vals['fleet_name'];
             console.log('目标信息表单值', copy_vals);
             _modify(copy_vals, type - 1);
           }

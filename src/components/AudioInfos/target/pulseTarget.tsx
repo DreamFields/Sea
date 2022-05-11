@@ -94,7 +94,7 @@ const PulseTarget = (props: any) => {
         </Col>
         <Col span={12}>
           <Form.Item
-            name="name"
+            name="fleet_name"
             label="目标舰号或名称"
             rules={[
               {
