@@ -36,7 +36,7 @@ const Index = (props) => {
       // console.log("manual_level", qj_data.manual_level);
       form.setFieldsValue({ result: qj_data.manual_level });
     }
-    console.log('qj_data', qj_data);
+    // console.log('qj_data', qj_data);
     return () => {};
   }, [qj_data]);
 

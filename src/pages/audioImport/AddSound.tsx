@@ -127,6 +127,8 @@ const AddSound: React.FC<{
               }
             }
             delete copy_vals['shaft_blade_rotationl'];
+            copy_vals['name'] = copy_vals['fleet_name'];
+            delete copy_vals['fleet_name'];
             console.log('目标信息表单值', copy_vals);
             _modify(copy_vals, type - 1);
           }
@@ -234,6 +236,43 @@ const AddSound: React.FC<{
                 sumForm={sumForm}
               />
             </div>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="target_ship_speed"
+              label="航速"
+              labelAlign="left"
+              labelCol={{ span: 4 }}
+              placeholder="单位：节"
+            >
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="target_ship_distance"
+              label="距离"
+              labelAlign="left"
+              labelCol={{ span: 4 }}
+              placeholder="单位：km"
+            >
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="target_ship_depth"
+              label="深度"
+              labelAlign="left"
+              labelCol={{ span: 4 }}
+              placeholder="单位：m"
+            >
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
           </Col>
         </Row>
         <div
