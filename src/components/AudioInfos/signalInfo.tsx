@@ -20,6 +20,7 @@ const SignalInfo = () => {
             label="航速"
             labelAlign="left"
             labelCol={{ span: 4 }}
+            placeholder="单位：节"
           >
             <InputNumber style={{ width: '100%' }} />
           </Form.Item>
@@ -30,6 +31,7 @@ const SignalInfo = () => {
             label="距离"
             labelAlign="left"
             labelCol={{ span: 4 }}
+            placeholder="单位：km"
           >
             <InputNumber style={{ width: '100%' }} />
           </Form.Item>
@@ -96,6 +98,7 @@ const SignalInfo = () => {
             label="深度"
             labelAlign="left"
             labelCol={{ span: 4 }}
+            placeholder="单位：m"
           >
             <InputNumber style={{ width: '100%' }} />
           </Form.Item>
