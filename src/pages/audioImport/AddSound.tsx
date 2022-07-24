@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Row, Col, Button, Form } from 'antd';
+import { Row, Col, Button, Form, InputNumber } from 'antd';
 import moment from 'moment';
 import {
   TypeRadio,
@@ -245,9 +245,8 @@ const AddSound: React.FC<{
               label="航速"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：节"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：节" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -256,9 +255,8 @@ const AddSound: React.FC<{
               label="距离"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：km"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：km" />
             </Form.Item>
           </Col>
         </Row>
@@ -269,9 +267,8 @@ const AddSound: React.FC<{
               label="深度"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：m"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：m" />
             </Form.Item>
           </Col>
         </Row>
