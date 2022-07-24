@@ -23,3 +23,23 @@ export async function FetchAutoLevel(body: any) {
     },
   });
 }
+
+export async function FetchAutoBatchLevel(body: {
+  mode: string;
+  sids: Array<string | number>;
+}) {
+  return request(`/v1/evaluation/batch_${body.mode}`, {
+    method: 'POST',
+    data: {
+      sids: body.sids,
+    },
+  });
+}
+export async function ExportExcel(sids: Array<string | number>) {
+  return request(`/v1/file/export`, {
+    method: 'POST',
+    data: {
+      sids: sids,
+    },
+  });
+}

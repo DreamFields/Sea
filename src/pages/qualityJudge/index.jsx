@@ -36,7 +36,7 @@ const Index = (props) => {
       // console.log("manual_level", qj_data.manual_level);
       form.setFieldsValue({ result: qj_data.manual_level });
     }
-    console.log('qj_data', qj_data);
+    // console.log('qj_data', qj_data);
     return () => {};
   }, [qj_data]);
 
@@ -178,7 +178,7 @@ const Index = (props) => {
       { label: '优', value: '优' },
       { label: '良', value: '良' },
       { label: '中', value: '中' },
-      { label: '劣', value: '劣' },
+      { label: '差', value: '差' },
     ];
 
     const onQLChange = (e) => {

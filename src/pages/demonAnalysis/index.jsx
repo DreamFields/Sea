@@ -14,6 +14,9 @@ import DemonForm from '../demonAnalysis2/index';
 import UploadPhotos from '../../components/UploadPhotos';
 import BladesUpload from './bladesUpload';
 import { SERVICEURL } from '../../utils/const';
+import html2canvas from 'html2canvas';
+import b64toBlob from 'b64-to-blob';
+
 const TestApp = (props) => {
   const { audio_id, audio_name, path, Data, dispatch } = props;
   const [loading, setloading] = useState(false);
@@ -571,6 +574,23 @@ const TestApp = (props) => {
     });
   };
 
+  const getScreenshot = () => {
+    html2canvas(document.querySelector('#capture'), {
+      // 转换为图片
+      useCORS: true, // 解决资源跨域问题
+    }).then((canvas) => {
+      // imgUrl 是图片的 base64格式 代码 png 格式
+      let imgUrl = canvas.toDataURL('image/png');
+      //下面是 下载图片的功能。 不需要不加 注意加 .png
+      const str = imgUrl.replace(/data:image\/png;base64,/, '');
+      const file = b64toBlob(str, 'image/png');
+      const clipboardItemInput = new window.ClipboardItem({
+        'image/png': file,
+      });
+      window.navigator.clipboard.write([clipboardItemInput]);
+    });
+  };
+
   useEffect(() => {
     if (audio_id) {
       getData();
@@ -580,24 +600,26 @@ const TestApp = (props) => {
   return (
     <div>
       <Card>
-        <Spin spinning={loading}>
-          <ReactEcharts
-            ref={(e) => {
-              echartRef = e;
-            }}
-            option={getOption(
-              myType,
-              Data.ydata[Data.label],
-              Data.xdata[Data.label],
-              PicType,
-            )}
-            theme="dark"
-            style={{ height: '400px' }}
-            onEvents={{
-              click: handleChartClick,
-            }}
-          />
-        </Spin>
+        <div id="capture">
+          <Spin spinning={loading}>
+            <ReactEcharts
+              ref={(e) => {
+                echartRef = e;
+              }}
+              option={getOption(
+                myType,
+                Data.ydata[Data.label],
+                Data.xdata[Data.label],
+                PicType,
+              )}
+              theme="dark"
+              style={{ height: '400px' }}
+              onEvents={{
+                click: handleChartClick,
+              }}
+            />
+          </Spin>
+        </div>
         <Button onClick={getData}>调制谱分析</Button>
         <Button
           onClick={() => {
@@ -615,6 +637,7 @@ const TestApp = (props) => {
           手动提取
         </Button>
         <BladesUpload demon_id={id} />
+        <Button onClick={getScreenshot}>复制截图</Button>
         <UploadPhotos url={`${SERVICEURL}/v1/ffile/demon/${id}`} />
       </Card>
       <DemonTable />

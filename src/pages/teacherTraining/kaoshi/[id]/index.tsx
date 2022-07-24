@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-13 21:24:31
+ * @LastEditTime: 2021-11-16 21:57:39
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \Sea\src\pages\teacherTraining\kaoshi\[id]\index.tsx
+ */
 import React, { useState, useEffect } from 'react';
 import style from './style.less';
 import { Button, Table, Space } from 'antd';
@@ -20,7 +28,7 @@ const Index = () => {
 
   const columns: any[] = [
     {
-      title: '学生名称aaa',
+      title: '学生名称',
       dataIndex: 'student_name',
       key: 'student_name',
     },
@@ -43,7 +51,9 @@ const Index = () => {
           <Button
             onClick={() => {
               console.log('detail paper student', data);
-              history.push(`/teacherTraining/kaoshi/${id}/${data.user_id}`);
+              history.push(
+                `/teacherTraining/kaoshi/${id}/${data.exam_paper_question_customer_answer_id}`,
+              );
             }}
           >
             详情

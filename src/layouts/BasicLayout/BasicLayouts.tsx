@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import QuestionSider from './QuestionSider';
-import AnswerSider from './AnswerSider';
 import './BasicLayouts.css';
 import {
   Menu,
@@ -8,23 +7,15 @@ import {
   Card,
   Modal,
   Form,
-  InputNumber,
   Spin,
   message,
   Drawer,
-  Row,
-  Col,
-  TimePicker,
-  DatePicker,
-  Radio,
   Select,
   Dropdown,
-  Image,
   Layout,
   Input,
   Button,
   Avatar,
-  Upload,
   Tooltip,
   Popover,
 } from 'antd';
@@ -36,24 +27,23 @@ import {
   ScissorOutlined,
   SnippetsOutlined,
   RobotOutlined,
-  UploadOutlined,
   EditOutlined,
 } from '@ant-design/icons';
 import CookieUtil from '@/utils/cookie.js';
-import Cookies from 'js-cookie';
 import request from '@/utils/request';
 import moment from 'moment';
 import topLogo from '@/assets/top-logo.png';
 import bottomLogo from '@/assets/bottom-logo.png';
-import { SERVICEURL } from '@/utils/const';
-import AddSound from '@/layouts/BasicLayout/AddSound';
+import { getRole, getName } from '@/utils/util';
+import StuQuestionSider from '@/layouts/BasicLayout/StuQuestionSider';
+import AddSound from './components/addSound';
+import ChangePasswordModal from './components/changePasswordModal';
+import ChangeNicknameModal from './components/changeNicknameModal';
 
 const { Header, Sider, Footer, Content } = Layout;
 
 const { Option } = Select;
 const { Search } = Input;
-
-const roles = ['管理员', '教员', '学员'];
 
 const alltype = {
   name_date: '时间或文件名',
@@ -97,7 +87,20 @@ interface BasicLayoutsContentProps {
   sound_list: any;
   soundListLoading: boolean;
   // loading: boolean;
+  overflowType: string;
 }
+/*
+let overf = 'auto';
+export function setOverFlowHidden() { 
+
+} 
+
+export function setOverFlowAuto() { 
+  overf = 'auto';
+  console.log("auto");
+  //setoverf('auto');
+} 
+*/
 
 const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   const {
@@ -107,13 +110,20 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     searchListLoading,
     train,
     location,
+    overflowType,
   } = props;
-  console.log('reRender2');
 
   useEffect(() => {
     dispatch({
       type: 'soundList/fetchSoundList',
     });
+    dispatch({
+      type: 'soundList/refreshOverflowType',
+      payload: {
+        overflowType: 'auto',
+      },
+    });
+    console.log(overflowType);
     return () => {};
   }, [1]);
 
@@ -370,7 +380,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   };
 
   const InforDrawer = ({ id, visible, setvisible }) => {
-    const [item, setitem] = useState(undefined);
+    const [item, setitem] = useState(undefined as any);
 
     useEffect(() => {
       // console.log("audioID", id);
@@ -411,7 +421,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
         // onOk={() => setvisible(false)}
         onClose={() => setvisible(false)}
         placement="left"
-        width={850}
         footer={
           <div
             style={{
@@ -429,8 +438,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
             </Button>
           </div>
         }
+        width={1000}
       >
-        <AddSound sound_data={item} sumForm={sumForm} />
+        <AddSound sound_data={item} dispatch={dispatch} sumForm={sumForm} />
       </Drawer>
     );
   };
@@ -484,216 +494,43 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
   };
 
   // 顶部菜单
-  class TopMenu extends React.Component {
-    handleClick = (e) => {
-      // console.log('click ', e);
-    };
-
-    render() {
-      return (
-        <Menu
-          onClick={this.handleClick}
-          defaultSelectedKeys={[props.location.pathname]}
-          mode="horizontal"
-          style={{ backgroundColor: '#2D2D2D', float: 'left' }}
-        >
-          <Menu.Item key="/" icon={<HomeOutlined />}>
-            <Link to="/">主页</Link>
-          </Menu.Item>
-          <Menu.Item key="/audioImport" icon={<MenuUnfoldOutlined />}>
-            <Link to="/audioImport">音频上传</Link>
-          </Menu.Item>
-          <Menu.Item key="/audioEdit" icon={<ScissorOutlined />}>
-            <Link to="/audioEdit">音频整编</Link>
-          </Menu.Item>
-          <Menu.Item key="/features" icon={<SnippetsOutlined />}>
-            <Link to="/features">特征提取</Link>
-          </Menu.Item>
-          <Menu.Item key="/qualityJudge" icon={<EditOutlined />}>
-            <Link to="/qualityJudge">质量评价</Link>
-          </Menu.Item>
-          <Menu.Item key="/exam" icon={<UserOutlined />}>
-            <Link to="/listenTraining">听音训练</Link>
-          </Menu.Item>
-          <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
-            <Link to="/targetRecognition">分类识别</Link>
-          </Menu.Item>
-          <Menu.Item key="/soundsExport" icon={<EditOutlined />}>
-            <Link to="/soundsExport">音频导出</Link>
-          </Menu.Item>
-        </Menu>
-      );
-    }
-  }
-
-  // 更改密码modal框
-  const ChangePasswordModal = () => {
-    const [visible, setvisible] = useState(false);
-    const [pwform] = Form.useForm();
-    useEffect(() => {
-      if (visible) {
-        pwform.resetFields();
-      }
-    }, [visible]);
-
-    const handleSubmit = (values: any) => {
-      // console.log(values);
-      request('/v1/user/password', {
-        method: 'PUT',
-        data: values,
-      }).then((res) => {
-        if (res) {
-          message.success('修改成功！');
-        } else {
-          message.error('修改失败！');
-        }
-        setvisible(false);
-      });
-    };
-
+  const TopMenu = () => {
     return (
-      <>
-        <a
-          onClick={() => {
-            setvisible(true);
-          }}
-        >
-          修改密码
-        </a>
-
-        <Modal
-          title="修改密码"
-          visible={visible}
-          onCancel={() => {
-            setvisible(false);
-          }}
-          onOk={() => {
-            pwform.submit();
-          }}
-        >
-          <Form form={pwform} onFinish={handleSubmit}>
-            <Form.Item
-              label="旧密码"
-              name="oldpassword"
-              labelAlign="right"
-              labelCol={{ span: 4 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入旧密码!',
-                },
-                {
-                  pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
-                  message: '密码必须包含数字和英文，长度6-20!',
-                },
-              ]}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-            <Form.Item
-              label="新密码"
-              name="newpassword"
-              labelAlign="right"
-              labelCol={{ span: 4 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码!',
-                },
-                {
-                  pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
-                  message: '新密码必须包含数字和英文，长度6-20!',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-            <Form.Item
-              label="确认密码"
-              name="renewpassword"
-              labelAlign="right"
-              labelCol={{ span: 4 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码!',
-                },
-                ({ getFieldValue }) => ({
-                  validator(rule, value) {
-                    if (!value || getFieldValue('newpassword') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject('两次输入的密码不一致！');
-                  },
-                }),
-              ]}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </>
-    );
-  };
-
-  // 更改用户名modal框
-  const ChangeNicknameModal = () => {
-    const [visible, setvisible] = useState(false);
-    const [form] = Form.useForm();
-    useEffect(() => {
-      if (visible) {
-        form.resetFields();
-      }
-    }, [visible]);
-
-    const handleSubmit = (values: any) => {
-      // console.log(values);
-      request('/v1/user/nickname', {
-        method: 'PUT',
-        data: values,
-      }).then((res) => {
-        if (res) {
-          message.success('修改成功！');
-        } else {
-          message.error('修改失败！');
-        }
-        setvisible(false);
-      });
-    };
-
-    return (
-      <>
-        <a
-          onClick={() => {
-            setvisible(true);
-          }}
-        >
-          修改昵称
-        </a>
-
-        <Modal
-          title="修改昵称"
-          visible={visible}
-          onCancel={() => {
-            setvisible(false);
-          }}
-          onOk={() => {
-            form.submit();
-          }}
-        >
-          <Form form={form} onFinish={handleSubmit}>
-            <Form.Item
-              label="新昵称"
-              name="nickname"
-              labelAlign="right"
-              labelCol={{ span: 4 }}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </>
+      <Menu
+        onClick={() => {}}
+        defaultSelectedKeys={[props.location.pathname]}
+        mode="horizontal"
+        style={{ backgroundColor: '#2D2D2D', float: 'left' }}
+      >
+        <Menu.Item key="/" icon={<HomeOutlined />}>
+          <Link to="/">主页</Link>
+        </Menu.Item>
+        <Menu.Item key="/audioImport" icon={<MenuUnfoldOutlined />}>
+          <Link to="/audioImport">音频上传</Link>
+        </Menu.Item>
+        <Menu.Item key="/audioEdit" icon={<ScissorOutlined />}>
+          <Link to="/audioEdit">音频整编</Link>
+        </Menu.Item>
+        <Menu.Item key="/features" icon={<SnippetsOutlined />}>
+          <Link to="/features">特征提取</Link>
+        </Menu.Item>
+        <Menu.Item key="/qualityJudge" icon={<EditOutlined />}>
+          <Link to="/qualityJudge">质量评价</Link>
+        </Menu.Item>
+        <Menu.Item key="/exam" icon={<UserOutlined />}>
+          <Link
+            to={getRole() === '学员' ? '/studentTraining' : 'teacherTraining'}
+          >
+            听音训练
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="/targetRecognition" icon={<RobotOutlined />}>
+          <Link to="/targetRecognition">分类识别</Link>
+        </Menu.Item>
+        {/* <Menu.Item key="/soundsExport" icon={<EditOutlined />}>
+          <Link to="/soundsExport">音频导出</Link>
+        </Menu.Item> */}
+      </Menu>
     );
   };
 
@@ -772,7 +609,6 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
     );
   };
 
-  const role = CookieUtil.get('role');
   return (
     <div>
       <Layout>
@@ -793,7 +629,7 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               />
             </Dropdown>
           </div>
-          {!train && (
+          {
             <div className="info">
               <span
                 style={{
@@ -802,13 +638,9 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               >
                 <Link to="/staffManage">用户管理 </Link>|
               </span>
-              <span>{` 您好，${
-                CookieUtil.get('role')
-                  ? roles[CookieUtil.get('role') - 1]
-                  : 'null'
-              }`}</span>
+              <span>{` 欢迎您回来，${getName()}`}</span>
             </div>
-          )}
+          }
         </Header>
         <Layout style={{ backgroundColor: '#343434' }}>
           {!train && (
@@ -819,9 +651,11 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
               </div>
             </Sider>
           )}
-          {train && role === '2' && <QuestionSider />}
-          {train && role === '3' && <AnswerSider />}
-          <Content className="main-content">{props.children}</Content>
+          {train && getRole() !== '学员' && <QuestionSider />}
+          {train && getRole() === '学员' && <StuQuestionSider />}
+          <Content style={{ overflow: overflowType }} className="main-content">
+            {props.children}
+          </Content>
         </Layout>
 
         <Footer
@@ -846,9 +680,13 @@ const BasicLayouts: React.FC<BasicLayoutsContentProps> = (props: any) => {
 };
 
 const mapStateToProps = ({ loading, soundList }) => {
-  // console.log(loading)
+  /*console.log('1',loading);
+  console.log('2',soundList);
+  console.log('3',inforImport);
+  console.log('4',overflow);*/
+
   return {
-    // InforImport: inforImport,
+    overflowType: soundList.overflowType,
     soundListLoading: loading.effects['soundList/fetchSoundList'],
     sound_list: soundList.sound_list,
   };

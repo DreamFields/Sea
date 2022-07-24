@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Spin, Input, Button, Form, Table } from 'antd';
+import { Spin, Input, Button, Form, Table, Card } from 'antd';
 import request from '@/utils/request';
+import html2canvas from 'html2canvas';
+import b64toBlob from 'b64-to-blob';
 
 const TestApp = (props) => {
   useEffect(() => {
@@ -132,38 +134,63 @@ const TestApp = (props) => {
       setloading(false);
     });
   };
+
+  const getScreenshot = () => {
+    html2canvas(document.querySelector('#capture'), {
+      // 转换为图片
+      useCORS: true, // 解决资源跨域问题
+    }).then((canvas) => {
+      // imgUrl 是图片的 base64格式 代码 png 格式
+      let imgUrl = canvas.toDataURL('image/png');
+      //下面是 下载图片的功能。 不需要不加 注意加 .png
+      const str = imgUrl.replace(/data:image\/png;base64,/, '');
+      const file = b64toBlob(str, 'image/png');
+      const clipboardItemInput = new window.ClipboardItem({
+        'image/png': file,
+      });
+      window.navigator.clipboard.write([clipboardItemInput]);
+    });
+  };
+
   return (
-    <Spin spinning={loading}>
-      <div
-        style={{
-          width: '100%',
-          height: 320,
-        }}
-      >
-        <img
-          alt="MCFF"
-          src={picIfo}
-          style={{
-            marginTop: 20,
-            width: '100%',
-            height: 300,
-            display: picIfo ? 'block' : 'none',
-          }}
-          id="resImg"
-        />
-        {/*
-      <Table
-        columns={columns}
-        dataSource={data}
-        style={{
-          marginTop: 20,
-          width: '100%',
-          height: 200,
-          display: picIfo ? 'block' : 'none',
-        }}
-      />*/}
-      </div>
-    </Spin>
+    <div>
+      <Card>
+        <div id="capture">
+          <Spin spinning={loading}>
+            <div
+              style={{
+                width: '100%',
+                height: 320,
+              }}
+            >
+              <img
+                alt="MCFF"
+                src={picIfo}
+                style={{
+                  marginTop: 20,
+                  width: '100%',
+                  height: 300,
+                  display: picIfo ? 'block' : 'none',
+                }}
+                id="resImg"
+              />
+              {/*
+            <Table
+              columns={columns}
+              dataSource={data}
+              style={{
+                marginTop: 20,
+                width: '100%',
+                height: 200,
+                display: picIfo ? 'block' : 'none',
+              }}
+            />*/}
+            </div>
+          </Spin>
+        </div>
+        <Button onClick={getScreenshot}>复制截图</Button>
+      </Card>
+    </div>
   );
 };
 export default TestApp;
