@@ -49,17 +49,17 @@ const Propeller = (props: any) => {
                   </Radio>
                 );
               })}
+              <Button
+                value={'添加新类别'}
+                onClick={() => setVisible(true)}
+                style={{
+                  display:
+                    CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
+                }}
+              >
+                添加新类别
+              </Button>
             </Radio.Group>
-            <Button
-              value={'添加新类别'}
-              onClick={() => setVisible(true)}
-              style={{
-                display:
-                  CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
-              }}
-            >
-              添加新类别
-            </Button>
           </Form.Item>
         </Col>
       </Row>

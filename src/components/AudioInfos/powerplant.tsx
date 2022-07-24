@@ -12,9 +12,6 @@ const Powerplant = (props: any) => {
   const onChange = (e) => {
     console.log('Powerplant checked', e.target);
     setValue(e.target.value);
-    // if (e.target.value === '添加新类别') {
-    //   setVisible(true);
-    // }
   };
 
   return (
@@ -29,18 +26,18 @@ const Powerplant = (props: any) => {
           {powerEngine?.map((item: { name: string }) => {
             return <Radio value={item.name}>{item.name}</Radio>;
           })}
+          <Button
+            value={'添加新类别'}
+            onClick={() => {
+              setVisible(true);
+            }}
+            style={{
+              display: CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
+            }}
+          >
+            添加新类别
+          </Button>
         </Radio.Group>
-        <Button
-          value={'添加新类别'}
-          onClick={() => {
-            setVisible(true);
-          }}
-          style={{
-            display: CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
-          }}
-        >
-          添加新类别
-        </Button>
       </Form.Item>
       <Modal
         visible={visible}
