@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import '../BasicLayouts.css';
-import { Form, message, Row, Col, Image, Button, Upload } from 'antd';
+import {
+  Form,
+  message,
+  Row,
+  Col,
+  Image,
+  Button,
+  Upload,
+  InputNumber,
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import request from '@/utils/request';
@@ -257,9 +266,8 @@ const AddSound = (props: any) => {
               label="航速"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：节"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：节" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -268,9 +276,8 @@ const AddSound = (props: any) => {
               label="距离"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：km"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：km" />
             </Form.Item>
           </Col>
         </Row>
@@ -281,9 +288,8 @@ const AddSound = (props: any) => {
               label="深度"
               labelAlign="left"
               labelCol={{ span: 4 }}
-              placeholder="单位：m"
             >
-              <InputNumber style={{ width: '100%' }} />
+              <InputNumber style={{ width: '100%' }} placeholder="单位：m" />
             </Form.Item>
           </Col>
         </Row>

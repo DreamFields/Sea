@@ -13,16 +13,13 @@ const RadiationTarget = (props: any) => {
 
   const [form] = Form.useForm();
 
-  const onChange_1 = (e) => {
+  const onChange_1 = (e: any) => {
     console.log('RadiationTarget checked', e.target);
     setValue_1(e.target.value);
   };
-  const onChange_2 = (e) => {
+  const onChange_2 = (e: any) => {
     console.log('RadiationTarget checked', e.target);
     setValue_2(e.target.value);
-    if (e.target.value === '添加新类别') {
-      setVisible(true);
-    }
   };
 
   return (
@@ -54,19 +51,19 @@ const RadiationTarget = (props: any) => {
               {rnType?.map((item: { rn_type: string }) => {
                 return <Radio value={item.rn_type}>{item.rn_type}</Radio>;
               })}
+              <Button
+                value={'添加新类别'}
+                onClick={() => {
+                  setVisible(true);
+                }}
+                style={{
+                  display:
+                    CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
+                }}
+              >
+                添加新类别
+              </Button>
             </Radio.Group>
-            <Button
-              value={'添加新类别'}
-              onClick={() => {
-                setVisible(true);
-              }}
-              style={{
-                display:
-                  CookieUtil.get('role') === '3' ? 'none' : 'inline-block',
-              }}
-            >
-              添加新类别
-            </Button>
           </Form.Item>
         </Col>
       </Row>
