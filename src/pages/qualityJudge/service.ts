@@ -35,3 +35,11 @@ export async function FetchAutoBatchLevel(body: {
     },
   });
 }
+export async function ExportExcel(sids: Array<string | number>) {
+  return request(`/v1/file/export`, {
+    method: 'POST',
+    data: {
+      sids: sids,
+    },
+  });
+}

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { connect } from 'umi';
 import { Button, Table, Form, Radio, message, Tag } from 'antd';
-import { FetchAutoBatchLevel } from './service';
+import { FetchAutoBatchLevel, ExportExcel } from './service';
 
 const columns = [
   {
@@ -98,6 +98,26 @@ const Index = (props) => {
             />
           </Form.Item>
         </Form>
+        <Button
+          type="primary"
+          onClick={async () => {
+            try {
+              if (!sound_list || !sound_list.length)
+                message.error('请先选择音频！');
+            } catch (e) {
+              message.error('请先选择音频！');
+            }
+            const res = await ExportExcel(selectedRowKeys).then((res) => {
+              console.log(res);
+              if (res) {
+                window.open(res);
+              }
+            });
+          }}
+          disabled={tableLoading}
+        >
+          导出
+        </Button>
         <Button
           type="primary"
           onClick={() => {
